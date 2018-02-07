@@ -1,0 +1,362 @@
+{
+	"userId": "linzhong123",
+	"userName": "lz",
+	"department": "用户与权限管理",
+	"roles": [
+		{
+			"code": "3e50e1b79469412ea0f0177c0b9ce88c",
+			"name": "软件工程师"
+		},
+		{
+			"code": "c03de7fc47bd4b119f3bdfa12b6bad15",
+			"name": "写诗的人"
+		}
+	],
+	"serviceIds": [],
+	"uiResources": [
+		{
+			"id": "1",
+			"icon": "el-icon-setting",
+			"url": "/home",
+			"title": "首页",
+			"menus": null
+		},
+		{
+			"id": "2",
+			"icon": "el-icon-menu",
+			"url": "/modelmgmt/modelmgmtindex",
+			"title": "模型管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/modelmgmt/modelalgorithmmgmt",
+					"title": "模型算法管理",
+					"submenus": [
+						{
+							"icon": null,
+							"url": "/modelmgmt/baseinfomgmt",
+							"title": "基本信息管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/programfilemgmt",
+							"title": "程序文件管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/servicemgmt",
+							"title": "服务管理",
+							"submenus": null
+						}
+					]
+				},
+				{
+					"icon": null,
+					"url": "/modelmgmt/modelexcutionmgmt",
+					"title": "模型执行管理",
+					"submenus": [
+						{
+							"icon": null,
+							"url": "/modelmgmt/planmgmt",
+							"title": "计划管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/taskmgmt",
+							"title": "任务管理",
+							"submenus": null
+						}
+					]
+				},
+				{
+					"icon": null,
+					"url": "/modelmgmt/systemmgmt",
+					"title": "系统管理",
+					"submenus": [
+						{
+							"icon": null,
+							"url": "/modelmgmt/metadatamgmt",
+							"title": "元数据管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/metacatmgmt",
+							"title": "元数据分类管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/dispatchnodemgmt",
+							"title": "调度节点管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/calculatenodemgmt",
+							"title": "计算节点管理",
+							"submenus": null
+						},
+						{
+							"icon": null,
+							"url": "/modelmgmt/datasyncmgmt",
+							"title": "数据同步管理",
+							"submenus": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "3",
+			"icon": "el-icon-menu",
+			"url": "/usermgmt/userauthmgmt",
+			"title": "用户权限管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/userMgmt/userManagement/user",
+					"title": "用户管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/userMgmt/userManagement/department",
+					"title": "部门管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/userMgmt/userManagement/userGroup",
+					"title": "用户组管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/userMgmt/userManagement/role",
+					"title": "角色管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/userMgmt/userManagement/resource",
+					"title": "资源管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/usermgmt/pwdedit",
+					"title": "修改密码",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "4",
+			"icon": "el-icon-menu",
+			"url": "/devicemgmt/devicemgmtindex",
+			"title": "设备管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/devicemgmt/deviceregister",
+					"title": "设备注册管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/devicemgmt/devicestatusmonitor",
+					"title": "设备状态监控",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/devicemgmt/deviceparamconfig",
+					"title": "设备参数配置",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/devicemgmt/devicefirmwareupdate",
+					"title": "设备固件升级",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "5",
+			"icon": "el-icon-menu",
+			"url": "10",
+			"title": "事件应用",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/safetyAppIndex/linkageResultApp",
+					"title": "联动结果管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/safetyAppIndex/eventLogApp",
+					"title": "事件管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "6",
+			"icon": "el-icon-menu",
+			"url": "/mapapp/mapappindex",
+			"title": "地图应用",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/mapapp/mapconfig",
+					"title": "地图配置",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/mapapp/scenemanager",
+					"title": "地图场景管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/mapapp/businessmanager",
+					"title": "业务数据管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "7",
+			"icon": "el-icon-menu",
+			"url": "/mdmapp/mdmappindex",
+			"title": "主数据管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/mdmapp/orgmanager",
+					"title": "组织管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/mdmapp/housemanager",
+					"title": "房屋管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/mdmapp/personmanager",
+					"title": "人员管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "8",
+			"icon": "el-icon-menu",
+			"url": "/broadcastapp/broadcastappindex",
+			"title": "个性化广播",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/broadcastapp/audiomanager",
+					"title": "音频管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/broadcastapp/actualtask",
+					"title": "实时任务",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/broadcastapp/regulartask",
+					"title": "定时任务",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "9",
+			"icon": "el-icon-menu",
+			"url": "/visitorapp/visitorappindex",
+			"title": "访客管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/visitorapp/visitorapp",
+					"title": "访客管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "10",
+			"icon": "el-icon-menu",
+			"url": "/accesscontrolapp/accesscontropindex",
+			"title": "门禁应用",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/accesscontrolapp/deviceGroupMgmt",
+					"title": "设备组管理",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/accesscontrolapp/auth",
+					"title": "门禁权限管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "11",
+			"icon": "el-icon-menu",
+			"url": "13",
+			"title": "日志管理",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/logServiceComponent/index",
+					"title": "日志管理",
+					"submenus": null
+				}
+			]
+		},
+		{
+			"id": "12",
+			"icon": "el-icon-menu",
+			"url": "10",
+			"title": "示例",
+			"menus": [
+				{
+					"icon": null,
+					"url": "/viewdemo/index",
+					"title": "示例",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/viewdemo/index1",
+					"title": "示例1",
+					"submenus": null
+				},
+				{
+					"icon": null,
+					"url": "/viewdemo/index2",
+					"title": "用户增删改查实例",
+					"submenus": null
+				}
+			]
+		}
+	]
+}

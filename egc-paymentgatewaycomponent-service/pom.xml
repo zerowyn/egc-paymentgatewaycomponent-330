@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.eg.egsc.scp.payment</groupId>
+		<artifactId>egc-paymentgatewaycomponent</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>egc-paymentgatewaycomponent-service</artifactId>
+	<!-- <packaging>war</packaging> -->
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<description>demoservice project for Spring Boot</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.eg.egsc.scp.payment</groupId>
+			<artifactId>egc-paymentgatewaycomponent-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.eg.egsc.scp.payment</groupId>
+			<artifactId>egc-paymentgatewaycomponent-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.eg.egsc.framework</groupId>
+			<artifactId>framework-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<!-- 打包插件，其中repackage、true是专门打spring boot专用包 -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<configuration> <skip>true</skip> </configuration> </plugin> -->
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources/</directory>
+				<excludes>
+					<exclude>env/dev/*</exclude>
+					<exclude>env/dev2/*</exclude>
+					<exclude>env/dev3/*</exclude>
+					<exclude>env/test/*</exclude>
+					<exclude>env/test2/*</exclude>
+					<exclude>env/uat/*</exclude>
+					<exclude>env/prod/*</exclude>
+				</excludes>
+				<includes>
+					<include>messages/*</include>
+					<include>**/*.xml</include>
+					<include>security/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/env/${profiles.active}</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profiles.active>dev</profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>dev2</id>
+			<properties>
+				<profiles.active>dev2</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev3</id>
+			<properties>
+				<profiles.active>dev3</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<profiles.active>test</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>test2</id>
+			<properties>
+				<profiles.active>test2</profiles.active>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>uat</id>
+			<properties>
+				<profiles.active>uat</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<profiles.active>prod</profiles.active>
+			</properties>
+		</profile>
+	</profiles>
+</project>
