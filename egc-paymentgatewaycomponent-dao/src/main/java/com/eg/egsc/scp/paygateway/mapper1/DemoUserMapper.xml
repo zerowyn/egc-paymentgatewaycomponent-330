@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.eg.egsc.scp.paygateway.mapper.DemoRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.eg.egsc.scp.paygateway.mapper.entity.DemoRole" >
+<mapper namespace="com.eg.egsc.scp.paygateway.mapper1.DemoUserMapper" >
+  <resultMap id="BaseResultMap" type="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser" >
     <id column="id" property="id" jdbcType="CHAR" />
-    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
-    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
-    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_desc" property="userDesc" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
@@ -71,16 +71,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, role_code, role_name, role_desc, create_time, update_time, create_user, update_user, 
+    id, user_code, user_name, user_desc, create_time, update_time, create_user, update_user, 
     tenant_id
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRoleCriteria" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from "DEMODB".demo_role
+    from "DEMODB".demo_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -91,43 +91,43 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from "DEMODB".demo_role
+    from "DEMODB".demo_user
     where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from "DEMODB".demo_role
+    delete from "DEMODB".demo_user
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRoleCriteria" >
-    delete from "DEMODB".demo_role
+  <delete id="deleteByExample" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria" >
+    delete from "DEMODB".demo_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRole" >
-    insert into "DEMODB".demo_role (id, role_code, role_name, 
-      role_desc, create_time, update_time, 
+  <insert id="insert" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser" >
+    insert into "DEMODB".demo_user (id, user_code, user_name, 
+      user_desc, create_time, update_time, 
       create_user, update_user, tenant_id
       )
-    values (#{id,jdbcType=CHAR}, #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
-      #{roleDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=CHAR}, #{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRole" >
-    insert into "DEMODB".demo_role
+  <insert id="insertSelective" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser" >
+    insert into "DEMODB".demo_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="roleCode != null" >
-        role_code,
+      <if test="userCode != null" >
+        user_code,
       </if>
-      <if test="roleName != null" >
-        role_name,
+      <if test="userName != null" >
+        user_name,
       </if>
-      <if test="roleDesc != null" >
-        role_desc,
+      <if test="userDesc != null" >
+        user_desc,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -149,14 +149,14 @@
       <if test="id != null" >
         #{id,jdbcType=CHAR},
       </if>
-      <if test="roleCode != null" >
-        #{roleCode,jdbcType=VARCHAR},
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
       </if>
-      <if test="roleName != null" >
-        #{roleName,jdbcType=VARCHAR},
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="roleDesc != null" >
-        #{roleDesc,jdbcType=VARCHAR},
+      <if test="userDesc != null" >
+        #{userDesc,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -175,26 +175,26 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRoleCriteria" resultType="java.lang.Integer" >
-    select count(*) from "DEMODB".demo_role
+  <select id="countByExample" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria" resultType="java.lang.Integer" >
+    select count(*) from "DEMODB".demo_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update "DEMODB".demo_role
+    update "DEMODB".demo_user
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=CHAR},
       </if>
-      <if test="record.roleCode != null" >
-        role_code = #{record.roleCode,jdbcType=VARCHAR},
+      <if test="record.userCode != null" >
+        user_code = #{record.userCode,jdbcType=VARCHAR},
       </if>
-      <if test="record.roleName != null" >
-        role_name = #{record.roleName,jdbcType=VARCHAR},
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
-      <if test="record.roleDesc != null" >
-        role_desc = #{record.roleDesc,jdbcType=VARCHAR},
+      <if test="record.userDesc != null" >
+        user_desc = #{record.userDesc,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -217,11 +217,11 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update "DEMODB".demo_role
+    update "DEMODB".demo_user
     set id = #{record.id,jdbcType=CHAR},
-      role_code = #{record.roleCode,jdbcType=VARCHAR},
-      role_name = #{record.roleName,jdbcType=VARCHAR},
-      role_desc = #{record.roleDesc,jdbcType=VARCHAR},
+      user_code = #{record.userCode,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_desc = #{record.userDesc,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_user = #{record.createUser,jdbcType=VARCHAR},
@@ -231,17 +231,17 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRole" >
-    update "DEMODB".demo_role
+  <update id="updateByPrimaryKeySelective" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser" >
+    update "DEMODB".demo_user
     <set >
-      <if test="roleCode != null" >
-        role_code = #{roleCode,jdbcType=VARCHAR},
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
       </if>
-      <if test="roleName != null" >
-        role_name = #{roleName,jdbcType=VARCHAR},
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="roleDesc != null" >
-        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      <if test="userDesc != null" >
+        user_desc = #{userDesc,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -261,11 +261,11 @@
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRole" >
-    update "DEMODB".demo_role
-    set role_code = #{roleCode,jdbcType=VARCHAR},
-      role_name = #{roleName,jdbcType=VARCHAR},
-      role_desc = #{roleDesc,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser" >
+    update "DEMODB".demo_user
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_desc = #{userDesc,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
@@ -273,13 +273,13 @@
       tenant_id = #{tenantId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-  <select resultMap="BaseResultMap" parameterType="com.eg.egsc.scp.paygateway.mapper.entity.DemoRoleCriteria" id="selectByExampleWithRowbounds" >
+  <select resultMap="BaseResultMap" parameterType="com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria" id="selectByExampleWithRowbounds" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from "DEMODB".demo_role
+    from "DEMODB".demo_user
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -287,4 +287,18 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  <insert id="insertByBatch" parameterType="java.util.List" >
+    insert into "DEMODB".demo_user (id, user_code, user_name, 
+      user_desc, create_time, update_time, 
+      create_user, update_user, tenant_id
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.id,jdbcType=CHAR}, #{item.userCode,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, 
+      #{item.userDesc,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+      #{item.createUser,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.tenantId,jdbcType=VARCHAR}
+      )
+      </foreach>
+  </insert>
 </mapper>

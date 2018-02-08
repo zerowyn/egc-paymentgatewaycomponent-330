@@ -17,7 +17,7 @@ import com.eg.egsc.config.AbstractUnitTestSupport;
 import com.eg.egsc.framework.client.dto.Header;
 import com.eg.egsc.framework.client.dto.RequestDto;
 import com.eg.egsc.scp.paygateway.dto.UserDto;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**

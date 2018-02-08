@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 
 import com.eg.egsc.framework.dao.base.BaseDao;
 import com.eg.egsc.framework.paging.PageUtils;
-import com.eg.egsc.scp.paygateway.mapper.DemoUserMapper;
-import com.eg.egsc.scp.paygateway.mapper.DemoUserRoleMapper;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserCriteria;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserRole;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserRoleCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.DemoUserMapper;
+import com.eg.egsc.scp.paygateway.mapper1.DemoUserRoleMapper;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserRole;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserRoleCriteria;
 
 
 /**

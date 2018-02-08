@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eg.egsc.config.AbstractUnitTestSupport;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 

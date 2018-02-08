@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.eg.egsc.framework.dao.base.BaseDao;
 import com.eg.egsc.scp.paygateway.extmapper.DemoUserExtMapper;
-import com.eg.egsc.scp.paygateway.mapper.DemoUserRoleMapper;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.DemoUserRoleMapper;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 
 /**
  * DemoUserExtDao层提供了各种访问数据库数据方法的类（扩展类）

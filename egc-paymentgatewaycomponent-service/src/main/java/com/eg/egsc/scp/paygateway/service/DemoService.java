@@ -8,8 +8,8 @@ import java.util.List;
 
 
 
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria;
 import com.eg.egsc.scp.paygateway.web.vo.DemoUserPageVo;
 
 

@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eg.egsc.scp.paygateway.dao.DemoUserDao;
 import com.eg.egsc.scp.paygateway.dao.DemoUserExtDao;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserCriteria;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserCriteria.Criteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria.Criteria;
 import com.eg.egsc.scp.paygateway.service.DemoService;
 import com.eg.egsc.scp.paygateway.web.vo.DemoUserPageVo;
 
@@ -44,7 +44,7 @@ public class DemoServiceImpl implements DemoService {
   }
 
   /* (non-Javadoc)
-   * @see com.eg.egsc.scp.demo.service.IDemoService#insert(com.eg.egsc.scp.demo.mapper.entity.DemoUser)
+   * @see com.eg.egsc.scp.demo.service.IDemoService#insert(com.eg.egsc.scp.demo.mapper1.entity.DemoUser)
    */
   @Override
   @Transactional
@@ -53,7 +53,7 @@ public class DemoServiceImpl implements DemoService {
   }
 
   /* (non-Javadoc)
-   * @see com.eg.egsc.scp.demo.service.IDemoService#countByExample(com.eg.egsc.scp.demo.mapper.entity.DemoUserCriteria)
+   * @see com.eg.egsc.scp.demo.service.IDemoService#countByExample(com.eg.egsc.scp.demo.mapper1.entity.DemoUserCriteria)
    */
   @Override
   @Transactional(readOnly = true)
@@ -80,7 +80,7 @@ public class DemoServiceImpl implements DemoService {
   }
 
   /* (non-Javadoc)
-   * @see com.eg.egsc.scp.demo.service.IDemoService#updateByPrimaryKey(com.eg.egsc.scp.demo.mapper.entity.DemoUser)
+   * @see com.eg.egsc.scp.demo.service.IDemoService#updateByPrimaryKey(com.eg.egsc.scp.demo.mapper1.entity.DemoUser)
    */
   @Override
   @Transactional
@@ -98,7 +98,7 @@ public class DemoServiceImpl implements DemoService {
   }
 
   /* (non-Javadoc)
-   * @see com.eg.egsc.scp.demo.service.IDemoService#queryOnePageDataByCondition(java.lang.Integer, java.lang.Integer, com.eg.egsc.scp.demo.mapper.entity.DemoUser)
+   * @see com.eg.egsc.scp.demo.service.IDemoService#queryOnePageDataByCondition(java.lang.Integer, java.lang.Integer, com.eg.egsc.scp.demo.mapper1.entity.DemoUser)
    */
   @Override
   @Transactional
@@ -146,7 +146,7 @@ public class DemoServiceImpl implements DemoService {
   }
   
   /* (non-Javadoc)
-   * @see com.eg.egsc.scp.demo.service.IDemoService#insert(com.eg.egsc.scp.demo.mapper.entity.DemoUser)
+   * @see com.eg.egsc.scp.demo.service.IDemoService#insert(com.eg.egsc.scp.demo.mapper1.entity.DemoUser)
    */
   @Override
   @Transactional

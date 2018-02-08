@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eg.egsc.common.component.utils.JsonUtil;
 import com.eg.egsc.config.AbstractUnitTestSupport;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserCriteria;
 import com.eg.egsc.scp.paygateway.service.impl.DemoServiceImpl;
 
 /**

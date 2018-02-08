@@ -1,7 +1,7 @@
 /**
  * Copyright 2017-2025 Evergrande Group.
  */
-package com.eg.egsc.scp.paygateway.mapper.entity;
+package com.eg.egsc.scp.paygateway.mapper1.entity;
 
 import java.util.Date;
 
