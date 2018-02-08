@@ -1,10 +1,10 @@
 /**
  * Copyright 2017-2025 Evergrande Group.
  */
-package com.eg.egsc.scp.paygateway.mapper;
+package com.eg.egsc.scp.paygateway.mapper1;
 
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserRole;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUserRoleCriteria;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserRole;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUserRoleCriteria;
 
 import java.util.List;
 

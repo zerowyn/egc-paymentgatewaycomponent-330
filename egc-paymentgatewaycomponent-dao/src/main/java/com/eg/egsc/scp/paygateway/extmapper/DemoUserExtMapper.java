@@ -5,8 +5,8 @@ package com.eg.egsc.scp.paygateway.extmapper;
 
 import java.util.List;
 
-import com.eg.egsc.scp.paygateway.mapper.DemoUserMapper;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.DemoUserMapper;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 
 /**
  * 扩展的Mapper类（要继承原有的Mapper）

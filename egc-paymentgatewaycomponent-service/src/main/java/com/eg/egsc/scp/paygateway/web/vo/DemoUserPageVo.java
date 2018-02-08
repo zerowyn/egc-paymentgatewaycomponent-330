@@ -5,7 +5,7 @@ package com.eg.egsc.scp.paygateway.web.vo;
 
 import java.util.List;
 
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 
 /**
  * 分页定义的VO

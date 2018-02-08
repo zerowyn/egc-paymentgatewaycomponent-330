@@ -20,7 +20,7 @@ import com.eg.egsc.common.component.auth.model.User;
 import com.eg.egsc.common.component.auth.web.SecurityContext;
 import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.framework.service.base.web.BaseWebController;
-import com.eg.egsc.scp.paygateway.mapper.entity.DemoUser;
+import com.eg.egsc.scp.paygateway.mapper1.entity.DemoUser;
 import com.eg.egsc.scp.paygateway.exception.DemoException;
 import com.eg.egsc.scp.paygateway.service.DemoService;
 import com.eg.egsc.scp.paygateway.util.ErrorCodeConstant;
