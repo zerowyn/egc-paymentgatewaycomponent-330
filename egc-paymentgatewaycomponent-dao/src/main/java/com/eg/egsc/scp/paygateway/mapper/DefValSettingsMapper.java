@@ -3,11 +3,12 @@
  */
 package com.eg.egsc.scp.paygateway.mapper;
 
-import com.eg.egsc.scp.demo.mapper.entity.DefValSettings;
-import com.eg.egsc.scp.demo.mapper.entity.DefValSettingsCriteria;
-import java.util.List;
+import com.eg.egsc.scp.paygateway.mapper.entity.DefValSettings;
+import com.eg.egsc.scp.paygateway.mapper.entity.DefValSettingsCriteria;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface DefValSettingsMapper {
     int countByExample(DefValSettingsCriteria example);

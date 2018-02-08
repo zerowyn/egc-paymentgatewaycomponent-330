@@ -3,11 +3,13 @@
  */
 package com.eg.egsc.scp.paygateway.mapper;
 
-import com.eg.egsc.scp.demo.mapper.entity.Configs;
-import com.eg.egsc.scp.demo.mapper.entity.ConfigsCriteria;
-import java.util.List;
+
+import com.eg.egsc.scp.paygateway.mapper.entity.Configs;
+import com.eg.egsc.scp.paygateway.mapper.entity.ConfigsCriteria;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface ConfigsMapper {
     int countByExample(ConfigsCriteria example);

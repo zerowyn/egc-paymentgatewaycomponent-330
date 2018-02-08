@@ -3,11 +3,13 @@
  */
 package com.eg.egsc.scp.paygateway.mapper;
 
-import com.eg.egsc.scp.demo.mapper.entity.CodeMapTypes;
-import com.eg.egsc.scp.demo.mapper.entity.CodeMapTypesCriteria;
-import java.util.List;
+
+import com.eg.egsc.scp.paygateway.mapper.entity.CodeMapTypes;
+import com.eg.egsc.scp.paygateway.mapper.entity.CodeMapTypesCriteria;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface CodeMapTypesMapper {
     int countByExample(CodeMapTypesCriteria example);
