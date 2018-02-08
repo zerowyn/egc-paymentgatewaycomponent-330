@@ -8,12 +8,14 @@
 package com.eg.egsc.scp.paygateway.service.model;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.stereotype.Component;
 
 /**
  * @Class Name OrderQueryRequestForWeiXin
  * @Author caiqinli
  * @Create In 2018年2月5日
  */
+@Component
 public class OrderQueryRequestForWeiXin {
   
   /**

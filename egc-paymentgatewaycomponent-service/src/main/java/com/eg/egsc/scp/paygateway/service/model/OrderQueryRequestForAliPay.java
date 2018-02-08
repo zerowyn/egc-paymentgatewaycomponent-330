@@ -7,11 +7,14 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @Class Name OrderQueryRequestForAliPay
  * @Author caiqinli
  * @Create In 2018年2月5日
  */
+@Component
 public class OrderQueryRequestForAliPay {
   
   /**

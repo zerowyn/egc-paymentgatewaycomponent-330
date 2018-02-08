@@ -22,8 +22,8 @@ import com.eg.egsc.framework.client.dto.RequestDto;
 import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.framework.service.base.api.BaseApiController;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
+import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForBackendSystem;
 
 /**
  * @Class Name OrderQueryApi
@@ -42,7 +42,7 @@ public class OrderQueryApi  extends BaseApiController {
   private OrderQueryRequestForBackendDto orderQueryRequestForBackendDto;
   
   @Autowired
-  private OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem;
+  private OrderQueryResponseForBackendDto orderQueryResponseForBackendDto;
   
   protected final Logger logger = LoggerFactory.getLogger(OrderQueryApi.class);
   
@@ -55,16 +55,18 @@ public class OrderQueryApi  extends BaseApiController {
    @RequestMapping(value = "/orderquery", method = RequestMethod.POST)
    public ResponseDto orderQuery(@RequestBody RequestDto<OrderQueryRequestForBackendDto> req) {
      ResponseDto result = new ResponseDto();
-     try {
-       orderQueryRequestForBackendDto = req.getData();
-       orderQueryRequestForBackendSystem.setPlatform(orderQueryRequestForBackendDto.getPlatform());
-       orderQueryRequestForBackendSystem.setAppid(orderQueryRequestForBackendDto.getAppid());
-       orderQueryRequestForBackendSystem.setMch_id(orderQueryRequestForBackendDto.getMch_id());
-       orderQueryRequestForBackendSystem.setOut_trade_no(orderQueryRequestForBackendDto.getOut_trade_no());
-       orderQueryRequestForBackendSystem.setTransaction_id(orderQueryRequestForBackendDto.getTransaction_id());
-       
-       String message = orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendSystem);    
-       result.setMessage(message);     
+     try {       
+       orderQueryResponseForBackendDto = orderQueryServiceImpl.orderQueryRequestFromBackendSystme(req.getData());
+       String message = "";
+       if(orderQueryResponseForBackendDto == null){
+         message = "程序异常,返回数据对象为空。";
+         logger.error(message);
+         result.setMessage(message);
+       }else{
+         message = "返回数据正常。";
+         result.setMessage(message);
+       }       
+       result.setData(orderQueryResponseForBackendDto);
      } catch (Exception e) {
        logger.error(e.getMessage());
        result.setMessage("支付网关：支付订单查询出现异常！");

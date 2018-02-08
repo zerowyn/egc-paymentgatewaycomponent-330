@@ -7,14 +7,12 @@
  */
 package com.eg.egsc.scp.paygateway.service;
 
-import org.springframework.stereotype.Service;
 
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
+import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForAliPay;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForBackendSystem;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForWeiXin;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForAliPay;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForBackendSystem;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForWeiXin;
 
 
@@ -34,7 +32,7 @@ public interface OrderQueryService {
    * @return OrderQueryRequestForWeiXin 返回给微信的请求数据对象
    */
   public OrderQueryRequestForWeiXin transferBackendMessageForWeiXin(
-      OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem);
+      OrderQueryRequestForBackendDto orderQueryRequestForBackendDto);
   
   /**
    * 接收缴费后台请求，转换为数据格式
@@ -42,14 +40,14 @@ public interface OrderQueryService {
    * @return OrderQueryRequestForAliPay 返回给支付宝的请求数据对象
    */
   public OrderQueryRequestForAliPay transferBackendMessageForAliPay(
-      OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem);
+      OrderQueryRequestForBackendDto orderQueryRequestForBackendDto);
   
   /**
    * 接收微信返回数据，转换为数据格式
    * @param OrderQueryResponseForWeiXin 微信接口返回的数据对象
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
-  public OrderQueryResponseForBackendSystem transferWeiXinMessageForBackendSystme(
+  public OrderQueryResponseForBackendDto transferWeiXinMessageForBackendSystme(
       OrderQueryResponseForWeiXin orderQueryResponseForWeiXin);
   
   /**
@@ -57,7 +55,7 @@ public interface OrderQueryService {
    * @param OrderQueryResponseForAliPay 支付宝接口返回的数据对象
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
-  public OrderQueryResponseForBackendSystem transferWeiXinMessageForBackendSystme(
+  public OrderQueryResponseForBackendDto transferAliPayMessageForBackendSystme(
       OrderQueryResponseForAliPay orderQueryResponseForAliPay);
   
   /**
@@ -66,7 +64,7 @@ public interface OrderQueryService {
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
 
-  public String orderQueryRequestFromBackendSystme(OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem);
+  public OrderQueryResponseForBackendDto orderQueryRequestFromBackendSystme(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto);
    
   
 

@@ -5,16 +5,18 @@
  * @Create In 2018年2月5日 下午5:30:57
  * TODO
  */
-package com.eg.egsc.scp.paygateway.service.model;
+package com.eg.egsc.scp.paygateway.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.stereotype.Component;
 
 /**
  * @Class Name OrderQueryResponseForBackendSystem
  * @Author caiqinli
  * @Create In 2018年2月5日
  */
-public class OrderQueryResponseForBackendSystem {
+@Component
+public class OrderQueryResponseForBackendDto {
   
   /**
    * 指定请求的目标平台-‘WEIXIN’或‘ALIPAY’，必填

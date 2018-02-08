@@ -10,15 +10,18 @@ package com.eg.egsc.scp.paygateway.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+
+
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
+import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForAliPay;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForBackendSystem;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForWeiXin;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForAliPay;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForBackendSystem;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForWeiXin;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 
@@ -31,6 +34,16 @@ import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 public class OrderQueryServiceImpl implements OrderQueryService {
 
   protected final Logger logger = LoggerFactory.getLogger(OrderQueryServiceImpl.class);
+  
+  @Autowired
+  private OrderQueryRequestForWeiXin orderQueryRequestForWeiXin;
+  
+  @Autowired
+  private OrderQueryResponseForBackendDto orderQueryResponseForBackendDto;
+  
+  @Autowired
+  private OrderQueryResponseForWeiXin orderQueryResponseForWeiXin;
+  
   /**
    * 接收缴费后台请求，转换为数据格式
    * @param OrderQueryRequestForBackendSystem 缴费后台提交的请求数据对象
@@ -38,10 +51,16 @@ public class OrderQueryServiceImpl implements OrderQueryService {
    */
   @Override
   public OrderQueryRequestForWeiXin transferBackendMessageForWeiXin(
-      OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem){
+      OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
-    OrderQueryRequestForWeiXin requestForWeiXin = new OrderQueryRequestForWeiXin();
-    return requestForWeiXin;
+    orderQueryRequestForWeiXin.setAppid(orderQueryRequestForBackendDto.getAppid());
+    orderQueryRequestForWeiXin.setMch_id(orderQueryRequestForBackendDto.getMch_id());
+    orderQueryRequestForWeiXin.setTransaction_id(orderQueryRequestForBackendDto.getTransaction_id());
+    orderQueryRequestForWeiXin.setOut_trade_no(orderQueryRequestForBackendDto.getOut_trade_no());
+    orderQueryRequestForWeiXin.setNonce_str(getNonce_str());
+    orderQueryRequestForWeiXin.setSign(getSign());
+  
+    return orderQueryRequestForWeiXin;
     
   }
   
@@ -52,7 +71,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
    */
   @Override
   public OrderQueryRequestForAliPay transferBackendMessageForAliPay(
-      OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem){
+      OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
     OrderQueryRequestForAliPay requestForAliPay = new OrderQueryRequestForAliPay();
     return requestForAliPay;        
@@ -64,10 +83,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
   @Override
-  public OrderQueryResponseForBackendSystem transferWeiXinMessageForBackendSystme(
+  public OrderQueryResponseForBackendDto transferWeiXinMessageForBackendSystme(
       OrderQueryResponseForWeiXin orderQueryResponseForWeiXin){
     
-    OrderQueryResponseForBackendSystem responseForBackendSystem = new OrderQueryResponseForBackendSystem();
+    OrderQueryResponseForBackendDto responseForBackendSystem = new OrderQueryResponseForBackendDto();
     return responseForBackendSystem;        
   }
   
@@ -77,10 +96,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
   @Override
-  public OrderQueryResponseForBackendSystem transferWeiXinMessageForBackendSystme(
+  public OrderQueryResponseForBackendDto transferAliPayMessageForBackendSystme(
       OrderQueryResponseForAliPay orderQueryResponseForAliPay){
     
-    OrderQueryResponseForBackendSystem responseForBackendSystem = new OrderQueryResponseForBackendSystem();
+    OrderQueryResponseForBackendDto responseForBackendSystem = new OrderQueryResponseForBackendDto();
     return responseForBackendSystem;
     
   }
@@ -91,25 +110,40 @@ public class OrderQueryServiceImpl implements OrderQueryService {
    * @return OrderQueryResponseForBackendSystem 返回给缴费后台的数据对象
    */
   @Override
-  public String orderQueryRequestFromBackendSystme(OrderQueryRequestForBackendSystem orderQueryRequestForBackendSystem){
+  public OrderQueryResponseForBackendDto orderQueryRequestFromBackendSystme(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
-    if(orderQueryRequestForBackendSystem == null){
+    if(orderQueryRequestForBackendDto == null){
       String errorMeg = "Dto from backend system request for order query is null!";
       logger.error(errorMeg);
-      return errorMeg;
+      return null;
     }
     //for wechat
-    if(PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(orderQueryRequestForBackendSystem.getPlatform())){
+    if(PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(orderQueryRequestForBackendDto.getPlatform())){      
+      orderQueryRequestForWeiXin = transferBackendMessageForWeiXin(orderQueryRequestForBackendDto);
+      
+      //send the data to ngix and call wechat api to query order 
+      
+      //transfer the wechat retrun data to payment backend system
+      orderQueryResponseForBackendDto = transferWeiXinMessageForBackendSystme(orderQueryResponseForWeiXin);
       
       
     }
     //for alipay
-    if(PaymentBusinessConstant.ALI_PAY.equalsIgnoreCase(orderQueryRequestForBackendSystem.getPlatform())){
+    else if(PaymentBusinessConstant.ALI_PAY.equalsIgnoreCase(orderQueryRequestForBackendDto.getPlatform())){
       
     }
+   
+    return orderQueryResponseForBackendDto;    
+  }
+  
+  private String getNonce_str(){
     
+    return "getNonce_strgetNonce_strgetNonce_str";
+  }
+  
+  private String getSign(){
     
-    return "To Be implement";    
+    return "getSign";
   }
 
 
