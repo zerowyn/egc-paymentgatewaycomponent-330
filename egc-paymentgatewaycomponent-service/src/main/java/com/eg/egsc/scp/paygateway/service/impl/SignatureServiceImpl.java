@@ -44,7 +44,7 @@ public class SignatureServiceImpl implements SignatureService {
 
     private static final String SIGN_TYPE = "sign_type";
 
-    private static byte[] base64Alphabet = new byte[255];
+    private static final String SIGN = "sign";
 
     /**
      * 接收请求数据，按照微信提供的协议进行签名
@@ -53,7 +53,7 @@ public class SignatureServiceImpl implements SignatureService {
      * @return sign
      */
     @Override
-    public String WeixinSignature(Map requestParamsMap) {
+    public String weixinSignature(Map requestParamsMap) {
         String sign = null;
 
         if (requestParamsMap == null) {
@@ -77,8 +77,33 @@ public class SignatureServiceImpl implements SignatureService {
         return sign;
     }
 
+    /**
+     * 接收返回数据，验证微信签名是否正确
+     *
+     * @param responseParamsMap
+     * @return
+     */
     @Override
-    public String AlipaySignature(Map requestParamsMap) {
+    public boolean weixinSigantureCheck(Map responseParamsMap) {
+        String sign = (String) responseParamsMap.get(SIGN);
+        if (StringUtils.isEmpty(sign)) {
+            String errorMeg = "sign is empty";
+            logger.error(errorMeg);
+            return false;
+        }
+        responseParamsMap.remove(SIGN);
+        String signCheck = weixinSignature(responseParamsMap);
+        return sign.equals(signCheck);
+    }
+
+    /**
+     * 接收请求数据，按照支付宝提供的协议进行签名
+     *
+     * @param requestParamsMap
+     * @return
+     */
+    @Override
+    public String alipaySignature(Map requestParamsMap) {
         String sign = null;
 
         if (requestParamsMap == null) {
@@ -89,7 +114,7 @@ public class SignatureServiceImpl implements SignatureService {
 
         StringBuffer content = getSignContent(requestParamsMap);
         String signType = (String) requestParamsMap.get(SIGN_TYPE);
-        if(StringUtils.isEmpty(signType)) {
+        if (StringUtils.isEmpty(signType)) {
             String errorMeg = "sign_type is null";
             logger.error(errorMeg);
             return sign;
@@ -104,6 +129,19 @@ public class SignatureServiceImpl implements SignatureService {
         }
 
         return sign;
+    }
+
+    @Override
+    public boolean alipaySigantureCheck(Map responseParamsMap) {
+        String sign = (String) responseParamsMap.get(SIGN);
+        if (StringUtils.isEmpty(sign)) {
+            String errorMeg = "sign is empty";
+            logger.error(errorMeg);
+            return false;
+        }
+        responseParamsMap.remove(SIGN);
+        String signCheck = alipaySignature(responseParamsMap);
+        return sign.equals(signCheck);
     }
 
     /**
@@ -247,15 +285,7 @@ public class SignatureServiceImpl implements SignatureService {
         return null;
     }
 
-    @Override
-    public boolean WeixinSigantureCheck(Map responseMap) {
-        return false;
-    }
 
-    @Override
-    public boolean AlipaySigantureCheck(Map responseMap) {
-        return false;
-    }
 
 
 }
