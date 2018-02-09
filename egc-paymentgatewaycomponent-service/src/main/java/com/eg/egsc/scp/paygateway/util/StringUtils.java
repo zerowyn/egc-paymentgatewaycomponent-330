@@ -12,7 +12,7 @@ import java.util.UUID;
 public class StringUtils {
 
     /**
-     * 随机生成uuid
+     * 生成随机uuid
      *
      * @return 返回生成的uuid
      */
@@ -21,5 +21,34 @@ public class StringUtils {
         return uuid.replaceAll("-", "");
     }
 
+    /**
+     * 生成随机字符串
+     *
+     * @return
+     */
+    public static String generateRandomString() {
+        return generateUuid();
+    }
+
+    /**
+     * 判断字符串是否为空
+     *
+     * @param value
+     * @return
+     */
+    public static boolean isEmpty(String value) {
+        int strLen;
+        if (value != null && (strLen = value.length()) != 0) {
+            for (int i = 0; i < strLen; ++i) {
+                if (!Character.isWhitespace(value.charAt(i))) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return true;
+        }
+    }
 
 }
