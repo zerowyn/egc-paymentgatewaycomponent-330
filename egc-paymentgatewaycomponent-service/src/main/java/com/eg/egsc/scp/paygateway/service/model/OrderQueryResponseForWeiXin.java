@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
  * @Create In 2018年2月5日
  */
 @Component
+@XmlRootElement(name="xml")
 public class OrderQueryResponseForWeiXin {
   
   
@@ -113,13 +116,25 @@ public class OrderQueryResponseForWeiXin {
    * 订单总金额，单位为分
    * 
    */
-  private int total_fee;
+  private Integer total_fee;
   
   /**
    * 现金支付金额订单现金支付金额
    * 
    */
-  private String cash_fee;
+  private Integer cash_fee;
+  
+  /**
+   * 应结订单金额： 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
+   * 
+   */
+  private Integer settlement_total_fee;
+  
+  /**
+   * 代金券金额：“代金券或立减优惠”金额<=订单总金额，订单总金额-“代金券或立减优惠”金额=现金支付金额
+   * 
+   */
+  private Integer coupon_fee;
   
   /**
    * 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY
@@ -127,17 +142,7 @@ public class OrderQueryResponseForWeiXin {
    */
   private String cash_fee_type;
   
-  /**
-   * 应结订单金额： 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
-   * 
-   */
-  private String settlement_total_fee;
-  
-  /**
-   * 代金券金额：“代金券或立减优惠”金额<=订单总金额，订单总金额-“代金券或立减优惠”金额=现金支付金额
-   * 
-   */
-  private String coupon_fee;
+
   
   /**
    * 代金券或立减优惠使用数量
@@ -398,34 +403,6 @@ public class OrderQueryResponseForWeiXin {
   }
 
   /**
-   * @Return the int total_fee
-   */
-  public int getTotal_fee() {
-    return total_fee;
-  }
-
-  /**
-   * @Param int total_fee to set
-   */
-  public void setTotal_fee(int total_fee) {
-    this.total_fee = total_fee;
-  }
-
-  /**
-   * @Return the String cash_fee
-   */
-  public String getCash_fee() {
-    return cash_fee;
-  }
-
-  /**
-   * @Param String cash_fee to set
-   */
-  public void setCash_fee(String cash_fee) {
-    this.cash_fee = cash_fee;
-  }
-
-  /**
    * @Return the String cash_fee_type
    */
   public String getCash_fee_type() {
@@ -439,33 +416,7 @@ public class OrderQueryResponseForWeiXin {
     this.cash_fee_type = cash_fee_type;
   }
 
-  /**
-   * @Return the String settlement_total_fee
-   */
-  public String getSettlement_total_fee() {
-    return settlement_total_fee;
-  }
 
-  /**
-   * @Param String settlement_total_fee to set
-   */
-  public void setSettlement_total_fee(String settlement_total_fee) {
-    this.settlement_total_fee = settlement_total_fee;
-  }
-
-  /**
-   * @Return the String coupon_fee
-   */
-  public String getCoupon_fee() {
-    return coupon_fee;
-  }
-
-  /**
-   * @Param String coupon_fee to set
-   */
-  public void setCoupon_fee(String coupon_fee) {
-    this.coupon_fee = coupon_fee;
-  }
 
   /**
    * @Return the String coupon_count
@@ -620,5 +571,62 @@ public class OrderQueryResponseForWeiXin {
   public void setSign(String sign) {
     this.sign = sign;
   }
+
+  /**
+   * @Return the Integer cash_fee
+   */
+  public Integer getCash_fee() {
+    return cash_fee;
+  }
+
+  /**
+   * @Param Integer cash_fee to set
+   */
+  public void setCash_fee(Integer cash_fee) {
+    this.cash_fee = cash_fee;
+  }
+
+  /**
+   * @Return the Integer settlement_total_fee
+   */
+  public Integer getSettlement_total_fee() {
+    return settlement_total_fee;
+  }
+
+  /**
+   * @Param Integer settlement_total_fee to set
+   */
+  public void setSettlement_total_fee(Integer settlement_total_fee) {
+    this.settlement_total_fee = settlement_total_fee;
+  }
+
+  /**
+   * @Return the Integer coupon_fee
+   */
+  public Integer getCoupon_fee() {
+    return coupon_fee;
+  }
+
+  /**
+   * @Param Integer coupon_fee to set
+   */
+  public void setCoupon_fee(Integer coupon_fee) {
+    this.coupon_fee = coupon_fee;
+  }
+
+  /**
+   * @Return the Integer total_fee
+   */
+  public Integer getTotal_fee() {
+    return total_fee;
+  }
+
+  /**
+   * @Param Integer total_fee to set
+   */
+  public void setTotal_fee(Integer total_fee) {
+    this.total_fee = total_fee;
+  }
+
 
 }

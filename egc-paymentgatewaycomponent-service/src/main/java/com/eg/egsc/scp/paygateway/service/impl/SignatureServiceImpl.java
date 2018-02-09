@@ -6,11 +6,14 @@ package com.eg.egsc.scp.paygateway.service.impl;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.util.Base64Utils;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
@@ -22,6 +25,7 @@ import java.util.*;
  * @author gucunyang
  * @since 2018-02-08
  */
+@Service
 public class SignatureServiceImpl implements SignatureService {
 
     protected final Logger logger = LoggerFactory.getLogger(SignatureServiceImpl.class);

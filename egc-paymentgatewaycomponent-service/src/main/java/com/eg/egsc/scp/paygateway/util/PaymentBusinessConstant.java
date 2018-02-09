@@ -20,5 +20,6 @@ public class PaymentBusinessConstant {
   
   public static final String WEI_XIN = "WEIXIN";
   public static final String ALI_PAY = "ALIPAY";
+  
 
 }
