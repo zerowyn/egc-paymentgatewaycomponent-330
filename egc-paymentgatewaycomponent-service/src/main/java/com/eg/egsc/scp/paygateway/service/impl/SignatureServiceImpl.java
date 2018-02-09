@@ -247,8 +247,8 @@ public class SignatureServiceImpl implements SignatureService {
 
         int index = 0;
         for (int i = 0; i < keys.size(); i++) {
-            String key = (String) keys.get(i);
-            String value = (String) requestParamsMap.get(key);
+            String key = keys.get(i);
+            String value = requestParamsMap.get(key).toString();
             content.append((index == 0 ? "" : "&") + key + "=" + value);
             ++index;
         }
@@ -284,8 +284,6 @@ public class SignatureServiceImpl implements SignatureService {
         }
         return null;
     }
-
-
 
 
 }
