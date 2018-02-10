@@ -253,7 +253,9 @@ public class SignatureServiceImpl implements SignatureService {
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
             String value = requestParamsMap.get(key).toString();
-            content.append((index == 0 ? "" : "&") + key + "=" + value);
+            if (!StringUtils.isEmpty(value)) {
+                content.append((index == 0 ? "" : "&") + key + "=" + value);
+            }
             ++index;
         }
         return content;
