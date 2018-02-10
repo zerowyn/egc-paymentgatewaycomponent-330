@@ -16,7 +16,7 @@ public interface SignatureService {
      * @param requestParamsMap 请求数据
      * @return sign 返回签名sign
      */
-    public String weixinSignature(Map requestParamsMap);
+    String weixinSignature(Map requestParamsMap);
 
     /**
      * 接收返回数据，验证微信签名是否正确
@@ -24,7 +24,7 @@ public interface SignatureService {
      * @param requestParamsMap
      * @return
      */
-    public boolean weixinSigantureCheck(Map requestParamsMap);
+    boolean weixinSigantureCheck(Map requestParamsMap);
 
     /**
      * 接收请求数据，按照支付宝提供的协议进行签名
@@ -32,7 +32,7 @@ public interface SignatureService {
      * @param requestParamsMap
      * @return
      */
-    public String alipaySignature(Map requestParamsMap);
+    String alipaySignature(Map requestParamsMap);
 
     /**
      * 接收返回数据，验证支付宝签名是否正确
@@ -40,6 +40,6 @@ public interface SignatureService {
      * @param requestParamsMap
      * @return
      */
-    public boolean alipaySigantureCheck(Map requestParamsMap);
+    boolean alipaySigantureCheck(Map requestParamsMap);
 
 }
