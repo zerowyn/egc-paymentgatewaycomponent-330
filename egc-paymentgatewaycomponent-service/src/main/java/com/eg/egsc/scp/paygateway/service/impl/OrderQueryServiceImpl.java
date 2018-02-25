@@ -10,6 +10,10 @@ package com.eg.egsc.scp.paygateway.service.impl;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -26,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 
@@ -55,14 +60,14 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
   protected final Logger logger = LoggerFactory.getLogger(OrderQueryServiceImpl.class);
   
-  @Autowired
-  private OrderQueryRequestForWeiXin orderQueryRequestForWeiXin;
+//  @Autowired
+//  private OrderQueryRequestForWeiXin orderQueryRequestForWeiXin;
   
-  @Autowired
-  private OrderQueryResponseForBackendDto orderQueryResponseForBackendDto;
+//  @Autowired
+//  private OrderQueryResponseForBackendDto orderQueryResponseForBackendDto;
   
-  @Autowired
-  private OrderQueryResponseForWeiXin orderQueryResponseForWeiXin;
+//  @Autowired
+//  private OrderQueryResponseForWeiXin orderQueryResponseForWeiXin;
   
   @Autowired
   SignatureService signatureServiceImpl;
@@ -73,6 +78,24 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   @Value("${payment.third.party.alipay.order.query.uri}")
   private String aliPayOrderQueryUri;
   
+  @Value("${xml.customized.header}")
+  private String xmlCustomizedHeader; 
+  
+  @Value("${payment.error.message.confirm.sign.not.pass}")
+  private String confirmSignNotPassMessage; 
+  
+  @Value("${payment.error.message.request.platform.out.of.scope}")
+  private String requestPlatformOutOfScopeMessage; 
+  
+  @Value("${payment.error.message.request.data.is.null}")
+  private String requestDataIsNullMessage; 
+  
+  @Value("${payment.third.party.alipay.sign.type}")
+  private String aliPaySignType; 
+  
+  @Value("${payment.third.party.alipay.order.query.uri.method}")
+  private String aliPayOrderQueryMethod;
+  
   /**
    * 接收缴费后台请求，转换为数据格式
    * @param OrderQueryRequestForBackendSystem 缴费后台提交的请求数据对象
@@ -82,10 +105,16 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   public OrderQueryRequestForWeiXin transferBackendMessageForWeiXin(
       OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
+    OrderQueryRequestForWeiXin orderQueryRequestForWeiXin = new OrderQueryRequestForWeiXin();    
+        
     orderQueryRequestForWeiXin.setAppid(orderQueryRequestForBackendDto.getAppid());
     orderQueryRequestForWeiXin.setMch_id(orderQueryRequestForBackendDto.getMch_id());
-    orderQueryRequestForWeiXin.setTransaction_id(orderQueryRequestForBackendDto.getTransaction_id());
-    orderQueryRequestForWeiXin.setOut_trade_no(orderQueryRequestForBackendDto.getOut_trade_no());
+    if(orderQueryRequestForBackendDto.getTransaction_id() == null 
+        || "".equals(orderQueryRequestForBackendDto.getTransaction_id().trim())){
+      orderQueryRequestForWeiXin.setOut_trade_no(orderQueryRequestForBackendDto.getOut_trade_no());
+    }else{
+      orderQueryRequestForWeiXin.setTransaction_id(orderQueryRequestForBackendDto.getTransaction_id());
+    }    
     orderQueryRequestForWeiXin.setNonce_str(getNonce_str());
     orderQueryRequestForWeiXin.setSign(getSign(orderQueryRequestForWeiXin));
   
@@ -103,8 +132,26 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
     OrderQueryRequestForAliPay requestForAliPay = new OrderQueryRequestForAliPay();
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    String timestampForAliPay = df.format(now);
+    String biz_content = ""
+        + "{\"out_trade_no\":\""+orderQueryRequestForBackendDto.getOut_trade_no()+"\","
+            + "\"trade_no\":\""+orderQueryRequestForBackendDto.getTransaction_id()+"\"}";    
+    System.out.println("===biz_content: "+biz_content);
+    
+    requestForAliPay.setApp_id(orderQueryRequestForBackendDto.getAppid());
+    requestForAliPay.setMethod(aliPayOrderQueryMethod);    
+    requestForAliPay.setCharset("utf-8");
+    requestForAliPay.setSign_type(aliPaySignType);
+    requestForAliPay.setTimestamp(timestampForAliPay);
+    requestForAliPay.setVersion("1.0");
+    requestForAliPay.setBiz_content(biz_content);
+    requestForAliPay.setSign(getSign(requestForAliPay));    
+    
     return requestForAliPay;        
   }
+  
   
   /**
    * 接收微信返回数据，转换为数据格式
@@ -115,6 +162,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   public OrderQueryResponseForBackendDto transferWeiXinMessageForBackendSystme(
       OrderQueryResponseForWeiXin orderQueryResponseForWeiXin){
     
+    OrderQueryResponseForBackendDto orderQueryResponseForBackendDto = new OrderQueryResponseForBackendDto();
     orderQueryResponseForBackendDto.setPlatform(PaymentBusinessConstant.WEI_XIN);
     orderQueryResponseForBackendDto.setAppid(orderQueryResponseForWeiXin.getAppid());
     orderQueryResponseForBackendDto.setMch_id(orderQueryResponseForWeiXin.getMch_id());
@@ -141,12 +189,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     orderQueryResponseForBackendDto.setSettlement_total_fee(orderQueryResponseForWeiXin.getSettlement_total_fee());
     orderQueryResponseForBackendDto.setTime_end(orderQueryResponseForWeiXin.getTime_end());
     orderQueryResponseForBackendDto.setTotal_fee(orderQueryResponseForWeiXin.getTotal_fee());
+    orderQueryResponseForBackendDto.setFee_type(orderQueryResponseForWeiXin.getFee_type());
+    
     orderQueryResponseForBackendDto.setTrade_state(orderQueryResponseForWeiXin.getTrade_state());
     orderQueryResponseForBackendDto.setTrade_state_desc(orderQueryResponseForWeiXin.getTrade_state_desc());
     orderQueryResponseForBackendDto.setTrade_type(orderQueryResponseForWeiXin.getTrade_type());
     
     return orderQueryResponseForBackendDto;        
   }
+  
   
   /**
    * 接收微信返回数据，转换为数据格式
@@ -171,15 +222,19 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   public OrderQueryResponseForBackendDto orderQueryRequestFromBackendSystme(
       OrderQueryRequestForBackendDto orderQueryRequestForBackendDto){
     
+    OrderQueryResponseForBackendDto orderQueryResponseForBackendDto = new OrderQueryResponseForBackendDto();
+    
     if(orderQueryRequestForBackendDto == null){
       String errorMeg = "Dto from backend system request for order query is null!";
       logger.error(errorMeg);
-      return null;
+      orderQueryResponseForBackendDto.setErr_code_des(requestDataIsNullMessage);
+      return orderQueryResponseForBackendDto;
     }
+    
     //for wechat
     if(PaymentBusinessConstant.WEI_XIN
         .equalsIgnoreCase(orderQueryRequestForBackendDto.getPlatform())){      
-      orderQueryRequestForWeiXin = 
+      OrderQueryRequestForWeiXin orderQueryRequestForWeiXin = 
           transferBackendMessageForWeiXin(orderQueryRequestForBackendDto);
       
       String requestXmlString = 
@@ -191,28 +246,31 @@ public class OrderQueryServiceImpl implements OrderQueryService {
             callThirdPartyOrderQueryApi(
                 orderQueryRequestForBackendDto.getPlatform(),requestXmlString);
         
-        String messageFromWeiXin = responseEntiryFromWeiXin.getBody();
-       
-        logger.debug("=====messageFromWeiXin====================> "+messageFromWeiXin);
+        String responseMessageFromWeiXin = responseEntiryFromWeiXin.getBody();       
+        logger.debug("=====responseMessageFromWeiXin====================> "+responseMessageFromWeiXin);
         
-        StringReader sr = new StringReader(messageFromWeiXin);
-        JAXBContext jaxbContext = JAXBContext.newInstance(OrderQueryResponseForWeiXin.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        orderQueryResponseForWeiXin = (OrderQueryResponseForWeiXin) unmarshaller.unmarshal(sr);
+        Map<String,Object> responseMap = StringUtils.transferXMLtoMap(responseMessageFromWeiXin,xmlCustomizedHeader);
+        logger.debug("=====responseMap====================> "+responseMap);
         
-        if(confirmSignForWeiXin(orderQueryResponseForWeiXin)){
-          orderQueryResponseForBackendDto = 
-              transferWeiXinMessageForBackendSystme(orderQueryResponseForWeiXin);
-        }else{
+        if(!confirmSignForWeiXin(responseMap)){
           logger.error("Business Exception! The Signature Check failed! "
               + "This responese message stop here and will not pass to payment backend system!");
-          return null;
+          orderQueryResponseForBackendDto.setErr_code_des(confirmSignNotPassMessage);
+          return orderQueryResponseForBackendDto;          
         }
         
+        StringReader sr = new StringReader(responseMessageFromWeiXin);
+        JAXBContext jaxbContext = JAXBContext.newInstance(OrderQueryResponseForWeiXin.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        OrderQueryResponseForWeiXin orderQueryResponseForWeiXin = new OrderQueryResponseForWeiXin();
+        orderQueryResponseForWeiXin = (OrderQueryResponseForWeiXin) unmarshaller.unmarshal(sr);
+        
+        orderQueryResponseForBackendDto = 
+            transferWeiXinMessageForBackendSystme(orderQueryResponseForWeiXin);        
       }catch(HttpClientErrorException e){
         logger.error("error:  " + e.getResponseBodyAsString());
       }catch(Exception e){
-        logger.error("error:  " + e.getMessage());
+        logger.error("error:  " + e);
       } 
       
     }
@@ -220,35 +278,94 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     else if(PaymentBusinessConstant.ALI_PAY
         .equalsIgnoreCase(orderQueryRequestForBackendDto.getPlatform())){
       logger.debug("=====Come into Alipay business logic====================> ");
+      OrderQueryRequestForAliPay orderQueryRequestForAliPay = 
+          transferBackendMessageForAliPay(orderQueryRequestForBackendDto);
       
+      String requestAliPayString = 
+          "timestamp=".concat(orderQueryRequestForAliPay.getTimestamp()).concat
+          ("&method=").concat(orderQueryRequestForAliPay.getMethod()).concat
+          ("&app_id=").concat(orderQueryRequestForAliPay.getApp_id()).concat
+          ("&sign_type=").concat(orderQueryRequestForAliPay.getSign_type()).concat
+          ("&sign=").concat(orderQueryRequestForAliPay.getSign()).concat
+          ("&version=").concat(orderQueryRequestForAliPay.getVersion()).concat
+          ("&charset=").concat(orderQueryRequestForAliPay.getCharset());
+      
+      ResponseEntity<String> responseEntiryFromAliPay = 
+          callThirdPartyOrderQueryApi(
+              orderQueryRequestForBackendDto.getPlatform(),requestAliPayString,orderQueryRequestForAliPay);
+      
+      String responseMessageFromAliPay = responseEntiryFromAliPay.getBody();       
+      logger.debug("=====responseMessageFromWeiXin====================> "+responseMessageFromAliPay);
+      
+      
+    }else{
+      logger.debug("====Request Data Exception! The Platform is not Wechat or Alipay! Nothing will be done here.=====");
+      orderQueryResponseForBackendDto.setErr_code_des(requestPlatformOutOfScopeMessage);
     }
    
     return orderQueryResponseForBackendDto;    
   }
   
-  private ResponseEntity<String> callThirdPartyOrderQueryApi(String platform, String requestString){
+  
+  private ResponseEntity<String> callThirdPartyOrderQueryApi(String platform,String requestString){  
+    
     RestTemplate rt = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    MediaType type = MediaType.parseMediaType("application/xml; charset=UTF-8");
-    headers.setContentType(type);
-    headers.add("Accept", MediaType.APPLICATION_XML_VALUE);
+    rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));;
+    HttpHeaders httpHeaders = new HttpHeaders();
+    MediaType mediaType = MediaType.parseMediaType("application/xml; charset=utf-8");
+    
+    httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_ATOM_XML));
+    httpHeaders.setContentType(mediaType);
     
     HttpEntity<String> formEntity = 
-        new HttpEntity<String>(requestString.toString(), headers);
+        new HttpEntity<String>(requestString.toString(), httpHeaders);
+    
+    logger.error("====Final platform: "+platform);
+    logger.error("====Final requestString: "+requestString);
+    
+    ResponseEntity<String> responseEntiryFromThirdPartyApi = null;
     
     String thirdPartyUri = "";
     if(PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(platform)){
-      thirdPartyUri = wechatOrderQueryUri;      
-    }else if(PaymentBusinessConstant.ALI_PAY.equalsIgnoreCase(platform)){
-      thirdPartyUri = aliPayOrderQueryUri; 
-    }
-    
-    ResponseEntity<String> responseEntiryFromThirdPartyApi = 
-        (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.POST, formEntity, String.class);
+      thirdPartyUri = wechatOrderQueryUri;
+      responseEntiryFromThirdPartyApi = 
+          (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.POST,formEntity,String.class);      
+    } 
     
     return responseEntiryFromThirdPartyApi;
     
   }
+  
+  
+  private ResponseEntity<String> callThirdPartyOrderQueryApi(String platform, 
+      String requestString,OrderQueryRequestForAliPay orderQueryRequestForAliPay){  
+    
+    RestTemplate rt = new RestTemplate();
+    rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));;
+    HttpHeaders httpHeaders = new HttpHeaders();
+    MediaType mediaType = MediaType.parseMediaType("application/json; charset=utf-8");
+    
+    httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+    httpHeaders.setContentType(mediaType);
+    
+    HttpEntity<String> formEntity = 
+        new HttpEntity<String>("\"biz_content\":\"{\"out_trade_no\":\"20150320010101001\",\"trade_no\":\"20150320010101001\"}\"", httpHeaders);
+    
+    logger.error("====Final platform: "+platform);
+    logger.error("====Final requestString: "+requestString);
+    
+    ResponseEntity<String> responseEntiryFromThirdPartyApi = null;
+    
+    String thirdPartyUri = aliPayOrderQueryUri.concat("?").concat(requestString);
+    
+    responseEntiryFromThirdPartyApi = 
+        (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.GET,formEntity,String.class,orderQueryRequestForAliPay.getBiz_content());    
+    
+    return responseEntiryFromThirdPartyApi;
+    
+  }
+  
+  
   
   
   private String getNonce_str(){
@@ -262,28 +379,59 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     String orderQRForWeiXinJsonString = gson.toJson(orderQueryRequestForWeiXin);
     logger.info("orderQRForWeiXinJsonString: ["+orderQRForWeiXinJsonString+"]");
     
-    Map signatureMap = 
+    Map signatureMapForWeiXin = 
         (Map) com.alibaba.fastjson.JSONObject.parse(orderQRForWeiXinJsonString);    
    
-    String paySignature = signatureServiceImpl.weixinSignature(signatureMap);
+    String paySignature = signatureServiceImpl.weixinSignature(signatureMapForWeiXin);
    
     return paySignature;
   }
   
   
-  private boolean confirmSignForWeiXin(OrderQueryResponseForWeiXin orderQueryResponseForWeiXin){
-    boolean result = false;
+  private String getSign(OrderQueryRequestForAliPay orderQueryRequestForAliPay){    
     Gson gson = new Gson();
-    String stringReturnFromWeiXin = gson.toJson(orderQueryResponseForWeiXin);
-    logger.info("stringReturnFromWeiXin: ["+stringReturnFromWeiXin+"]");
+    String orderQueryRequestForAliPayJsonString = gson.toJson(orderQueryRequestForAliPay);
+    logger.info("===orderQueryRequestForAliPayJsonString1: ["+orderQueryRequestForAliPayJsonString+"]");
     
-    Map signatureCheckMap = 
-        (Map) com.alibaba.fastjson.JSONObject.parse(stringReturnFromWeiXin);
+//    orderQueryRequestForAliPayJsonString = orderQueryRequestForAliPayJsonString.replaceAll("\\\\", "");
+//    logger.info("===orderQueryRequestForAliPayJsonString2: ["+orderQueryRequestForAliPayJsonString+"]");
     
-    result = signatureServiceImpl.weixinSigantureCheck(signatureCheckMap);
+    Map signatureMapForAliPay = 
+        (Map) com.alibaba.fastjson.JSONObject.parse(orderQueryRequestForAliPayJsonString);    
+   
+    String paySignature = signatureServiceImpl.alipaySignature(signatureMapForAliPay);
+   
+    return paySignature;
+  }
+  
+  
+//  private boolean confirmSignForWeiXin(OrderQueryResponseForWeiXin orderQueryResponseForWeiXin){
+//    boolean result = false;
+//    Gson gson = new Gson();
+//    String stringReturnFromWeiXin = gson.toJson(orderQueryResponseForWeiXin);
+//    logger.info("stringReturnFromWeiXin: ["+stringReturnFromWeiXin+"]");
+//    
+//    Map signatureCheckMap = 
+//        (Map) com.alibaba.fastjson.JSONObject.parse(stringReturnFromWeiXin);
+//    
+//    result = signatureServiceImpl.weixinSigantureCheck(signatureCheckMap);
+//    
+//    return result;    
+//  }
+  
+  
+  private boolean confirmSignForWeiXin(Map<String,Object> responseMap){
+    boolean result = false;
+    logger.info("responseMap: ["+responseMap+"]");
+    if(responseMap == null || responseMap.isEmpty()){
+      logger.error("responseMap is NULL or empty, the signanture check is failed.");
+      return false;
+    }
+    result = signatureServiceImpl.weixinSigantureCheck(responseMap);
     
     return result;    
   }
+  
   
   public static String jaxbRequestObjectToXMLForWeiXin(OrderQueryRequestForWeiXin orderQueryRequestForWeiXin){      
     String xmlString = "";      
@@ -304,6 +452,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     return xmlString;
       
   }
+
 
 
 }

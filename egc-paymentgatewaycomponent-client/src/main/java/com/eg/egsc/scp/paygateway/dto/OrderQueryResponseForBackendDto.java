@@ -121,6 +121,13 @@ public class OrderQueryResponseForBackendDto {
    */
   private Integer total_fee;
   
+  
+  /**
+   * 订单总金额类型
+   * 
+   */
+  private String fee_type;
+  
   /**
    * 现金支付金额订单现金支付金额
    * 
@@ -599,6 +606,20 @@ public class OrderQueryResponseForBackendDto {
    */
   public void setTotal_fee(Integer total_fee) {
     this.total_fee = total_fee;
+  }
+
+  /**
+   * @Return the String fee_type
+   */
+  public String getFee_type() {
+    return fee_type;
+  }
+
+  /**
+   * @Param String fee_type to set
+   */
+  public void setFee_type(String fee_type) {
+    this.fee_type = fee_type;
   }
 
 
