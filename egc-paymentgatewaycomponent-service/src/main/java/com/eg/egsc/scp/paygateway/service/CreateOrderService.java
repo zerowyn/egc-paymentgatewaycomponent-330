@@ -12,10 +12,7 @@ import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
-import com.eg.egsc.scp.paygateway.service.model.CreateOrderRequestForWeiXin;
-import com.eg.egsc.scp.paygateway.service.model.CreateOrderResponseForWeiXin;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForWeiXin;
-import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForWeiXin;
+import com.eg.egsc.scp.paygateway.service.model.*;
 
 /**
  * 提供API与Controller调用的接口类
@@ -39,6 +36,22 @@ public interface CreateOrderService {
      */
     public CreateOrderResponseForBackendDto transferWeiXinMessageForBackendSystme(
             CreateOrderResponseForWeiXin createOrderResponseForWeiXin);
+
+    /**
+     * 接收缴费后台请求，转换为数据格式
+     * @param createOrderRequestForBackendDto 缴费后台提交的请求数据对象
+     * @return CreateOrderRequestForAliPay 返回给支付宝的请求数据对象
+     */
+    public CreateOrderRequestForAliPay transferBackendMessageForAliPay(
+            CreateOrderRequestForBackendDto createOrderRequestForBackendDto);
+
+    /**
+     * 接收微信返回数据，转换为数据格式
+     * @param createOrderResponseForAliPay 支付宝接口返回的数据对象
+     * @return CreateOrderResponseForBackendDto 返回给缴费后台的数据对象
+     */
+    public CreateOrderResponseForBackendDto transferAliPayMessageForBackendSystme(
+            CreateOrderResponseForAliPay createOrderResponseForAliPay);
 
     /**
      *
