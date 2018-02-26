@@ -20,12 +20,12 @@
 		<jdbcConnection driverClass="org.postgresql.Driver"
 			connectionURL="jdbc:postgresql://192.168.0.157:2018/hdsc_db" userId="pgc"
 			password="pgc_password" />
-		<javaModelGenerator targetPackage="com.eg.egsc.scp.demo.mapper.entity"
-			targetProject="egcdemo-dao/src/main/java" />
-		<sqlMapGenerator targetPackage="com.eg.egsc.scp.demo.mapper"
-			targetProject="egcdemo-dao/src/main/java" />
-		<javaClientGenerator targetPackage="com.eg.egsc.scp.demo.mapper"
-			targetProject="egcdemo-dao/src/main/java" type="XMLMAPPER" />
+		<javaModelGenerator targetPackage="com.eg.egsc.scp.paygateway.mapper.entity"
+			targetProject="egc-paymentgatewaycomponent-dao/src/main/java" />
+		<sqlMapGenerator targetPackage="com.eg.egsc.scp.paygateway.mapper"
+			targetProject="egc-paymentgatewaycomponent-dao/src/main/java" />
+		<javaClientGenerator targetPackage="com.eg.egsc.scp.paygateway.mapper"
+			targetProject="egc-paymentgatewaycomponent-dao/src/main/java" type="XMLMAPPER" />
 		<table schema="pgc" tableName="%" />
 	</context>
 </generatorConfiguration>

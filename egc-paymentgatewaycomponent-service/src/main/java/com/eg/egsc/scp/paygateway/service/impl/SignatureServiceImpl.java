@@ -3,52 +3,50 @@
  */
 package com.eg.egsc.scp.paygateway.service.impl;
 
+import com.eg.egsc.scp.paygateway.service.ConfigsService;
+import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.util.Base64Utils;
+import com.eg.egsc.scp.paygateway.util.StreamUtil;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
-
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import java.security.KeyFactory;
-import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.Signature;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.*;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant.*;
 
 /**
+ * 签名和验签算法
+ *
  * @author gucunyang
  * @since 2018-02-08
  */
 @Service
 public class SignatureServiceImpl implements SignatureService {
 
-    protected final Logger logger = LoggerFactory.getLogger(SignatureServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SignatureServiceImpl.class);
 
-    // 微信商户key，后期应从配置文件读取 TODO
-    private static final String WEIXIN_MCH_KEY = "D8892E20D8F95CB366C6783602952CEE";
+    @Autowired
+    ConfigsService configsServiceImpl;
 
-    // 支付宝应用私钥
-    private static final String ALIPAY_MCH_KEY = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkoppNC/ab1OfRobJfpWbD7LzhjE6bUQODsu9PJhTI8N9aa4KKY8l9wIqpoxLJCvIfljy3nBRFHEbeK2eA0T+Nfd1xP4X2Pei/aaBO9pd2TOXJfPkCwkXqEic4ww4oma4IZF7sBXZKdszdBo6TRuIQMtVBPv0T861rX/UpVfycrRJEOfNviH9+F9mCRsSY1+6a359lxKxGLyJgCqSpP5hbw03oyeLcrW/4ZbbChHetkGGJnCNC7ngk95gAZcFfsw8DTVXfTBX7k1vjviFZ9NJDjrdppNN1fzXS4v5eeqdBMnhh6tQohSywwId74E2NZj6SZOF0NJrLeNvjzB/SZMahAgMBAAECggEAdrJM8ROY/wzm/frIcbD8gHFkVHEmE1C7ae5OHxBjl+QiBDzS5xe+o41364oI9y2PFzroF7DN5G3YokFE5Fj4qvh9+TJFUR2derOawpOC6+XRHg2eMmECqxnfcUsgICF8mcxTq3LcsB8q4Ifjr0dBoVAk9F+HcyUSeQG77ctyzznDPBQjD0kog3ztTW5qZgAUO5m+jin9DQVz3qKzf8cYxk6OVBVTNsokUIuc+g3Ym8skZEOoBE4aRHch7SkiU/aNII3Lz0O0FFW22kNoAt4v/sA1HNi9nTjzjT5HfTg+j/+c/rRoCsSTMR2ir/J8YG3Rj5raxvsBexkDwGNv1mEOyQKBgQD4MT+V+lx27Ql1HKzXHL8FPXtDshNYfvoliBcvBMp0FYEcxIFBaqG2poRj3SEUa7n5S0louW4MNY5DQ/kDTex4XBkcrt+NSMihhiYQHoqUF9dD389W4W73MXf6ZxyXziTZ8/1elzVejNDmruPV5cukbIUN3EZ8b56KyYeVzPcnrwKBgQCp0HLPx8jJrpOSqiEpX3oWXk1oIZwi5wTIzweoNhnKmV/IFV1MdVJeVlWK0oSxpYemekoJZAe6NhN8exbDATPoIjsPFev6vzNBmUb1YdPVtPQDrEK4vWvb0PIPcb1U2kENR51jXh6F/wCnC2UkJc87iAN2yMIcdkHksR6qin06rwKBgGXZX+yd9v/eufjTMaJ8626tEj5vfzzbrq9kL49d+e61PGyfvyMnLQGVR9LrVb3Zj1HcMV3GaoCcIas8450VhyrFMJDyuk5yRdLzB/+paNjpB6+U0rMmg7DxHfkmAzfQopLGa307s+z/AGMJ9fk6+dyZo+hSMqKx82+kz/0LRYmFAoGAZFQDgT9IIeBC0CQz8321ZAHTOfKhjP1wljO7EmbkVg7HyC7XMJUgVRws7hfyzgI+Yt1dYK744cuRN7qBeDT9teiDfCY3ha3xWpB0nAVwYpLGmGTuBrfjQbvxR66rbbaFOJNXKZ4x6nj+qbLRzsmH5mQ1p7h09tvnknYS6C9qTYECgYEArovKgqWqj19jJsxMpIxDfHaFFcvqGOVFc5lCfHXb7cTH4ivCjRLc0WR1/U1bCMDLv80gA1mu5zG5cwpac/7PuNj6sTfh3CT/Sff4Ed5v753tMS051CMrVLMa0xokplmKKPQdT/gZOxUu1o/P8x8MEVVImR0VmPTf9Y+uA9uOKjg=";
-
-    private static final String SIGN_TYPE_MD5 = "MD5";
-
-    private static final String SIGN_TYPE_HMAC = "HmacSHA256";
-
-    private static final String SIGN_TYPE_RSA = "RSA";
-
-    private static final String SIGN_TYPE_RSA2 = "RSA2";
-
-    private static final String CHARSET_NAME = "utf-8";
-
-    private static final String SIGN_TYPE = "sign_type";
-
-    private static final String SIGN = "sign";
+    @Autowired
+    DefValSettingsService defValSettingsServiceImpl;
 
     /**
      * 接收请求数据，按照微信提供的协议进行签名
@@ -65,14 +63,21 @@ public class SignatureServiceImpl implements SignatureService {
             logger.error(errorMeg);
             return sign;
         }
-
+        String weixinKey = configsServiceImpl.getConfigsValueByExample(KEY, WEI_XIN);
+        String charset = (String) requestParamsMap.get(CHARSET);
+        if (StringUtils.isEmpty(charset)) {
+            charset = getCharset(WEI_XIN);
+        }
         StringBuffer content = getSignContent(requestParamsMap);
-        content.append("&key=" + WEIXIN_MCH_KEY);
+        content.append("&key=" + weixinKey);
         String signType = (String) requestParamsMap.get(SIGN_TYPE);
-        if (StringUtils.isEmpty(signType) || SIGN_TYPE_MD5.toUpperCase().equals(signType.toUpperCase())) {
-            sign = md5Sign(content);
+        if (StringUtils.isEmpty(signType)) {
+            signType = getSignType(WEI_XIN);
+        }
+        if (SIGN_TYPE_MD5.toUpperCase().equals(signType.toUpperCase())) {
+            sign = md5Sign(content, charset);
         } else if (SIGN_TYPE_HMAC.toUpperCase().equals(signType.toUpperCase())) {
-            sign = hmacSHA256Sign(content);
+            sign = hmacSHA256Sign(content, weixinKey, charset);
         } else {
             String errorMeg = "Unsupported Signature Type: signType = " + signType;
             logger.error(errorMeg);
@@ -88,7 +93,13 @@ public class SignatureServiceImpl implements SignatureService {
      * @return
      */
     @Override
-    public boolean weixinSigantureCheck(Map responseParamsMap) {
+    public boolean weixinSignatureCheck(Map responseParamsMap) {
+        if (responseParamsMap == null) {
+            String errorMeg = "responseParamsMap from paymentgateway is null!";
+            logger.error(errorMeg);
+            return false;
+        }
+
         String sign = (String) responseParamsMap.get(SIGN);
         if (StringUtils.isEmpty(sign)) {
             String errorMeg = "sign is empty";
@@ -117,16 +128,21 @@ public class SignatureServiceImpl implements SignatureService {
         }
 
         StringBuffer content = getSignContent(requestParamsMap);
+        System.out.println(content);
         String signType = (String) requestParamsMap.get(SIGN_TYPE);
         if (StringUtils.isEmpty(signType)) {
             String errorMeg = "sign_type is null";
             logger.error(errorMeg);
             return sign;
         }
+        String charset = (String) requestParamsMap.get(CHARSET);
+        if (StringUtils.isEmpty(charset)) {
+            charset = getCharset(ALI_PAY);
+        }
         if (SIGN_TYPE_RSA2.equals(signType)) {
-            sign = rsa256Sign(content);
+            sign = rsa256Sign(content, charset);
         } else if (SIGN_TYPE_RSA.equals(signType)) {
-            sign = rsaSign(content);
+            sign = rsaSign(content, charset);
         } else {
             String errorMeg = "Unsupported Signature Type: signType = " + signType;
             logger.error(errorMeg);
@@ -135,8 +151,20 @@ public class SignatureServiceImpl implements SignatureService {
         return sign;
     }
 
+    /**
+     * 接收异步通知数据，验证支付宝签名是否正确
+     *
+     * @param responseParamsMap
+     * @return
+     */
     @Override
-    public boolean alipaySigantureCheck(Map responseParamsMap) {
+    public boolean alipaySignatureAsyCheck(Map responseParamsMap) {
+        if (responseParamsMap == null) {
+            String errorMeg = "responseParamsMap from paymentgateway is null!";
+            logger.error(errorMeg);
+            return false;
+        }
+
         String sign = (String) responseParamsMap.get(SIGN);
         if (StringUtils.isEmpty(sign)) {
             String errorMeg = "sign is empty";
@@ -144,8 +172,28 @@ public class SignatureServiceImpl implements SignatureService {
             return false;
         }
         responseParamsMap.remove(SIGN);
-        String signCheck = alipaySignature(responseParamsMap);
-        return sign.equals(signCheck);
+        String signType = (String) responseParamsMap.get(SIGN_TYPE);
+        if (StringUtils.isEmpty(signType)) {
+            signType = getSignType(ALI_PAY);
+        }
+        responseParamsMap.remove(SIGN_TYPE);
+
+        String content = getSignContent(responseParamsMap).toString();
+        return getCheckResult(content, sign, signType);
+
+    }
+
+    /**
+     * 接收同步返回数据，验证支付宝签名是否正确
+     *
+     * @param content
+     * @param sign
+     * @return
+     */
+    @Override
+    public boolean alipaySignatureSynCheck(String content, String sign) {
+        String signType = getSignType(ALI_PAY);
+        return getCheckResult(content, sign, signType);
     }
 
     /**
@@ -154,11 +202,11 @@ public class SignatureServiceImpl implements SignatureService {
      * @param content
      * @return
      */
-    private String md5Sign(StringBuffer content) {
+    private String md5Sign(StringBuffer content, String charset) {
         String sign = null;
         try {
             MessageDigest md5 = MessageDigest.getInstance(SIGN_TYPE_MD5);
-            byte[] bytes = md5.digest(content.toString().getBytes(CHARSET_NAME));
+            byte[] bytes = md5.digest(content.toString().getBytes(charset));
             sign = encodeBytes(bytes);
         } catch (Exception e) {
             String errorMeg = "MD5 Signature ERROR";
@@ -173,13 +221,13 @@ public class SignatureServiceImpl implements SignatureService {
      * @param content
      * @return
      */
-    private String hmacSHA256Sign(StringBuffer content) {
+    private String hmacSHA256Sign(StringBuffer content, String weixinKey, String charset) {
         String sign = null;
         try {
             Mac hmacSHA256 = Mac.getInstance(SIGN_TYPE_HMAC);
-            SecretKeySpec secretKey = new SecretKeySpec(WEIXIN_MCH_KEY.getBytes(CHARSET_NAME), SIGN_TYPE_HMAC);
+            SecretKeySpec secretKey = new SecretKeySpec(weixinKey.getBytes(charset), SIGN_TYPE_HMAC);
             hmacSHA256.init(secretKey);
-            byte[] bytes = hmacSHA256.doFinal(content.toString().getBytes(CHARSET_NAME));
+            byte[] bytes = hmacSHA256.doFinal(content.toString().getBytes(charset));
             sign = encodeBytes(bytes);
         } catch (Exception e) {
             String errorMeg = "HMAC-SHA256 Signature ERROR";
@@ -195,16 +243,16 @@ public class SignatureServiceImpl implements SignatureService {
      * @param content
      * @return
      */
-    private String rsa256Sign(StringBuffer content) {
+    public String rsa256Sign(StringBuffer content, String charset) {
         String sign = null;
         try {
             PrivateKey privateK = getPrivateKey();
-            Signature signature = Signature.getInstance("SHA256WithRSA");
+            Signature signature = Signature.getInstance(RSA2_INSTANCE_NAME);
             if (privateK == null) {
                 return sign;
             }
             signature.initSign(privateK);
-            signature.update(content.toString().getBytes(CHARSET_NAME));
+            signature.update(content.toString().getBytes(charset));
             sign = Base64Utils.encode(signature.sign());
         } catch (Exception e) {
             String errorMeg = "RSA2 Signature ERROR";
@@ -219,16 +267,16 @@ public class SignatureServiceImpl implements SignatureService {
      * @param content
      * @return
      */
-    private String rsaSign(StringBuffer content) {
+    private String rsaSign(StringBuffer content, String charset) {
         String sign = null;
         try {
+            Signature signature = Signature.getInstance(RSA_INSTANCE_NAME);
             PrivateKey privateK = getPrivateKey();
-            Signature signature = Signature.getInstance("SHA1WithRSA");
             if (privateK == null) {
                 return sign;
             }
             signature.initSign(privateK);
-            signature.update(content.toString().getBytes(CHARSET_NAME));
+            signature.update(content.toString().getBytes(charset));
             sign = Base64Utils.encode(signature.sign());
         } catch (Exception e) {
             String errorMeg = "RSA Signature ERROR";
@@ -278,18 +326,117 @@ public class SignatureServiceImpl implements SignatureService {
         return hex.toString().toUpperCase();
     }
 
+    /**
+     * 获取privateKey
+     *
+     * @return
+     */
     private PrivateKey getPrivateKey() {
         try {
-            byte[] keyBytes = Base64Utils.decode(ALIPAY_MCH_KEY);
+            String alipayAppPrivateKey = configsServiceImpl.getConfigsValueByExample(KEY, "ALIPAY-APP-PRIVATE");
+            byte[] keyBytes = Base64Utils.decode(alipayAppPrivateKey);
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(SIGN_TYPE_RSA);
             return keyFactory.generatePrivate(pkcs8KeySpec);
         } catch (Exception e) {
             String errorMeg = "Get Private Key ERROR";
             logger.error(errorMeg);
+            e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * 获取字符集
+     *
+     * @param platform
+     * @return
+     */
+    private String getCharset(String platform) {
+        String charset = defValSettingsServiceImpl.getDefValSettingsValueByExample(platform, CHARSET);
+        if (StringUtils.isEmpty(charset)) {
+            charset = ALI_PAY.equals(platform) ? CHARSET_GBK : CHARSET_UTF8;
+        }
+        return charset;
+    }
+
+    /**
+     * 验证签名
+     *
+     * @param content
+     * @param sign
+     * @param alipayPublicKey
+     * @param charset
+     * @param rsaInstanceName
+     * @return
+     */
+    private boolean checkSign(String content, String sign, String alipayPublicKey,
+                              String charset, String rsaInstanceName) {
+        try {
+            PublicKey pubKey = getPublicKeyFromX509(SIGN_TYPE_RSA,
+                    new ByteArrayInputStream(alipayPublicKey.getBytes()));
+            Signature signature = Signature.getInstance(rsaInstanceName);
+            signature.initVerify(pubKey);
+            signature.update(content.toString().getBytes(charset));
+            return signature.verify(Base64.decodeBase64(sign.getBytes()));
+        } catch (Exception e) {
+            String errorMeg = "Signature Check ERROR";
+            logger.error(errorMeg);
+        }
+        return false;
+    }
+
+    /**
+     * 获取签名结果
+     *
+     * @param content
+     * @param sign
+     * @param signType
+     * @return
+     */
+    private boolean getCheckResult(String content, String sign, String signType) {
+        String alipayPublicKey = configsServiceImpl.getConfigsValueByExample(KEY, "ALIPAY-PUBLIC");
+        String charset = getCharset(ALI_PAY);
+        if (SIGN_TYPE_RSA2.equals(signType)) {
+            return checkSign(content, sign, alipayPublicKey, charset, RSA2_INSTANCE_NAME);
+        } else if (SIGN_TYPE_RSA.equals(signType)) {
+            return checkSign(content, sign, alipayPublicKey, charset, RSA_INSTANCE_NAME);
+        } else {
+            String errorMeg = "Unsupported Signature Type: signType = " + signType;
+            logger.error(errorMeg);
+            return false;
+        }
+    }
+
+    /**
+     * getSignTyoe
+     *
+     * @param platform
+     * @return
+     */
+    private String getSignType(String platform) {
+        String signType = defValSettingsServiceImpl.getDefValSettingsValueByExample(platform, SIGN_TYPE);
+        if (StringUtils.isEmpty(signType)) {
+            signType = ALI_PAY.equals(platform) ? SIGN_TYPE_RSA2 : SIGN_TYPE_MD5;
+        }
+        return signType;
+    }
+
+    /**
+     * getPublicKeyFromX509
+     *
+     * @param algorithm
+     * @param ins
+     * @return
+     * @throws Exception
+     */
+    private PublicKey getPublicKeyFromX509(String algorithm, InputStream ins) throws Exception {
+        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+        StringWriter writer = new StringWriter();
+        StreamUtil.io(new InputStreamReader(ins), writer);
+        byte[] encodedKey = writer.toString().getBytes();
+        encodedKey = Base64.decodeBase64(encodedKey);
+        return keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+    }
 
 }
