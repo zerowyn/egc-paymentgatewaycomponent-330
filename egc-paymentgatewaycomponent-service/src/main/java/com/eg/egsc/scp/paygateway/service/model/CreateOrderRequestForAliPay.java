@@ -7,43 +7,128 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @Class Name CreateOrderRequestForAliPay
  * @Author lihui
  * @Create In 2018年2月25日
  */
-@Component
 public class CreateOrderRequestForAliPay {
   
   /**
-   * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
+   * 应用ID
    * 
    */
-  private String transaction_id;
-  
+  private String app_id;
+
   /**
-   * 转发给微信订单查询接口的消息格式-缴费后台内部订单号，
-   * 当没提供transaction_id时需要传这个。
-   * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
-   * 
+   * 接口名称
    */
-  private String out_trade_no;
-  
+  private String method;
+
   /**
-   * 由支付网关调用 随机数生成算法 生成一个32位的字符串。由签名与验签模块生成。
-   * 
+   * 编码格式
    */
-  private String nonce_str;
-  
-  
+  private String charset;
+
   /**
-   * 由支付网关生成的签名，详见签名生成算法。由签名与验签模块生成。
-   * 
+   * 商户生成签名所使用的字符串
+   */
+  private String sign_type;
+
+  /**
+   * 签名
    */
   private String sign;
-  
-  
 
+  /**
+   * 发送请求时间时间
+   */
+  private String timestamp;
+
+  /**
+   * 版本
+   */
+  private String version;
+
+  /**
+   * 通知地址
+   */
+  private String notify_url;
+
+  /**
+   * 业务请求参数的集合
+   */
+  private String biz_content;
+
+  public String getApp_id() {
+    return app_id;
+  }
+
+  public void setApp_id(String app_id) {
+    this.app_id = app_id;
+  }
+
+  public String getMethod() {
+    return method;
+  }
+
+  public void setMethod(String method) {
+    this.method = method;
+  }
+
+  public String getCharset() {
+    return charset;
+  }
+
+  public void setCharset(String charset) {
+    this.charset = charset;
+  }
+
+  public String getSign_type() {
+    return sign_type;
+  }
+
+  public void setSign_type(String sign_type) {
+    this.sign_type = sign_type;
+  }
+
+  public String getSign() {
+    return sign;
+  }
+
+  public void setSign(String sign) {
+    this.sign = sign;
+  }
+
+  public String getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(String timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getNotify_url() {
+    return notify_url;
+  }
+
+  public void setNotify_url(String notify_url) {
+    this.notify_url = notify_url;
+  }
+
+  public String getBiz_content() {
+    return biz_content;
+  }
+
+  public void setBiz_content(String biz_content) {
+    this.biz_content = biz_content;
+  }
 }
