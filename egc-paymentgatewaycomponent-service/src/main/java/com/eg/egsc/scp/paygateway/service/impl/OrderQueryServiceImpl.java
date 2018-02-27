@@ -416,7 +416,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       logger.error("responseMap is NULL or empty, the signanture check is failed.");
       return false;
     }
-    result = signatureServiceImpl.weixinSigantureCheck(responseMap);
+    result = signatureServiceImpl.weixinSignatureCheck(responseMap);
     
     return result;    
   }
