@@ -168,19 +168,20 @@ public class OrderQueryResponseForWeiXin {
      MCOUPON 商户红包
    * 
    */
-  private String coupon_type_$n;
-  
-  /**
-   * 代金券或立减优惠ID, $n为下标，从0开始编号
-   * 
-   */
-  private String coupon_id_$n;
-  
-  /**
-   * 单个代金券或立减优惠支付金额, $n为下标，从0开始编号
-   * 
-   */
-  private String coupon_fee_$n;
+//  private String coupon_type_$n;
+//  
+//  /**
+//   * 代金券或立减优惠ID, $n为下标，从0开始编号
+//   * 
+//   */
+//  private String coupon_id_$n;
+//  
+//  /**
+//   * 单个代金券或立减优惠支付金额, $n为下标，从0开始编号
+//   * 
+//   */
+//  private String coupon_fee_$n;
+  private String coupon_list_json_string;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
@@ -439,48 +440,6 @@ public class OrderQueryResponseForWeiXin {
   }
 
   /**
-   * @Return the String coupon_type_$n
-   */
-  public String getCoupon_type_$n() {
-    return coupon_type_$n;
-  }
-
-  /**
-   * @Param String coupon_type_$n to set
-   */
-  public void setCoupon_type_$n(String coupon_type_$n) {
-    this.coupon_type_$n = coupon_type_$n;
-  }
-
-  /**
-   * @Return the String coupon_id_$n
-   */
-  public String getCoupon_id_$n() {
-    return coupon_id_$n;
-  }
-
-  /**
-   * @Param String coupon_id_$n to set
-   */
-  public void setCoupon_id_$n(String coupon_id_$n) {
-    this.coupon_id_$n = coupon_id_$n;
-  }
-
-  /**
-   * @Return the String coupon_fee_$n
-   */
-  public String getCoupon_fee_$n() {
-    return coupon_fee_$n;
-  }
-
-  /**
-   * @Param String coupon_fee_$n to set
-   */
-  public void setCoupon_fee_$n(String coupon_fee_$n) {
-    this.coupon_fee_$n = coupon_fee_$n;
-  }
-
-  /**
    * @Return the String transaction_id
    */
   public String getTransaction_id() {
@@ -646,6 +605,20 @@ public class OrderQueryResponseForWeiXin {
    */
   public void setFee_type(String fee_type) {
     this.fee_type = fee_type;
+  }
+
+  /**
+   * @Return the String coupon_list_json_string
+   */
+  public String getCoupon_list_json_string() {
+    return coupon_list_json_string;
+  }
+
+  /**
+   * @Param String coupon_list_json_string to set
+   */
+  public void setCoupon_list_json_string(String coupon_list_json_string) {
+    this.coupon_list_json_string = coupon_list_json_string;
   }
 
 

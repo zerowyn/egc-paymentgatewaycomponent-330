@@ -13,13 +13,24 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+
+
+
+
+
 
 
 
@@ -47,6 +58,7 @@ import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.AlipayOrderQueryResponse;
+import com.eg.egsc.scp.paygateway.service.model.FundBillList;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForAliPay;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryRequestForWeiXin;
 import com.eg.egsc.scp.paygateway.service.model.OrderQueryResponseForAliPay;
@@ -106,8 +118,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   private String aliPayOrderQueryCharset;
   
   @Value("${payment.third.party.alipay.order.query.version}")
-  private String aliPayOrderQueryVersion;
-
+  private String aliPayOrderQueryVersion;  
+  
+  @Value("${payment.third.party.alipay.order.query.target.fundChannel}")
+  private String aliPayOrderQueryTargetFundChannel;
   
   /**
    * 接收缴费后台请求，转换为数据格式
@@ -208,6 +222,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     orderQueryResponseForBackendDto.setTrade_state_desc(orderQueryResponseForWeiXin.getTrade_state_desc());
     orderQueryResponseForBackendDto.setTrade_type(orderQueryResponseForWeiXin.getTrade_type());
     
+    orderQueryResponseForBackendDto.setCoupon_list_json_string(orderQueryResponseForWeiXin.getCoupon_list_json_string());
+    
+    
     return orderQueryResponseForBackendDto;        
   }
   
@@ -225,8 +242,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     
     AlipayOrderQueryResponse AlipayTradeQueryResponse = orderQueryResponseForAliPay.getAlipayTradeQueryResponse();
     
-    orderQueryResponseForBackendDto.setPlatform(PaymentBusinessConstant.ALI_PAY);
-    
+    orderQueryResponseForBackendDto.setPlatform(PaymentBusinessConstant.ALI_PAY);    
     orderQueryResponseForBackendDto.setReturn_code(getReturn_code(AlipayTradeQueryResponse.getCode()));
     orderQueryResponseForBackendDto.setReturn_msg(AlipayTradeQueryResponse.getMsg());
     orderQueryResponseForBackendDto.setResult_code(AlipayTradeQueryResponse.getSub_code());
@@ -237,45 +253,44 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
     
     orderQueryResponseForBackendDto.setTransaction_id(AlipayTradeQueryResponse.getTrade_no());
-    orderQueryResponseForBackendDto.setOut_trade_no(AlipayTradeQueryResponse.getOut_trade_no());
-    
+    orderQueryResponseForBackendDto.setOut_trade_no(AlipayTradeQueryResponse.getOut_trade_no());    
     orderQueryResponseForBackendDto.setTrade_state(getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"1"));
-    orderQueryResponseForBackendDto.setResult_code(getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"2"));
+    
+    String alipayTradeResult = getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"2");
+    if(!"".equals(alipayTradeResult)){
+      orderQueryResponseForBackendDto.setResult_code(alipayTradeResult);
+    }    
     
     orderQueryResponseForBackendDto.setTotal_fee(AlipayTradeQueryResponse.getTotal_amount());
     orderQueryResponseForBackendDto.setCash_fee(AlipayTradeQueryResponse.getBuyer_pay_amount());
-    orderQueryResponseForBackendDto.setMch_id(AlipayTradeQueryResponse.getStore_id());
+    orderQueryResponseForBackendDto.setMch_id(AlipayTradeQueryResponse.getStore_id());    
+  
+    FundBillList[] fundBillList = AlipayTradeQueryResponse.getFundBillList();
+    
+    if(fundBillList != null){
+      int coupon_num = 0;
+      String coupon_jsonString = "";
+      Integer coupon_fee = 0;     
+      for(FundBillList fb : fundBillList)
+      {        
+        if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){         
+          coupon_jsonString = coupon_jsonString+"{\"coupon_id_"+coupon_num+"\":\"\","
+              + "\"coupon_type_"+fb.getFund_channel()+"\":\"\",\"coupon_fee_"+fb.getAmount()+"\":\"\",},";
+          coupon_fee = coupon_fee+fb.getAmount();
+          coupon_num++;
+        }        
+      }      
+      orderQueryResponseForBackendDto.setCoupon_count(Integer.toString(coupon_num));
+      orderQueryResponseForBackendDto.setCoupon_fee(coupon_fee);
+      if(coupon_jsonString != ""){
+        coupon_jsonString = "["+coupon_jsonString.substring(0, coupon_jsonString.length()-1)+"]";
+      }
+      
+      orderQueryResponseForBackendDto.setCoupon_list_json_string(coupon_jsonString);      
+    }        
     
     return orderQueryResponseForBackendDto;
     
-  }
-  
-  /**
-   * 
-   * @param tradeStatusFromAlipay 支付宝接口返回的trade status; 
-   * @param flag : 1-表示需要转换为缴费后台的trade_state; 2-表示需要转换为缴费后台的result_code
-   * @return String
-   */
-  private String getTradeStateOrResultCode(String tradeStatusFromAlipay,String flag){
-    String result = "";
-    if("TRADE_SUCCESS".equals(tradeStatusFromAlipay)){
-      result = "SUCCESS";
-    }else if("WAIT_BUYER_PAY".equals(tradeStatusFromAlipay)){
-      result = "USERPAYING";
-    }else if("TRADE_CLOSED".equals(tradeStatusFromAlipay)){
-      result = "TRADE_CLOSED";
-    }else if("TRADE_FINISHED".equals(tradeStatusFromAlipay)){
-      result = "TRADE_FINISHED";
-    }
-    return result;    
-  }  
-  
-  private String getReturn_code(String codeFromAlipay){
-    String result = "FAIL";
-    if("10000".equals(codeFromAlipay)){
-      result = "SUCCESS";
-    }
-    return result;    
   }
   
   
@@ -331,6 +346,41 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         OrderQueryResponseForWeiXin orderQueryResponseForWeiXin = new OrderQueryResponseForWeiXin();
         orderQueryResponseForWeiXin = (OrderQueryResponseForWeiXin) unmarshaller.unmarshal(sr);
         
+        //update coupon_list_json_string to accept multiple coupons
+        if(!responseMap.isEmpty()){
+          Set<String> xmlFiledsFromWeiXin = responseMap.keySet();
+          List<String> keys_startwith_coupon = 
+              xmlFiledsFromWeiXin.stream().filter(st->st.startsWith("coupon_id_")).collect(Collectors.toList());
+          
+          if(keys_startwith_coupon.size()>0){
+            Integer maxID = 0;
+            Integer tempID = 0;
+            String coupon_json_string = "";
+            
+            for(String sk : keys_startwith_coupon)
+            {
+              tempID = Integer.valueOf(sk.replaceAll("coupon_id_", ""));
+              if(maxID<tempID){
+                maxID = tempID;
+              }              
+            }
+            
+            for(int i=0;i<maxID;i++)
+            {             
+              coupon_json_string = coupon_json_string+"{"
+                  + "\"coupon_id_"+i+"\":\""+responseMap.get("coupon_id_"+i)+"\","
+                      + "\"coupon_type_"+i+"\":\""+responseMap.get("coupon_type_"+i)+"\","
+                          + "\"coupon_fee_"+i+"\":\""+responseMap.get("coupon_fee_"+i)+"\"},";
+            }
+            if(!"".equals(coupon_json_string)){
+              coupon_json_string = "["+coupon_json_string.substring(0, coupon_json_string.length()-1)+"]";
+              orderQueryResponseForWeiXin.setCoupon_list_json_string(coupon_json_string);
+            }            
+            
+          }
+         
+        }        
+        
         orderQueryResponseForBackendDto = 
             transferWeiXinMessageForBackendSystme(orderQueryResponseForWeiXin);        
       }catch(HttpClientErrorException e){
@@ -362,6 +412,56 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
    
     return orderQueryResponseForBackendDto;    
+  }  
+  
+  
+  public static String jaxbRequestObjectToXMLForWeiXin(OrderQueryRequestForWeiXin orderQueryRequestForWeiXin){      
+    String xmlString = "";      
+    try{        
+      JAXBContext context = JAXBContext.newInstance(OrderQueryRequestForWeiXin.class);
+      Marshaller m = context.createMarshaller();
+
+      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); 
+
+      StringWriter sw = new StringWriter();
+      m.marshal(orderQueryRequestForWeiXin, sw);
+      xmlString = sw.toString();
+
+    }catch(JAXBException e){        
+      e.printStackTrace();
+    }
+
+    return xmlString;
+      
+  }
+  
+  
+  /**
+   * 
+   * @param tradeStatusFromAlipay 支付宝接口返回的trade status; 
+   * @param flag : 1-表示需要转换为缴费后台的trade_state; 2-表示需要转换为缴费后台的result_code
+   * @return String
+   */
+  private String getTradeStateOrResultCode(String tradeStatusFromAlipay,String flag){
+    String result = "";
+    if("TRADE_SUCCESS".equals(tradeStatusFromAlipay)){
+      result = "SUCCESS";
+    }else if("WAIT_BUYER_PAY".equals(tradeStatusFromAlipay)){
+      result = "USERPAYING";
+    }else if("TRADE_CLOSED".equals(tradeStatusFromAlipay)){
+      result = "TRADE_CLOSED";
+    }else if("TRADE_FINISHED".equals(tradeStatusFromAlipay)){
+      result = "TRADE_FINISHED";
+    }
+    return result;    
+  }  
+  
+  private String getReturn_code(String codeFromAlipay){
+    String result = "FAIL";
+    if("10000".equals(codeFromAlipay)){
+      result = "SUCCESS";
+    }
+    return result;    
   }
   
   
@@ -419,28 +519,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     result = signatureServiceImpl.weixinSignatureCheck(responseMap);
     
     return result;    
-  }
-  
-  
-  public static String jaxbRequestObjectToXMLForWeiXin(OrderQueryRequestForWeiXin orderQueryRequestForWeiXin){      
-    String xmlString = "";      
-    try{        
-      JAXBContext context = JAXBContext.newInstance(OrderQueryRequestForWeiXin.class);
-      Marshaller m = context.createMarshaller();
+  }  
 
-      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); 
-
-      StringWriter sw = new StringWriter();
-      m.marshal(orderQueryRequestForWeiXin, sw);
-      xmlString = sw.toString();
-
-    }catch(JAXBException e){        
-      e.printStackTrace();
-    }
-
-    return xmlString;
-      
-  }
   
   private AlipayTradeQueryResponse orderQueryForAlipay(OrderQueryRequestForAliPay orderQueryRequestForAliPay){
     
