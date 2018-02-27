@@ -7,6 +7,11 @@
  */
 package com.eg.egsc.scp.paygateway.service.impl;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.CreateOrderService;
@@ -53,17 +58,26 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     @Value("${payment.third.party.alipay.order.create.uri}")
     private String aliPayCreateOrderUri;
 
+    @Value("${payment.third.party.alipay.order.query.private.key}")
+    private String aliPayOrderQueryPrivateKey;
+
+    @Value("${payment.third.party.alipay.order.query.public.key}")
+    private String aliPayOrderQueryPublicKey;
+
     @Value("${payment.third.party.alipay.order.create.uri.method}")
     private String aliPayCreateOrderMethod;
 
     @Value("${payment.error.message.request.platform.out.of.scope}")
     private String requestPlatformOutOfScopeMessage;
 
+    @Value("${payment.error.message.confirm.sign.not.pass}")
+    private String confirmSignNotPassMessage;
+
+    @Value("${xml.customized.header}")
+    private String xmlCustomizedHeader;
+
     @Autowired
     private CreateOrderResponseForWeiXin createOrderResponseForWeiXin;
-
-//    @Autowired
-//    private CreateOrderResponseForBackendDto createOrderResponseForBackendDto;
 
     @Autowired
     private SignatureService signatureServiceImpl;
@@ -75,7 +89,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setMch_id(createOrderRequestForBackendDto.getMch_id());
         createOrderRequestForWeiXin.setDevice_info("WEB");
         createOrderRequestForWeiXin.setNonce_str(getNonce_str());
-        createOrderRequestForWeiXin.setSign(getSign(createOrderRequestForWeiXin));
         createOrderRequestForWeiXin.setSign_type("MD5");
         createOrderRequestForWeiXin.setBody(createOrderRequestForBackendDto.getBody());
         createOrderRequestForWeiXin.setDetail(createOrderRequestForBackendDto.getDetail());
@@ -90,15 +103,17 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setProduct_id(createOrderRequestForBackendDto.getProduct_id());
         createOrderRequestForWeiXin.setLimit_pay(createOrderRequestForBackendDto.getLimit_pay());
         createOrderRequestForWeiXin.setOpenid(createOrderRequestForBackendDto.getOpenid());
+        createOrderRequestForWeiXin.setTrade_type(createOrderRequestForBackendDto.getTrade_type());
+        createOrderRequestForWeiXin.setSign(getSign(createOrderRequestForWeiXin));
         return createOrderRequestForWeiXin;
     }
 
     @Override
     public CreateOrderResponseForBackendDto transferWeiXinMessageForBackendSystme(
-                            CreateOrderResponseForWeiXin createOrderResponseForWeiXin) {
+            CreateOrderResponseForWeiXin createOrderResponseForWeiXin) {
         CreateOrderResponseForBackendDto createOrderResponseForBackendDto = new CreateOrderResponseForBackendDto();
         createOrderResponseForBackendDto.setPlatform(PaymentBusinessConstant.WEI_XIN);
-        createOrderResponseForBackendDto.setResult_code(createOrderResponseForWeiXin.getReturn_code());
+        createOrderResponseForBackendDto.setResult_code(createOrderResponseForWeiXin.getResult_code());
         createOrderResponseForBackendDto.setReturn_msg(createOrderResponseForWeiXin.getReturn_msg());
         createOrderResponseForBackendDto.setAppid(createOrderResponseForWeiXin.getAppid());
         createOrderResponseForBackendDto.setMch_id(createOrderResponseForWeiXin.getMch_id());
@@ -110,22 +125,23 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderResponseForBackendDto.setTrade_type(createOrderResponseForWeiXin.getTrade_type());
         createOrderResponseForBackendDto.setPrepay_id(createOrderResponseForWeiXin.getPrepay_id());
         createOrderResponseForBackendDto.setMweb_url(createOrderResponseForWeiXin.getMweb_url());
+        createOrderResponseForBackendDto.setReturn_code(createOrderResponseForWeiXin.getReturn_code());
         return createOrderResponseForBackendDto;
     }
 
     @Override
     public CreateOrderRequestForAliPay transferBackendMessageForAliPay(
-                            CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
+            CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
         CreateOrderRequestForAliPay requestForAliPay = new CreateOrderRequestForAliPay();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp now = new Timestamp(System.currentTimeMillis());
         String timestampForAliPay = df.format(now);
         String biz_content = ""
-                + "{\"subject\":\""+createOrderRequestForBackendDto.getDetail()+"\","
-                + "\"out_trade_no\":\""+createOrderRequestForBackendDto.getOut_trade_no()+"\","
-                + "\"total_amount\":\""+createOrderRequestForBackendDto.getTotal_fee()+"\","
-                + "\"product_code\":\""+"QUICK_MSECURITY_PAY"+"\" }";
-        System.out.println("===biz_content: "+biz_content);
+                + "{\"subject\":\"" + createOrderRequestForBackendDto.getDetail() + "\","
+                + "\"out_trade_no\":\"" + createOrderRequestForBackendDto.getOut_trade_no() + "\","
+                + "\"total_amount\":\"" + createOrderRequestForBackendDto.getTotal_fee() + "\","
+                + "\"product_code\":\"" + "QUICK_MSECURITY_PAY" + "\" }";
+        System.out.println("===biz_content: " + biz_content);
 
         requestForAliPay.setApp_id(createOrderRequestForBackendDto.getAppid());
         requestForAliPay.setMethod(aliPayCreateOrderMethod);
@@ -144,7 +160,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderResponseForBackendDto.setPlatform(PaymentBusinessConstant.ALI_PAY);
         createOrderResponseForBackendDto.setReturn_code(createOrderResponseForAliPay.getCode());
         createOrderResponseForBackendDto.setReturn_msg(createOrderResponseForAliPay.getMsg());
-        if("SUCCESS".equalsIgnoreCase(createOrderResponseForAliPay.getCode())){
+        if ("SUCCESS".equalsIgnoreCase(createOrderResponseForAliPay.getCode())) {
             createOrderResponseForBackendDto.setSign(createOrderResponseForAliPay.getSign());
             createOrderResponseForBackendDto.setNonce_str(getNonce_str());
             createOrderResponseForBackendDto.setResult_code(createOrderResponseForAliPay.getSub_code());
@@ -154,82 +170,67 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     }
 
     /**
-     *
      * @param createOrderRequestForBackendDto 缴费后台创建支付订单的数据对象
      * @return CreateOrderResponseForBackendDto 返回给缴费后台的数据对象
      */
     @Override
     public CreateOrderResponseForBackendDto createOrderRequestFromBackendSystme(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
         CreateOrderResponseForBackendDto createOrderResponseForBackendDto = new CreateOrderResponseForBackendDto();
-        if(createOrderRequestForBackendDto == null){
+        if (createOrderRequestForBackendDto == null) {
             String errorMsg = "Dto from backend system request for order query is null!";
             logger.error(errorMsg);
             return null;
         }
         //for wechat
-        if(PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())){
+        if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())) {
             CreateOrderRequestForWeiXin createOrderRequestForWeiXin = transferBackendMessageForWeiXin(createOrderRequestForBackendDto);
             String requestXmlString = jaxbRequestObjectToXMLForWeiXin(createOrderRequestForWeiXin);
-            logger.info("requestXmlString = ["+requestXmlString+"]");
+            logger.info("requestXmlString = [" + requestXmlString + "]");
 
             try {
                 ResponseEntity<String> responseEntiryFromWeiXin = callThirdPartyCreateOrderApi(
-                        createOrderRequestForBackendDto.getPlatform(),requestXmlString);
+                        createOrderRequestForBackendDto.getPlatform(), requestXmlString);
                 String messageFromWeiXin = responseEntiryFromWeiXin.getBody();
+                logger.debug("=====messageFromWeiXin====================> " + messageFromWeiXin);
 
-                logger.debug("=====messageFromWeiXin====================> "+messageFromWeiXin);
+                Map<String, Object> responseMap = StringUtils.transferXMLtoMap(messageFromWeiXin, xmlCustomizedHeader);
+                logger.debug("=====responseMap====================> " + responseMap);
 
+                if (!confirmSignForWeiXin(responseMap)) {
+                    logger.error("Business Exception! The WeiXin Signature Check failed! "
+                            + "This responese message stop here and will not pass to payment backend system!");
+                    createOrderResponseForBackendDto.setErr_code_des(confirmSignNotPassMessage);
+                    return createOrderResponseForBackendDto;
+                }
                 StringReader sr = new StringReader(messageFromWeiXin);
-                JAXBContext jaxbContext = JAXBContext.newInstance(OrderQueryResponseForWeiXin.class);
+                JAXBContext jaxbContext = JAXBContext.newInstance(CreateOrderResponseForWeiXin.class);
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 createOrderResponseForWeiXin = (CreateOrderResponseForWeiXin) unmarshaller.unmarshal(sr);
-
-                if(confirmSignForWeiXin(createOrderResponseForWeiXin)){
-                    createOrderResponseForBackendDto =
-                            transferWeiXinMessageForBackendSystme(createOrderResponseForWeiXin);
-                }else{
-                    logger.error("Business Exception! The Signature Check failed! "
-                            + "This responese message stop here and will not pass to payment backend system!");
-                    return null;
-                }
-            } catch(HttpClientErrorException e){
+                createOrderResponseForBackendDto =
+                        transferWeiXinMessageForBackendSystme(createOrderResponseForWeiXin);
+            } catch (HttpClientErrorException e) {
                 logger.error("error:  " + e.getResponseBodyAsString());
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.error("error:  " + e.getMessage());
             }
         }
 
         //for alipay
-        else if(PaymentBusinessConstant.ALI_PAY
-                .equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())){
+        else if (PaymentBusinessConstant.ALI_PAY
+                .equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())) {
             logger.debug("=====Come into Alipay business logic====================> ");
             CreateOrderRequestForAliPay createOrderRequestForAliPay = transferBackendMessageForAliPay(createOrderRequestForBackendDto);
 
-            String requestAliPayString =
-                    "timestamp=".concat(createOrderRequestForAliPay.getTimestamp()).concat
-                            ("&method=").concat(createOrderRequestForAliPay.getMethod()).concat
-                            ("&app_id=").concat(createOrderRequestForAliPay.getApp_id()).concat
-                            ("&sign_type=").concat(createOrderRequestForAliPay.getSign_type()).concat
-                            ("&sign=").concat(createOrderRequestForAliPay.getSign()).concat
-                            ("&version=").concat(createOrderRequestForAliPay.getVersion()).concat
-                            ("&charset=").concat(createOrderRequestForAliPay.getCharset());
+            AlipayTradeQueryResponse aliResponse = createOrderForAlipay(createOrderRequestForAliPay);
+            logger.debug("===aliResponse.getBody(): " + aliResponse.getBody());
 
-            ResponseEntity<String> responseEntiryFromAliPay =
-                    callThirdPartyOrderQueryApi(
-                            createOrderRequestForBackendDto.getPlatform(),requestAliPayString,createOrderRequestForAliPay);
-
-            String responseMessageFromAliPay = responseEntiryFromAliPay.getBody();
-            logger.debug("=====responseMessageFromAlipay====================> "+responseMessageFromAliPay);
             Gson gson = new Gson();
-            CreateOrderResponseForAliPay createOrderResponseForAliPay = gson.fromJson(responseMessageFromAliPay, CreateOrderResponseForAliPay.class);
+            CreateOrderResponseForAliPay createOrderResponseForAliPay = gson.fromJson(aliResponse.getBody(), CreateOrderResponseForAliPay.class);
+            System.out.println(createOrderResponseForAliPay);
+
             createOrderResponseForBackendDto = transferAliPayMessageForBackendSystme(createOrderResponseForAliPay);
-            if("SUCCESS".equalsIgnoreCase(createOrderResponseForAliPay.getCode())) {
-                createOrderResponseForBackendDto.setAppid(createOrderRequestForBackendDto.getAppid());
-                createOrderResponseForBackendDto.setMch_id(createOrderRequestForBackendDto.getMch_id());
-            }else if("SUCCESS".equalsIgnoreCase(createOrderResponseForAliPay.getCode()) & "SUCCESS".equalsIgnoreCase(createOrderResponseForAliPay.getSub_code()) ){
-                createOrderResponseForBackendDto.setTrade_type(createOrderRequestForBackendDto.getTrade_type());
-            }
-        }else{
+
+        } else {
             logger.debug("====Request Data Exception! The Platform is not Wechat or Alipay! Nothing will be done here.=====");
             createOrderResponseForBackendDto.setErr_code_des(requestPlatformOutOfScopeMessage);
         }
@@ -237,64 +238,32 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return createOrderResponseForBackendDto;
     }
 
-    private ResponseEntity<String> callThirdPartyOrderQueryApi(String platform,
-                                                               String requestString,CreateOrderRequestForAliPay createOrderRequestForAliPay){
-
-        RestTemplate rt = new RestTemplate();
-        rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));;
-        HttpHeaders httpHeaders = new HttpHeaders();
-        MediaType mediaType = MediaType.parseMediaType("application/json; charset=utf-8");
-
-        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
-        httpHeaders.setContentType(mediaType);
-
-        HttpEntity<String> formEntity =
-                new HttpEntity<String>("\"biz_content\":\"{\"out_trade_no\":\"IQJZSRC1YMQB5HU\"," +
-                        "\"total_amount\":\"0.01\",\"subject\":\"1\",\"product_code\":\"QUICK_MSECURITY_PAY\"}\"", httpHeaders);
-
-        logger.error("====Finally platform: "+platform);
-        logger.error("====Final requestString: "+requestString);
-
-        ResponseEntity<String> responseEntiryFromThirdPartyApi = null;
-
-        String thirdPartyUri = aliPayCreateOrderUri.concat("?").concat(requestString);
-
-        responseEntiryFromThirdPartyApi =
-                (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.GET,formEntity,String.class,createOrderRequestForAliPay.getBiz_content());
-
-        return responseEntiryFromThirdPartyApi;
-
-    }
-
-    private boolean confirmSignForWeiXin(CreateOrderResponseForWeiXin createOrderResponseForWeiXin){
+    private boolean confirmSignForWeiXin(Map<String, Object> responseMap) {
         boolean result = false;
-        Gson gson = new Gson();
-        String stringReturnFromWeiXin = gson.toJson(createOrderResponseForWeiXin);
-        logger.info("stringMessageReturnFromWeiXin: ["+stringReturnFromWeiXin+"]");
-
-        Map signatureCheckMap =
-                (Map) com.alibaba.fastjson.JSONObject.parse(stringReturnFromWeiXin);
-
-        result = signatureServiceImpl.weixinSigantureCheck(signatureCheckMap);
+        logger.info("responseMap : [" + responseMap + "]");
+        if (responseMap == null || responseMap.isEmpty()) {
+            logger.error("responseMap is NULL or empty, the signanture check is failed.");
+            return false;
+        }
+        result = signatureServiceImpl.weixinSignatureCheck(responseMap);
 
         return result;
     }
 
-    private ResponseEntity<String> callThirdPartyCreateOrderApi(String platform, String requestString){
+    private ResponseEntity<String> callThirdPartyCreateOrderApi(String platform, String requestString) {
         RestTemplate rt = new RestTemplate();
+        rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/xml; charset=utf-8");
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_ATOM_XML));
         headers.setContentType(type);
-        headers.add("Accept", MediaType.APPLICATION_XML_VALUE);
 
         HttpEntity<String> formEntity =
                 new HttpEntity<String>(requestString.toString(), headers);
 
         String thirdPartyUri = "";
-        if(PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(platform)){
+        if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(platform)) {
             thirdPartyUri = wechatCreateOrderUri;
-        }else if(PaymentBusinessConstant.ALI_PAY.equalsIgnoreCase(platform)){
-            thirdPartyUri = aliPayCreateOrderUri;
         }
         ResponseEntity<String> responseEntiryFromThirdPartyApi =
                 (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.POST, formEntity, String.class);
@@ -303,10 +272,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     }
 
-    private String getSign(CreateOrderRequestForAliPay createOrderRequestForAliPay){
+    private String getSign(CreateOrderRequestForAliPay createOrderRequestForAliPay) {
         Gson gson = new Gson();
         String createOrderRequestForAliPayJsonString = gson.toJson(createOrderRequestForAliPay);
-        logger.info("===createOrderRequestForAliPayJsonString1: ["+createOrderRequestForAliPayJsonString+"]");
+        logger.info("===createOrderRequestForAliPayJsonString1: [" + createOrderRequestForAliPayJsonString + "]");
 
 //    orderQueryRequestForAliPayJsonString = orderQueryRequestForAliPayJsonString.replaceAll("\\\\", "");
 //    logger.info("===orderQueryRequestForAliPayJsonString2: ["+orderQueryRequestForAliPayJsonString+"]");
@@ -319,10 +288,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return paySignature;
     }
 
-    private String getSign(CreateOrderRequestForWeiXin createOrderRequestForWeiXin){
+    private String getSign(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         Gson gson = new Gson();
         String createOrderForWeiXinJsonString = gson.toJson(createOrderRequestForWeiXin);
-        logger.info("createOrderRequestForWeiXin: ["+createOrderRequestForWeiXin+"]");
+        logger.info("createOrderRequestForWeiXin: [" + createOrderRequestForWeiXin + "]");
 
         Map signatureMap =
                 (Map) com.alibaba.fastjson.JSONObject.parse(createOrderForWeiXinJsonString);
@@ -332,14 +301,14 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return paySignature;
     }
 
-    private String getNonce_str(){
+    private String getNonce_str() {
         String uuid = StringUtils.generateUuid();
         return uuid;
     }
 
-    public static String jaxbRequestObjectToXMLForWeiXin(CreateOrderRequestForWeiXin createOrderRequestForWeiXin){
+    public static String jaxbRequestObjectToXMLForWeiXin(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         String xmlString = "";
-        try{
+        try {
             JAXBContext context = JAXBContext.newInstance(CreateOrderRequestForWeiXin.class);
             Marshaller m = context.createMarshaller();
 
@@ -349,11 +318,41 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             m.marshal(createOrderRequestForWeiXin, sw);
             xmlString = sw.toString();
 
-        }catch(JAXBException e){
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
 
         return xmlString;
+
+    }
+
+    private AlipayTradeQueryResponse createOrderForAlipay(CreateOrderRequestForAliPay createOrderRequestForAliPay) {
+
+        AlipayClient alipayClient = new DefaultAlipayClient(
+                aliPayCreateOrderUri,
+                createOrderRequestForAliPay.getApp_id(),
+                aliPayOrderQueryPrivateKey,
+                createOrderRequestForAliPay.getFormat(),
+                createOrderRequestForAliPay.getCharset(),
+                aliPayOrderQueryPublicKey,
+                createOrderRequestForAliPay.getSign_type());
+
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+
+        request.setBizContent(createOrderRequestForAliPay.getBiz_content());
+        AlipayTradeQueryResponse response = new AlipayTradeQueryResponse();
+        try {
+            response = alipayClient.execute(request);
+        } catch (AlipayApiException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (response.isSuccess()) {
+            System.out.println("调用成功。。。");
+        } else {
+            System.out.println("调用失败。。。");
+        }
+        return response;
 
     }
 }

@@ -46,6 +46,12 @@ public class CreateOrderRequestForAliPay {
   private String timestamp;
 
   /**
+   * 请求参数格式
+   * 仅支持JSON
+   */
+  private String format;
+
+  /**
    * 版本
    */
   private String version;
@@ -130,5 +136,13 @@ public class CreateOrderRequestForAliPay {
 
   public void setBiz_content(String biz_content) {
     this.biz_content = biz_content;
+  }
+
+  public String getFormat() {
+    return format;
+  }
+
+  public void setFormat(String format) {
+    this.format = format;
   }
 }

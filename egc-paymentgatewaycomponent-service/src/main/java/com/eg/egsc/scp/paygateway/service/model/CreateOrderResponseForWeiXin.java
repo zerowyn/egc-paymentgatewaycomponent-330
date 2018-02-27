@@ -9,6 +9,9 @@ package com.eg.egsc.scp.paygateway.service.model;
 
 import com.eg.egsc.framework.client.dto.BaseBusinessDto;
 import org.springframework.stereotype.Component;
+import sun.awt.SunHints;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @Class Name CreateOrderResponseForWeiXin
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @Create In 2018年2月25日
  */
 @Component
+@XmlRootElement(name = "xml")
 public class CreateOrderResponseForWeiXin {
 
   /**

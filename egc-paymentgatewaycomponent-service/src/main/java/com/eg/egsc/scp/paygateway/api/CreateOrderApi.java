@@ -55,11 +55,11 @@ public class CreateOrderApi extends BaseController {
         try {
             createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
             String message = "";
-            if(createOrderResponseForBackendDto == null){
+            if (createOrderResponseForBackendDto == null) {
                 message = "程序异常，数据返回对象为空";
                 logger.error(message);
                 result.setMessage(message);
-            }else{
+            } else {
                 message = "数据返回正常";
                 result.setMessage(message);
             }
