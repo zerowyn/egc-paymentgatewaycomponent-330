@@ -8,6 +8,7 @@
 package com.eg.egsc.scp.paygateway.service;
 
 
+import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
@@ -47,11 +48,11 @@ public interface CreateOrderService {
 
     /**
      * 接收微信返回数据，转换为数据格式
-     * @param createOrderResponseForAliPay 支付宝接口返回的数据对象
+     * @param alipayTradeAppPayResponse 支付宝接口返回的数据对象
      * @return CreateOrderResponseForBackendDto 返回给缴费后台的数据对象
      */
     public CreateOrderResponseForBackendDto transferAliPayMessageForBackendSystme(
-            CreateOrderResponseForAliPay createOrderResponseForAliPay);
+            AlipayTradeAppPayResponse alipayTradeAppPayResponse);
 
     /**
      *

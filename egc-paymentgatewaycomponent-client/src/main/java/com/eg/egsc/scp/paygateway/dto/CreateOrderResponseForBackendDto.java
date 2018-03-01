@@ -108,6 +108,13 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
    */
   private String mweb_url;
 
+  /**
+   * 支付宝的订单字符串
+   * 前端页面调用支付宝支付的支付串，无需做处理直接使用
+   * @return
+   */
+  private String orderStr;
+
   public static long getSerialVersionUID() {
     return serialVersionUID;
   }
@@ -240,5 +247,13 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
 
   public void setMweb_url(String mweb_url) {
     this.mweb_url = mweb_url;
+  }
+
+  public String getOrderStr() {
+    return orderStr;
+  }
+
+  public void setOrderStr(String orderStr) {
+    this.orderStr = orderStr;
   }
 }
