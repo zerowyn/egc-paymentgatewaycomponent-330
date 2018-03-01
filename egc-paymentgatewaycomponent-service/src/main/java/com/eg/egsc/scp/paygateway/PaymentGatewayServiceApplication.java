@@ -16,15 +16,15 @@ import com.eg.egsc.framework.service.core.ApplicationStarter;
 @ComponentScan(basePackages = {"com.eg.egsc"})
 //@MapperScan(basePackages = {"com.eg.egsc.scp.demo"})
 @MapperScan(basePackages = {"com.eg.egsc.scp.paygateway"})
-public class DemoServiceApplication extends SpringBootServletInitializer {
+public class PaymentGatewayServiceApplication extends SpringBootServletInitializer {
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-    return builder.sources(DemoServiceApplication.class);
+    return builder.sources(PaymentGatewayServiceApplication.class);
   }
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) {
-    new ApplicationStarter().run(DemoServiceApplication.class, args);
+    new ApplicationStarter().run(PaymentGatewayServiceApplication.class, args);
   }
 }
