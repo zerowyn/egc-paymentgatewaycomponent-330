@@ -6,9 +6,9 @@ package com.eg.egsc.scp.paygateway.service.impl;
 import com.eg.egsc.framework.paging.PageUtils;
 import com.eg.egsc.scp.paygateway.dto.CodeMapsDto;
 import com.eg.egsc.scp.paygateway.dto.PageQueryDto;
+import com.eg.egsc.scp.paygateway.mapper.CodeMapTypesMapper;
 import com.eg.egsc.scp.paygateway.mapper.CodeMapsMapper;
-import com.eg.egsc.scp.paygateway.mapper.entity.CodeMaps;
-import com.eg.egsc.scp.paygateway.mapper.entity.CodeMapsCriteria;
+import com.eg.egsc.scp.paygateway.mapper.entity.*;
 import com.eg.egsc.scp.paygateway.service.CodeMapsSerivce;
 import com.eg.egsc.scp.paygateway.util.CollectionUtil;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
@@ -18,8 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author gucunyang
@@ -32,6 +31,9 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
 
     @Autowired
     private CodeMapsMapper codeMapsMapper;
+
+    @Autowired
+    private CodeMapTypesMapper codeMapTypesMapper;
 
     /**
      * 新增代码转换表信息
@@ -67,7 +69,9 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         logger.info("delete CodeMaps start");
         CodeMapsCriteria codeMapsCriteria = new CodeMapsCriteria();
         codeMapsCriteria.createCriteria().andUuidIn(codeMapsUuids);
-        codeMapsMapper.deleteByExample(codeMapsCriteria);
+        CodeMaps codeMaps = new CodeMaps();
+        codeMaps.setDeleteFlag((short) 0);
+        codeMapsMapper.updateByExampleSelective(codeMaps, codeMapsCriteria);
         logger.info("delete CodeMaps successful");
     }
 
@@ -102,7 +106,13 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
             return null;
         }
         logger.info("getCodeMapsByUuid start");
-        CodeMaps codeMaps = codeMapsMapper.selectByPrimaryKey(uuid);
+        CodeMapsCriteria codeMapsCriteria = new CodeMapsCriteria();
+        codeMapsCriteria.createCriteria().andUuidEqualTo(uuid).andDeleteFlagEqualTo((short) 1);
+        List<CodeMaps> codeMapsList = codeMapsMapper.selectByExample(codeMapsCriteria);
+        CodeMaps codeMaps = getUpdateCodeMaps(codeMapsList);
+        if (codeMaps == null) {
+            return null;
+        }
         CodeMapsDto codeMapsDto = new CodeMapsDto();
         codeMapsConvertToCodeMapsDto(codeMaps, codeMapsDto);
         logger.info("getCodeMapsByUuid successful");
@@ -123,12 +133,91 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         }
         logger.info("getCodeMapsList start");
         CodeMapsCriteria codeMapsCriteria = new CodeMapsCriteria();
+        codeMapsCriteria.createCriteria().andDeleteFlagEqualTo((short) 1);
         RowBounds rowBounds = new RowBounds(PageUtils.getOffset(pageQueryDto.getPageNo(), pageQueryDto.getPageSize()),
                 pageQueryDto.getPageSize());
         List<CodeMaps> codeMapsList = codeMapsMapper.selectByExampleWithRowbounds(codeMapsCriteria, rowBounds);
         List<CodeMapsDto> codeMapsDtoList = codeMapsListConvertToCodeMapsDtoList(codeMapsList);
         logger.info("getCodeMapsList successful");
         return codeMapsDtoList;
+    }
+
+    @Override
+    public Map excodeConvertToIncode(Map codeConvertMap) {
+        String platform = (String) codeConvertMap.get("platform");
+        String exField = (String) codeConvertMap.get("exField");
+        String method = (String) codeConvertMap.get("method");
+        String exCode = (String) codeConvertMap.get("exCode");
+        String exMsg = (String) codeConvertMap.get("exMsg");
+        if (StringUtils.isEmpty(platform) || StringUtils.isEmpty(exField)) {
+            logger.error("Param is null!");
+            return null;
+        }
+        List<CodeMapTypes> codeMapTypesList = new ArrayList<>();
+        if (!StringUtils.isEmpty(method)) {
+            CodeMapTypesCriteria codeMapTypesCriteria = new CodeMapTypesCriteria();
+            codeMapTypesCriteria.createCriteria().andPlatformEqualTo(platform).andMethodEqualTo(method)
+                    .andExFieldEqualTo(exField).andDeleteFlagEqualTo((short) 1);
+            codeMapTypesList = codeMapTypesMapper.selectByExample(codeMapTypesCriteria);
+        }
+        if (CollectionUtil.isEmpty(codeMapTypesList) || StringUtils.isEmpty(method)) {
+            codeMapTypesList = getListWithoutMethod(platform, exField);
+        }
+        return getResultMap(exCode, exMsg, codeMapTypesList);
+    }
+
+    private Map getResultMap(String exCode, String exMsg, List<CodeMapTypes> codeMapTypesList) {
+        List<CodeMaps> codeMapsList = new ArrayList<>();
+        for (CodeMapTypes codeMapTypes : codeMapTypesList) {
+            String typeId = codeMapTypes.getUuid();
+            if (StringUtils.isEmpty(typeId) || StringUtils.isEmpty(exCode)) {
+                logger.error("Param is null!");
+                return null;
+            }
+            CodeMapsCriteria codeMapsCriteria = new CodeMapsCriteria();
+            codeMapsCriteria.createCriteria().andTypeIdEqualTo(typeId).andExCodeEqualTo(exCode)
+                    .andDeleteFlagEqualTo((short) 1);
+            List<CodeMaps> codeMapsListVal = codeMapsMapper.selectByExample(codeMapsCriteria);
+            codeMapsList.addAll(codeMapsListVal);
+        }
+        CodeMaps codeMaps = getUpdateCodeMaps(codeMapsList);
+        Map resultMap = new HashMap();
+        if (codeMaps == null) {
+            return resultMap;
+        }
+        CodeMapTypes codeMapTypes = codeMapTypesMapper.selectByPrimaryKey(codeMaps.getTypeId());
+        resultMap.put(codeMapTypes.getInField(), codeMaps.getInCode());
+        if (codeMapTypes.getMsgOverwrite() == 0 && !StringUtils.isEmpty(exMsg)) {
+            if (exMsg.equals(codeMaps.getExMsg())) {
+                resultMap.put(codeMapTypes.getInMsgField(), codeMaps.getInMsg());
+            }
+        }
+        return resultMap;
+    }
+
+    private CodeMaps getUpdateCodeMaps(List<CodeMaps> codeMapsList) {
+        CodeMaps codeMaps = null;
+        if (codeMapsList.size() == 1) {
+            codeMaps = codeMapsList.get(0);
+        }
+        if (codeMapsList.size() > 1) {
+            Date createTime = codeMapsList.get(0).getCreateTime();
+            codeMaps = codeMapsList.get(0);
+            for (CodeMaps codeMapsVal : codeMapsList) {
+                if (codeMapsVal.getCreateTime().getTime() > createTime.getTime()) {
+                    codeMaps = codeMapsVal;
+                }
+            }
+        }
+        return codeMaps;
+    }
+
+    private List<CodeMapTypes> getListWithoutMethod(String platform, String exField) {
+        CodeMapTypesCriteria codeMapTypesCriteria = new CodeMapTypesCriteria();
+        codeMapTypesCriteria.createCriteria().andPlatformEqualTo(platform).andMethodIsNull()
+                .andExFieldEqualTo(exField).andDeleteFlagEqualTo((short) 1);
+        List<CodeMapTypes> codeMapTypesList = codeMapTypesMapper.selectByExample(codeMapTypesCriteria);
+        return codeMapTypesList;
     }
 
     /**
@@ -170,11 +259,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         codeMapsDto.setInCode(codeMaps.getInCode());
         codeMapsDto.setExMsg(codeMaps.getExMsg());
         codeMapsDto.setInMsg(codeMaps.getInMsg());
-        Short deleteFlag = codeMaps.getDeleteFlag();
-        if (deleteFlag == null) {
-            deleteFlag = 1;
-        }
-        codeMapsDto.setDeleteFlag(deleteFlag);
+        codeMapsDto.setDeleteFlag(codeMaps.getDeleteFlag());
         codeMapsDto.setCreateTime(codeMaps.getCreateTime());
         codeMapsDto.setUpdateTime(codeMaps.getUpdateTime());
         codeMapsDto.setCreateUser(codeMaps.getCreateUser());
