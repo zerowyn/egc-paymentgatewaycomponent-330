@@ -119,7 +119,7 @@ public class OrderQueryResponseForBackendDto {
    * 订单总金额，单位为分
    * 
    */
-  private Integer total_fee;
+  private Double total_fee;
   
   
   /**
@@ -132,7 +132,7 @@ public class OrderQueryResponseForBackendDto {
    * 现金支付金额订单现金支付金额
    * 
    */
-  private Integer cash_fee;
+  private Double cash_fee;
   
   /**
    * 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY
@@ -144,13 +144,13 @@ public class OrderQueryResponseForBackendDto {
    * 应结订单金额： 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
    * 
    */
-  private Integer settlement_total_fee;
+  private Double settlement_total_fee;
   
   /**
    * 代金券金额：“代金券或立减优惠”金额<=订单总金额，订单总金额-“代金券或立减优惠”金额=现金支付金额
    * 
    */
-  private Integer coupon_fee;
+  private Double coupon_fee;
   
   /**
    * 代金券或立减优惠使用数量
@@ -513,62 +513,7 @@ public class OrderQueryResponseForBackendDto {
     this.trade_state_desc = trade_state_desc;
   }
 
-  /**
-   * @Return the Integer cash_fee
-   */
-  public Integer getCash_fee() {
-    return cash_fee;
-  }
-
-  /**
-   * @Param Integer cash_fee to set
-   */
-  public void setCash_fee(Integer cash_fee) {
-    this.cash_fee = cash_fee;
-  }
-
-  /**
-   * @Return the Integer settlement_total_fee
-   */
-  public Integer getSettlement_total_fee() {
-    return settlement_total_fee;
-  }
-
-  /**
-   * @Param Integer settlement_total_fee to set
-   */
-  public void setSettlement_total_fee(Integer settlement_total_fee) {
-    this.settlement_total_fee = settlement_total_fee;
-  }
-
-  /**
-   * @Return the Integer coupon_fee
-   */
-  public Integer getCoupon_fee() {
-    return coupon_fee;
-  }
-
-  /**
-   * @Param Integer coupon_fee to set
-   */
-  public void setCoupon_fee(Integer coupon_fee) {
-    this.coupon_fee = coupon_fee;
-  }
-
-  /**
-   * @Return the Integer total_fee
-   */
-  public Integer getTotal_fee() {
-    return total_fee;
-  }
-
-  /**
-   * @Param Integer total_fee to set
-   */
-  public void setTotal_fee(Integer total_fee) {
-    this.total_fee = total_fee;
-  }
-
+ 
   /**
    * @Return the String fee_type
    */
@@ -595,6 +540,62 @@ public class OrderQueryResponseForBackendDto {
    */
   public void setCoupon_list_json_string(String coupon_list_json_string) {
     this.coupon_list_json_string = coupon_list_json_string;
+  }
+
+  /**
+   * @Return the Double total_fee
+   */
+  public Double getTotal_fee() {
+    return total_fee;
+  }
+
+  /**
+   * @Param Double total_fee to set
+   */
+  public void setTotal_fee(Double total_fee) {
+    this.total_fee = total_fee;
+  }
+
+  /**
+   * @Return the Double cash_fee
+   */
+  public Double getCash_fee() {
+    return cash_fee;
+  }
+
+  /**
+   * @Param Double cash_fee to set
+   */
+  public void setCash_fee(Double cash_fee) {
+    this.cash_fee = cash_fee;
+  }
+
+  /**
+   * @Return the Double settlement_total_fee
+   */
+  public Double getSettlement_total_fee() {
+    return settlement_total_fee;
+  }
+
+  /**
+   * @Param Double settlement_total_fee to set
+   */
+  public void setSettlement_total_fee(Double settlement_total_fee) {
+    this.settlement_total_fee = settlement_total_fee;
+  }
+
+  /**
+   * @Return the Double coupon_fee
+   */
+  public Double getCoupon_fee() {
+    return coupon_fee;
+  }
+
+  /**
+   * @Param Double coupon_fee to set
+   */
+  public void setCoupon_fee(Double coupon_fee) {
+    this.coupon_fee = coupon_fee;
   }
 
 

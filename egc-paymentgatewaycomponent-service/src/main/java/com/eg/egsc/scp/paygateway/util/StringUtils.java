@@ -83,12 +83,7 @@ public class StringUtils {
       Pattern p = Pattern.compile("<([^</]+)>([^</]*)</([^</]+)>");
       Matcher m = p.matcher(xmlString);
      
-      while(m.find()){        
-        logger.debug("===>group(0): "+m.group(0));  //将匹配出的电话号码存放到mobileList中
-        logger.debug("===>group(1): "+m.group(1));
-        logger.debug("===>group(2): "+m.group(2));
-        logger.debug("===>group(3): "+m.group(3));
-        logger.debug("===========================>");
+      while(m.find()){
         newMap.put(m.group(1), m.group(2));      
        }
       

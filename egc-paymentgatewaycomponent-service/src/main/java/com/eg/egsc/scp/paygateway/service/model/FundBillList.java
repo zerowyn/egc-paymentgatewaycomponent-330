@@ -26,13 +26,13 @@ public class FundBillList {
    * 该支付工具类型所使用的金额
    * 
    */ 
-  private Integer amount;
+  private Double amount;
   
   /**
    * 渠道实际付款金额 
    * 
    */ 
-  private Integer real_amount;
+  private Double real_amount;
 
   /**
    * @Return the String fund_channel
@@ -49,33 +49,33 @@ public class FundBillList {
   }
 
   /**
-   * @Return the Integer amount
+   * @Return the Double amount
    */
-  public Integer getAmount() {
+  public Double getAmount() {
     return amount;
   }
 
   /**
-   * @Param Integer amount to set
+   * @Param Double amount to set
    */
-  public void setAmount(Integer amount) {
+  public void setAmount(Double amount) {
     this.amount = amount;
   }
 
   /**
-   * @Return the Integer real_amount
+   * @Return the Double real_amount
    */
-  public Integer getReal_amount() {
+  public Double getReal_amount() {
     return real_amount;
   }
 
   /**
-   * @Param Integer real_amount to set
+   * @Param Double real_amount to set
    */
-  public void setReal_amount(Integer real_amount) {
+  public void setReal_amount(Double real_amount) {
     this.real_amount = real_amount;
   }
-  
+ 
 
 
 }

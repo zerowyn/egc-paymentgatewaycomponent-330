@@ -70,7 +70,7 @@ public class AlipayOrderQueryResponse {
    * 交易的订单金额，单位为元，两位小数。
    * 
    */ 
-  private Integer total_amount;
+  private String total_amount;
   
   /**
    * 实收金额，单位为元，两位小数。
@@ -82,19 +82,19 @@ public class AlipayOrderQueryResponse {
    * 买家实付金额，单位为元，两位小数。
    * 该金额代表该笔交易买家实际支付的金额，不包含商户折扣等金额   * 
    */ 
-  private Integer buyer_pay_amount;
+  private String buyer_pay_amount;
   
   /**
    * 积分支付的金额，单位为元，两位小数。
    * 该金额代表该笔交易中用户使用积分支付的金额，比如集分宝或者支付宝实时优惠等    * 
    */ 
-  private Integer point_amount;
+  private String point_amount;
   
   /**
    * 交易中用户支付的可开具发票的金额，单位为元，两位小数。
    * 该金额代表该笔交易中可以给用户开具发票的金额  
    */ 
-  private Integer invoice_amount;
+  private String invoice_amount;
   
   /**
    * 本次交易打款给卖家的时间 
@@ -250,19 +250,6 @@ public class AlipayOrderQueryResponse {
     this.trade_status = trade_status;
   }
 
-  /**
-   * @Return the Integer total_amount
-   */
-  public Integer getTotal_amount() {
-    return total_amount;
-  }
-
-  /**
-   * @Param Integer total_amount to set
-   */
-  public void setTotal_amount(Integer total_amount) {
-    this.total_amount = total_amount;
-  }
 
   /**
    * @Return the String receipt_amount
@@ -278,47 +265,6 @@ public class AlipayOrderQueryResponse {
     this.receipt_amount = receipt_amount;
   }
 
-  /**
-   * @Return the Integer buyer_pay_amount
-   */
-  public Integer getBuyer_pay_amount() {
-    return buyer_pay_amount;
-  }
-
-  /**
-   * @Param Integer buyer_pay_amount to set
-   */
-  public void setBuyer_pay_amount(Integer buyer_pay_amount) {
-    this.buyer_pay_amount = buyer_pay_amount;
-  }
-
-  /**
-   * @Return the Integer point_amount
-   */
-  public Integer getPoint_amount() {
-    return point_amount;
-  }
-
-  /**
-   * @Param Integer point_amount to set
-   */
-  public void setPoint_amount(Integer point_amount) {
-    this.point_amount = point_amount;
-  }
-
-  /**
-   * @Return the Integer invoice_amount
-   */
-  public Integer getInvoice_amount() {
-    return invoice_amount;
-  }
-
-  /**
-   * @Param Integer invoice_amount to set
-   */
-  public void setInvoice_amount(Integer invoice_amount) {
-    this.invoice_amount = invoice_amount;
-  }
 
   /**
    * @Return the String send_pay_date
@@ -416,6 +362,76 @@ public class AlipayOrderQueryResponse {
    */
   public void setBuyer_user_type(String buyer_user_type) {
     this.buyer_user_type = buyer_user_type;
+  }
+
+  /**
+   * @Return the String total_amount
+   */
+  public String getTotal_amount() {
+    return total_amount;
+  }
+
+  /**
+   * @Param String total_amount to set
+   */
+  public void setTotal_amount(String total_amount) {
+    this.total_amount = total_amount;
+  }
+
+  /**
+   * @Return the String buyer_pay_amount
+   */
+  public String getBuyer_pay_amount() {
+    return buyer_pay_amount;
+  }
+
+  /**
+   * @Param String buyer_pay_amount to set
+   */
+  public void setBuyer_pay_amount(String buyer_pay_amount) {
+    this.buyer_pay_amount = buyer_pay_amount;
+  }
+
+  /**
+   * @Return the String point_amount
+   */
+  public String getPoint_amount() {
+    return point_amount;
+  }
+
+  /**
+   * @Param String point_amount to set
+   */
+  public void setPoint_amount(String point_amount) {
+    this.point_amount = point_amount;
+  }
+
+  /**
+   * @Return the String invoice_amount
+   */
+  public String getInvoice_amount() {
+    return invoice_amount;
+  }
+
+  /**
+   * @Param String invoice_amount to set
+   */
+  public void setInvoice_amount(String invoice_amount) {
+    this.invoice_amount = invoice_amount;
+  }
+
+  /**
+   * @Return the FundBillList[] fund_bill_list
+   */
+  public FundBillList[] getFund_bill_list() {
+    return fund_bill_list;
+  }
+
+  /**
+   * @Param FundBillList[] fund_bill_list to set
+   */
+  public void setFund_bill_list(FundBillList[] fund_bill_list) {
+    this.fund_bill_list = fund_bill_list;
   }
 
 

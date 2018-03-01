@@ -34,6 +34,10 @@ import javax.xml.bind.Unmarshaller;
 
 
 
+
+
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +59,8 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
+import com.eg.egsc.scp.paygateway.service.ConfigsService;
+import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.AlipayOrderQueryResponse;
@@ -81,11 +87,40 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   @Autowired
   SignatureService signatureServiceImpl;
   
-  @Value("${payment.third.party.wechat.order.query.uri}")
-  private String wechatOrderQueryUri;
+  @Autowired
+  ConfigsService configsServiceImpl;
   
-  @Value("${payment.third.party.alipay.order.query.uri}")
-  private String aliPayOrderQueryUri;
+  @Autowired
+  DefValSettingsService defValSettingsServiceImpl;
+  
+  /////
+//  @Value("${payment.third.party.wechat.order.query.uri}")
+//  private String wechatOrderQueryUri;
+// 
+//  @Value("${payment.third.party.alipay.order.query.uri}")
+//  private String aliPayOrderQueryUri;
+//  
+  @Value("${payment.third.party.alipay.sign.type}")
+  private String aliPaySignType; 
+//  
+//  @Value("${payment.third.party.alipay.order.query.uri.method}")
+//  private String aliPayOrderQueryMethod;
+//  
+//  @Value("${payment.third.party.alipay.order.query.private.key}")
+//  private String aliPayOrderQueryPrivateKey;
+//  
+//  @Value("${payment.third.party.alipay.order.query.public.key}")
+//  private String aliPayOrderQueryPublicKey;
+//  
+//  @Value("${payment.third.party.alipay.order.query.format}")
+//  private String aliPayOrderQueryFormat;
+//  
+//  @Value("${payment.third.party.alipay.order.query.charset}")
+//  private String aliPayOrderQueryCharset;
+//  
+//  @Value("${payment.third.party.alipay.order.query.version}")
+//  private String aliPayOrderQueryVersion;
+  /////  
   
   @Value("${xml.customized.header}")
   private String xmlCustomizedHeader; 
@@ -99,30 +134,19 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   @Value("${payment.error.message.request.data.is.null}")
   private String requestDataIsNullMessage; 
   
-  @Value("${payment.third.party.alipay.sign.type}")
-  private String aliPaySignType; 
-  
-  @Value("${payment.third.party.alipay.order.query.uri.method}")
-  private String aliPayOrderQueryMethod;
-  
-  @Value("${payment.third.party.alipay.order.query.private.key}")
-  private String aliPayOrderQueryPrivateKey;
-  
-  @Value("${payment.third.party.alipay.order.query.public.key}")
-  private String aliPayOrderQueryPublicKey;
-  
-  @Value("${payment.third.party.alipay.order.query.format}")
-  private String aliPayOrderQueryFormat;
-  
-  @Value("${payment.third.party.alipay.order.query.charset}")
-  private String aliPayOrderQueryCharset;
-  
-  @Value("${payment.third.party.alipay.order.query.version}")
-  private String aliPayOrderQueryVersion;  
-  
   @Value("${payment.third.party.alipay.order.query.target.fundChannel}")
   private String aliPayOrderQueryTargetFundChannel;
   
+  private String wechatOrderQueryUri = ""; 
+  private String aliPayOrderQueryUri = "";  
+//  private String aliPaySignType = ""; 
+  private String aliPayOrderQueryMethod = "";
+  private String aliPayOrderQueryPrivateKey = "";
+  private String aliPayOrderQueryPublicKey = "";
+  private String aliPayOrderQueryFormat = "";
+  private String aliPayOrderQueryCharset = "";
+  private String aliPayOrderQueryVersion = "";
+    
   /**
    * 接收缴费后台请求，转换为数据格式
    * @param OrderQueryRequestForBackendSystem 缴费后台提交的请求数据对象
@@ -259,10 +283,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     String alipayTradeResult = getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"2");
     if(!"".equals(alipayTradeResult)){
       orderQueryResponseForBackendDto.setResult_code(alipayTradeResult);
-    }    
+    }
     
-    orderQueryResponseForBackendDto.setTotal_fee(AlipayTradeQueryResponse.getTotal_amount());
-    orderQueryResponseForBackendDto.setCash_fee(AlipayTradeQueryResponse.getBuyer_pay_amount());
+    orderQueryResponseForBackendDto.setTotal_fee(
+        Double.parseDouble(AlipayTradeQueryResponse.getTotal_amount()==null ? "0.00" : AlipayTradeQueryResponse.getTotal_amount() ));
+    orderQueryResponseForBackendDto.setCash_fee(Double.parseDouble(
+        AlipayTradeQueryResponse.getBuyer_pay_amount() ==null ? "0.00" : AlipayTradeQueryResponse.getBuyer_pay_amount()));
     orderQueryResponseForBackendDto.setMch_id(AlipayTradeQueryResponse.getStore_id());    
   
     FundBillList[] fundBillList = AlipayTradeQueryResponse.getFundBillList();
@@ -270,13 +296,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     if(fundBillList != null){
       int coupon_num = 0;
       String coupon_jsonString = "";
-      Integer coupon_fee = 0;     
+      Double coupon_fee = 0.00;
+      Double singleBillAmount = 0.00;
       for(FundBillList fb : fundBillList)
       {        
-        if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){         
+        if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){
+          singleBillAmount = fb.getAmount()==null? 0.00 : fb.getAmount();
           coupon_jsonString = coupon_jsonString+"{\"coupon_id_"+coupon_num+"\":\"\","
-              + "\"coupon_type_"+fb.getFund_channel()+"\":\"\",\"coupon_fee_"+fb.getAmount()+"\":\"\",},";
-          coupon_fee = coupon_fee+fb.getAmount();
+              + "\"coupon_type_"+fb.getFund_channel()+"\":\"\",\"coupon_fee_"+singleBillAmount+"\":\"\",},";          
+          coupon_fee = coupon_fee+singleBillAmount;
           coupon_num++;
         }        
       }      
@@ -311,6 +339,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       orderQueryResponseForBackendDto.setErr_code_des(requestDataIsNullMessage);
       return orderQueryResponseForBackendDto;
     }
+    
+    assignVariables();
     
     //for wechat
     if(PaymentBusinessConstant.WEI_XIN
@@ -401,7 +431,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
             
       Gson gson=new Gson();
       OrderQueryResponseForAliPay orderQueryResponseForAliPay = gson.fromJson(aliResponse.getBody(), OrderQueryResponseForAliPay.class);
-      System.out.println(orderQueryResponseForAliPay);
+      //System.out.println(orderQueryResponseForAliPay);
       
       orderQueryResponseForBackendDto = transferAliPayMessageForBackendSystme(orderQueryResponseForAliPay);
      
@@ -550,6 +580,20 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
     return response;
     
+  }
+  
+  
+  private void assignVariables(){
+    wechatOrderQueryUri = configsServiceImpl.getConfigsValueByExample("WEIXIN-URL", "query"); 
+    aliPayOrderQueryUri = configsServiceImpl.getConfigsValueByExample("ALIPAY-URL", "query");
+    aliPayOrderQueryPrivateKey = configsServiceImpl.getConfigsValueByExample("KEY", "ALIPAY-APP-PRIVATE");
+    aliPayOrderQueryPublicKey = configsServiceImpl.getConfigsValueByExample("KEY", "ALIPAY-PUBLIC");
+    
+    //aliPaySignType = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "signType"); 
+    aliPayOrderQueryMethod = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "method");    
+    aliPayOrderQueryFormat = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "format");
+    aliPayOrderQueryCharset = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "charset");
+    aliPayOrderQueryVersion = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "version");
   }
 
 
