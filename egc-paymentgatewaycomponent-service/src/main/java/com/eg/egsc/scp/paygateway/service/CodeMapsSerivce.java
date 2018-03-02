@@ -27,7 +27,7 @@ public interface CodeMapsSerivce {
     /**
      * 删除代码转换表信息
      *
-     * @param codeMapsUuids 代码转换表主键列表
+     * @param codeMapsUuids 代码转换表主键集合
      */
     void deleteCodeMaps(List<String> codeMapsUuids);
 
@@ -58,10 +58,10 @@ public interface CodeMapsSerivce {
      * 平台代码转换
      *
      * @param platform 支付平台
-     * @param method 消息方法
-     * @param exField 外部代码字段
-     * @param exCode 外部代码值
-     * @param exMsg 外部消息
+     * @param method   消息方法
+     * @param exField  外部代码字段
+     * @param exCode   外部代码值
+     * @param exMsg    外部消息
      * @return 数据集合
      */
     Map excodeConvertToIncode(String platform, String method, String exField, String exCode, String exMsg);
@@ -70,9 +70,9 @@ public interface CodeMapsSerivce {
      * 平台代码转换
      *
      * @param platform 支付平台
-     * @param method 消息方法
-     * @param exField 外部代码字段
-     * @param exCode 外部代码值
+     * @param method   消息方法
+     * @param exField  外部代码字段
+     * @param exCode   外部代码值
      * @return 数据集合
      */
     Map excodeConvertToIncode(String platform, String method, String exField, String exCode);

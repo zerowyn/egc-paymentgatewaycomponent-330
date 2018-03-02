@@ -51,8 +51,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 接收请求数据，按照微信提供的协议进行签名
      *
-     * @param requestParamsMap
-     * @return sign
+     * @param requestParamsMap 请求参数集合
+     * @return 签名
      */
     @Override
     public String weixinSignature(Map requestParamsMap) {
@@ -89,8 +89,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 接收返回数据，验证微信签名是否正确
      *
-     * @param responseParamsMap
-     * @return
+     * @param responseParamsMap 返回参数集合
+     * @return 验签结果
      */
     @Override
     public boolean weixinSignatureCheck(Map responseParamsMap) {
@@ -114,8 +114,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 接收请求数据，按照支付宝提供的协议进行签名
      *
-     * @param requestParamsMap
-     * @return
+     * @param requestParamsMap 请求参数集合
+     * @return 签名
      */
     @Override
     public String alipaySignature(Map requestParamsMap) {
@@ -154,8 +154,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 接收异步通知数据，验证支付宝签名是否正确
      *
-     * @param responseParamsMap
-     * @return
+     * @param responseParamsMap 返回参数集合
+     * @return 验签结果
      */
     @Override
     public boolean alipaySignatureAsyCheck(Map responseParamsMap) {
@@ -186,9 +186,9 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 接收同步返回数据，验证支付宝签名是否正确
      *
-     * @param content
-     * @param sign
-     * @return
+     * @param content 返回字符串
+     * @param sign    签名
+     * @return 验签结果
      */
     @Override
     public boolean alipaySignatureSynCheck(String content, String sign) {
@@ -199,8 +199,9 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * MD5签名
      *
-     * @param content
-     * @return
+     * @param content 验签字符串
+     * @param charset 字符集
+     * @return 签名
      */
     private String md5Sign(StringBuffer content, String charset) {
         String sign = null;
@@ -218,8 +219,10 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * HmacSHA256签名
      *
-     * @param content
-     * @return
+     * @param content   验签字符串
+     * @param weixinKey 微信密钥
+     * @param charset   字符集
+     * @return 签名
      */
     private String hmacSHA256Sign(StringBuffer content, String weixinKey, String charset) {
         String sign = null;
@@ -240,10 +243,11 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * RSA2签名
      *
-     * @param content
-     * @return
+     * @param content 验签字符串
+     * @param charset 字符集
+     * @return 签名
      */
-    public String rsa256Sign(StringBuffer content, String charset) {
+    private String rsa256Sign(StringBuffer content, String charset) {
         String sign = null;
         try {
             PrivateKey privateK = getPrivateKey();
@@ -264,8 +268,9 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * RSA签名
      *
-     * @param content
-     * @return
+     * @param content 验签字符串
+     * @param charset 字符集
+     * @return 签名
      */
     private String rsaSign(StringBuffer content, String charset) {
         String sign = null;
@@ -288,8 +293,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 获取待签名字符串
      *
-     * @param requestParamsMap
-     * @return
+     * @param requestParamsMap 请求参数集合
+     * @return 验签字符串
      */
     private StringBuffer getSignContent(Map requestParamsMap) {
         StringBuffer content = new StringBuffer();
@@ -313,7 +318,7 @@ public class SignatureServiceImpl implements SignatureService {
      * byte数组转换成字符串
      *
      * @param bytes
-     * @return
+     * @return String
      */
     private String encodeBytes(byte[] bytes) {
         StringBuilder hex = new StringBuilder(bytes.length * 2);
@@ -329,7 +334,7 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 获取privateKey
      *
-     * @return
+     * @return privateKey
      */
     private PrivateKey getPrivateKey() {
         try {
@@ -349,8 +354,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 获取字符集
      *
-     * @param platform
-     * @return
+     * @param platform 支付平台
+     * @return charset
      */
     private String getCharset(String platform) {
         String charset = defValSettingsServiceImpl.getDefValSettingsValueByExample(platform, CHARSET);
@@ -363,12 +368,12 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 验证签名
      *
-     * @param content
-     * @param sign
-     * @param alipayPublicKey
-     * @param charset
-     * @param rsaInstanceName
-     * @return
+     * @param content         验签字符串
+     * @param sign            签名
+     * @param alipayPublicKey 支付宝公钥
+     * @param charset         字符集
+     * @param rsaInstanceName 签名方式
+     * @return 验签结果
      */
     private boolean checkSign(String content, String sign, String alipayPublicKey,
                               String charset, String rsaInstanceName) {
@@ -389,10 +394,10 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * 获取签名结果
      *
-     * @param content
-     * @param sign
-     * @param signType
-     * @return
+     * @param content  验签字符串
+     * @param sign     签名
+     * @param signType 签名方式
+     * @return 验签结果
      */
     private boolean getCheckResult(String content, String sign, String signType) {
         String alipayPublicKey = configsServiceImpl.getConfigsValueByExample(KEY, "ALIPAY-PUBLIC");
@@ -411,8 +416,8 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * getSignTyoe
      *
-     * @param platform
-     * @return
+     * @param platform 支付平台
+     * @return 签名方式
      */
     private String getSignType(String platform) {
         String signType = defValSettingsServiceImpl.getDefValSettingsValueByExample(platform, SIGN_TYPE);
@@ -425,7 +430,7 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * getPublicKeyFromX509
      *
-     * @param algorithm
+     * @param algorithm 签名方式
      * @param ins
      * @return
      * @throws Exception

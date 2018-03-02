@@ -7,8 +7,6 @@ import com.eg.egsc.framework.paging.PageUtils;
 import com.eg.egsc.scp.paygateway.dto.DefValSettingsDto;
 import com.eg.egsc.scp.paygateway.dto.PageQueryDto;
 import com.eg.egsc.scp.paygateway.mapper.DefValSettingsMapper;
-import com.eg.egsc.scp.paygateway.mapper.entity.Configs;
-import com.eg.egsc.scp.paygateway.mapper.entity.ConfigsCriteria;
 import com.eg.egsc.scp.paygateway.mapper.entity.DefValSettings;
 import com.eg.egsc.scp.paygateway.mapper.entity.DefValSettingsCriteria;
 import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
@@ -39,7 +37,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
     /**
      * 新增默认设置表信息
      *
-     * @param defValSettingsDto
+     * @param defValSettingsDto 默认设置表对象
      */
     @Override
     public void insertDefValSettings(DefValSettingsDto defValSettingsDto) {
@@ -59,7 +57,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
     /**
      * 删除默认设置表信息
      *
-     * @param defValSettingsUuids
+     * @param defValSettingsUuids 默认设置表主键集合
      */
     @Override
     public void deleteDefValSettings(List<String> defValSettingsUuids) {
@@ -70,14 +68,16 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
         logger.info("delete DefValSettings start");
         DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
         defValSettingsCriteria.createCriteria().andUuidIn(defValSettingsUuids);
-        defValSettingsMapper.deleteByExample(defValSettingsCriteria);
+        DefValSettings defValSettings = new DefValSettings();
+        defValSettings.setDeleteFlag((short) 0);
+        defValSettingsMapper.updateByExampleSelective(defValSettings, defValSettingsCriteria);
         logger.info("delete DefValSettings successful");
     }
 
     /**
      * 修改默认设置表信息
      *
-     * @param defValSettingsDto
+     * @param defValSettingsDto 默认设置表对象
      */
     @Override
     public void updateDefValSettings(DefValSettingsDto defValSettingsDto) {
@@ -95,8 +95,8 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
     /**
      * 查询默认设置表信息
      *
-     * @param uuid
-     * @return
+     * @param uuid 默认设置表主键
+     * @return 默认设置表对象
      */
     @Override
     public DefValSettingsDto getDefValSettingsByUuid(String uuid) {
@@ -105,7 +105,13 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
             return null;
         }
         logger.info("getDefValSettingsByUuid start");
-        DefValSettings defValSettings = defValSettingsMapper.selectByPrimaryKey(uuid);
+        DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
+        defValSettingsCriteria.createCriteria().andUuidEqualTo(uuid).andDeleteFlagEqualTo((short) 1);
+        List<DefValSettings> defValSettingsList = defValSettingsMapper.selectByExample(defValSettingsCriteria);
+        DefValSettings defValSettings = getUpdateDefValSetting(defValSettingsList);
+        if (defValSettings == null) {
+            return null;
+        }
         DefValSettingsDto defValSettingsDto = new DefValSettingsDto();
         defValSettingsConvertToDefValSettingsDto(defValSettings, defValSettingsDto);
         logger.info("getDefValSettingsByUuid successful");
@@ -115,8 +121,8 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
     /**
      * 默认设置表信息分页查询
      *
-     * @param pageQueryDto
-     * @return
+     * @param pageQueryDto 页面请求对象
+     * @return 默认设置表对象集合
      */
     @Override
     public List<DefValSettingsDto> getDefValSettingsList(PageQueryDto pageQueryDto) {
@@ -126,6 +132,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
         }
         logger.info("getDefValSettingsList start");
         DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
+        defValSettingsCriteria.createCriteria().andDeleteFlagEqualTo((short) 1);
         RowBounds rowBounds = new RowBounds(PageUtils.getOffset(pageQueryDto.getPageNo(), pageQueryDto.getPageSize()),
                 pageQueryDto.getPageSize());
         List<DefValSettings> defValSettingsList
@@ -139,34 +146,36 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
     /**
      * 查询默认设置表信息的值
      *
-     * @param platform
-     * @param method
-     * @param fieldName
-     * @return
+     * @param platform  支付平台代码
+     * @param method    消息方法的代码
+     * @param fieldName 参数名
+     * @return 参数的默认值
      */
     @Override
     public String getDefValSettingsValueByExample(String platform, String method, String fieldName) {
-        if (StringUtils.isEmpty(platform) || StringUtils.isEmpty(method) || StringUtils.isEmpty(fieldName)) {
+        if (StringUtils.isEmpty(platform) || StringUtils.isEmpty(fieldName)) {
             logger.error("Param is null!");
             return null;
         }
-        logger.info("getDefValSettingsValueByExample start");
-        DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
-        defValSettingsCriteria.createCriteria().andPlatformEqualTo(platform).andMethodEqualTo(method)
-                .andFieldNameEqualTo(fieldName);
-        List<DefValSettings> defValSettingsList = defValSettingsMapper.selectByExample(defValSettingsCriteria);
-        if (CollectionUtil.isEmpty(defValSettingsList)) {
+        List<DefValSettings> defValSettingsList = new ArrayList<>();
+        if (!StringUtils.isEmpty(method)) {
+            DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
+            defValSettingsCriteria.createCriteria().andPlatformEqualTo(platform).andMethodEqualTo(method)
+                    .andFieldNameEqualTo(fieldName).andDeleteFlagEqualTo((short) 1);
+            defValSettingsList = defValSettingsMapper.selectByExample(defValSettingsCriteria);
+        }
+        if (CollectionUtil.isEmpty(defValSettingsList) || StringUtils.isEmpty(method)) {
             return getDefValSettingsValueByExample(platform, fieldName);
         }
-        return getUpdateValue(defValSettingsList);
+        return getUpdateDefValSetting(defValSettingsList).getValue();
     }
 
     /**
      * 查询默认设置表信息的值
      *
-     * @param platform
-     * @param fieldName
-     * @return
+     * @param platform  支付平台代码
+     * @param fieldName 参数名
+     * @return 参数的默认值
      */
     @Override
     public String getDefValSettingsValueByExample(String platform, String fieldName) {
@@ -174,34 +183,35 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
             logger.error("Param is null!");
             return null;
         }
-        logger.info("getDefValSettingsValueByExample start");
         DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
-        defValSettingsCriteria.createCriteria().andPlatformEqualTo(platform).andFieldNameEqualTo(fieldName);
+        defValSettingsCriteria.createCriteria().andPlatformEqualTo(platform).andMethodIsNull()
+                .andFieldNameEqualTo(fieldName).andDeleteFlagEqualTo((short) 1);
         List<DefValSettings> defValSettingsList = defValSettingsMapper.selectByExample(defValSettingsCriteria);
-        return getUpdateValue(defValSettingsList);
+        DefValSettings defValSettings = getUpdateDefValSetting(defValSettingsList);
+        return defValSettings != null ? defValSettings.getValue() : null;
     }
 
     /**
-     * 获取最新默认设置表值
+     * 获取默认设置表对象
      *
-     * @param defValSettingsList
-     * @return
+     * @param defValSettingsList 默认设置表对象集合
+     * @return 默认设置表对象
      */
-    private String getUpdateValue(List<DefValSettings> defValSettingsList) {
-        String value = null;
+    private DefValSettings getUpdateDefValSetting(List<DefValSettings> defValSettingsList) {
+        DefValSettings defValSettings = null;
         if (defValSettingsList.size() == 1) {
-            value = defValSettingsList.get(0).getValue();
+            defValSettings = defValSettingsList.get(0);
         }
         if (defValSettingsList.size() > 1) {
             Date createTime = defValSettingsList.get(0).getCreateTime();
-            value = defValSettingsList.get(0).getValue();
-            for (DefValSettings defValSettings : defValSettingsList) {
-                if (defValSettings.getCreateTime().getTime() > createTime.getTime()) {
-                    value = defValSettings.getValue();
+            defValSettings = defValSettingsList.get(0);
+            for (DefValSettings defValSettingsVal : defValSettingsList) {
+                if (defValSettingsVal.getCreateTime().getTime() > createTime.getTime()) {
+                    defValSettings = defValSettingsVal;
                 }
             }
         }
-        return value;
+        return defValSettings;
     }
 
 
@@ -242,11 +252,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
         defValSettingsDto.setFieldName(defValSettings.getFieldName());
         defValSettingsDto.setRemark(defValSettings.getRemark());
         defValSettingsDto.setValue(defValSettings.getValue());
-        Short deleteFlag = defValSettings.getDeleteFlag();
-        if (deleteFlag == null) {
-            deleteFlag = 1;
-        }
-        defValSettingsDto.setDeleteFlag(deleteFlag);
+        defValSettingsDto.setDeleteFlag(defValSettings.getDeleteFlag());
         defValSettingsDto.setCreateTime(defValSettings.getCreateTime());
         defValSettingsDto.setUpdateTime(defValSettings.getUpdateTime());
         defValSettingsDto.setCreateUser(defValSettings.getCreateUser());

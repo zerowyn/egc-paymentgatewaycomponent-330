@@ -15,16 +15,29 @@ public class PaymentBusinessDto extends BaseBusinessDto {
 
     private static final long serialVersionUID = -4295449118054562789L;
 
+    /**
+     * 表主键
+     */
     private String uuid;
 
-    private String courtUuid;
-
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
+    /**
+     * 最后更新时间
+     */
     private Date updateTime;
 
+    /**
+     * 创建人
+     */
     private String createUser;
 
+    /**
+     * 修订人
+     */
     private String updateUser;
 
     public String getUuid() {
@@ -33,14 +46,6 @@ public class PaymentBusinessDto extends BaseBusinessDto {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public String getCourtUuid() {
-        return courtUuid;
-    }
-
-    public void setCourtUuid(String courtUuid) {
-        this.courtUuid = courtUuid;
     }
 
     public Date getCreateTime() {

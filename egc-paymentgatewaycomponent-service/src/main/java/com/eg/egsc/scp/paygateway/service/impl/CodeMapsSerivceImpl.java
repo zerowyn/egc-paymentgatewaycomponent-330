@@ -38,7 +38,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     /**
      * 新增代码转换表信息
      *
-     * @param codeMapsDto
+     * @param codeMapsDto 代码转换表数据对象
      */
     @Override
     public void insertCodeMaps(CodeMapsDto codeMapsDto) {
@@ -58,7 +58,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     /**
      * 删除代码转换表信息
      *
-     * @param codeMapsUuids
+     * @param codeMapsUuids 代码转换表主键集合
      */
     @Override
     public void deleteCodeMaps(List<String> codeMapsUuids) {
@@ -78,7 +78,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     /**
      * 修改代码转换表信息
      *
-     * @param codeMapsDto
+     * @param codeMapsDto 代码转换表数据对象
      */
     @Override
     public void updateCodeMaps(CodeMapsDto codeMapsDto) {
@@ -96,8 +96,8 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     /**
      * 查询代码转换表信息
      *
-     * @param uuid
-     * @return
+     * @param uuid 代码转换表主键
+     * @return 代码转换表数据对象
      */
     @Override
     public CodeMapsDto getCodeMapsByUuid(String uuid) {
@@ -122,8 +122,8 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     /**
      * 代码转换表信息分页查询
      *
-     * @param pageQueryDto
-     * @return
+     * @param pageQueryDto 页面请求对象
+     * @return 代码转换表数据对象列表
      */
     @Override
     public List<CodeMapsDto> getCodeMapsList(PageQueryDto pageQueryDto) {
@@ -142,6 +142,16 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         return codeMapsDtoList;
     }
 
+    /**
+     * 平台代码转换
+     *
+     * @param platform 支付平台
+     * @param method   消息方法
+     * @param exField  外部代码字段
+     * @param exCode   外部代码值
+     * @param exMsg    外部消息
+     * @return 数据集合
+     */
     @Override
     public Map excodeConvertToIncode(String platform, String method, String exField, String exCode, String exMsg) {
 
@@ -162,11 +172,29 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         return getResultMap(exCode, exMsg, codeMapTypesList);
     }
 
+    /**
+     * 平台代码转换
+     *
+     * @param platform 支付平台
+     * @param method   消息方法
+     * @param exField  外部代码字段
+     * @param exCode   外部代码值
+     * @return 数据集合
+     */
     @Override
     public Map excodeConvertToIncode(String platform, String method, String exField, String exCode) {
         return excodeConvertToIncode(platform, method, exField, exCode, "");
     }
 
+
+    /**
+     * 获取返回结果集合
+     *
+     * @param exCode           外部代码值
+     * @param exMsg            外部消息
+     * @param codeMapTypesList 代码转换类型对象集合
+     * @return 结果集合
+     */
     private Map getResultMap(String exCode, String exMsg, List<CodeMapTypes> codeMapTypesList) {
         List<CodeMaps> codeMapsList = new ArrayList<>();
         for (CodeMapTypes codeMapTypes : codeMapTypesList) {
@@ -196,6 +224,12 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         return resultMap;
     }
 
+    /**
+     * 获取代码转换对象集合
+     *
+     * @param codeMapsList 代码转换对象集合
+     * @return 代码转换对象
+     */
     private CodeMaps getUpdateCodeMaps(List<CodeMaps> codeMapsList) {
         CodeMaps codeMaps = null;
         if (codeMapsList.size() == 1) {
@@ -212,6 +246,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         }
         return codeMaps;
     }
+
 
     private List<CodeMapTypes> getListWithoutMethod(String platform, String exField) {
         CodeMapTypesCriteria codeMapTypesCriteria = new CodeMapTypesCriteria();

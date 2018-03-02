@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 
 /**
+ * 字符串工具类
+ *
  * @author gucunyang
  * @since 2018-02-08
  */

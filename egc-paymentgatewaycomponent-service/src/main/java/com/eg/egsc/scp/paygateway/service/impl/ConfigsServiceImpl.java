@@ -37,7 +37,7 @@ public class ConfigsServiceImpl implements ConfigsService {
     /**
      * 新增配置表信息
      *
-     * @param configsDto
+     * @param configsDto 配置表对象
      */
     @Override
     public void insertConfigs(ConfigsDto configsDto) {
@@ -57,7 +57,7 @@ public class ConfigsServiceImpl implements ConfigsService {
     /**
      * 删除配置表信息
      *
-     * @param configsUuids
+     * @param configsUuids 配置表主键集合
      */
     @Override
     public void deleteConfigs(List<String> configsUuids) {
@@ -68,14 +68,16 @@ public class ConfigsServiceImpl implements ConfigsService {
         logger.info("delete Configs start");
         ConfigsCriteria configsCriteria = new ConfigsCriteria();
         configsCriteria.createCriteria().andUuidIn(configsUuids);
-        configsMapper.deleteByExample(configsCriteria);
+        Configs configs = new Configs();
+        configs.setDeleteFlag((short) 1);
+        configsMapper.updateByExampleSelective(configs, configsCriteria);
         logger.info("delete Configs successful");
     }
 
     /**
      * 修改配置表信息
      *
-     * @param configsDto
+     * @param configsDto 配置表对象
      */
     @Override
     public void updateConfigs(ConfigsDto configsDto) {
@@ -93,8 +95,8 @@ public class ConfigsServiceImpl implements ConfigsService {
     /**
      * 查询配置表信息
      *
-     * @param uuid
-     * @return
+     * @param uuid 配置表主键
+     * @return 配置表对象
      */
     @Override
     public ConfigsDto getConfigsByUuid(String uuid) {
@@ -103,7 +105,10 @@ public class ConfigsServiceImpl implements ConfigsService {
             return null;
         }
         logger.info("getConfigsByUuid start");
-        Configs configs = configsMapper.selectByPrimaryKey(uuid);
+        ConfigsCriteria configsCriteria = new ConfigsCriteria();
+        configsCriteria.createCriteria().andUuidEqualTo(uuid).andDeleteFlagEqualTo((short) 1);
+        List<Configs> configsList = configsMapper.selectByExample(configsCriteria);
+        Configs configs = getUpdateConfig(configsList);
         if (configs == null) {
             return null;
         }
@@ -116,8 +121,8 @@ public class ConfigsServiceImpl implements ConfigsService {
     /**
      * 配置表信息分页查询
      *
-     * @param pageQueryDto
-     * @return
+     * @param pageQueryDto 页面请求对象
+     * @return 配置表列表
      */
     @Override
     public List<ConfigsDto> getConfigsList(PageQueryDto pageQueryDto) {
@@ -127,6 +132,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         }
         logger.info("getConfigsList start");
         ConfigsCriteria configsCriteria = new ConfigsCriteria();
+        configsCriteria.createCriteria().andDeleteFlagEqualTo((short) 1);
         RowBounds rowBounds = new RowBounds(PageUtils.getOffset(pageQueryDto.getPageNo(), pageQueryDto.getPageSize()),
                 pageQueryDto.getPageSize());
         List<Configs> configsList = configsMapper.selectByExampleWithRowbounds(configsCriteria, rowBounds);
@@ -138,9 +144,9 @@ public class ConfigsServiceImpl implements ConfigsService {
     /**
      * 查询配置信息的值
      *
-     * @param typeCode
-     * @param configItem
-     * @return
+     * @param typeCode   配置项的类别代码
+     * @param configItem 配置项的名称
+     * @return 配置项的值
      */
     @Override
     public String getConfigsValueByExample(String typeCode, String configItem) {
@@ -150,23 +156,35 @@ public class ConfigsServiceImpl implements ConfigsService {
         }
         logger.info("getConfigsValueByExample start");
         ConfigsCriteria configsCriteria = new ConfigsCriteria();
-        configsCriteria.createCriteria().andTypeCodeEqualTo(typeCode).andConfigItemEqualTo(configItem);
+        configsCriteria.createCriteria().andTypeCodeEqualTo(typeCode).andConfigItemEqualTo(configItem)
+                .andDeleteFlagEqualTo((short) 1);
         List<Configs> configsList = configsMapper.selectByExample(configsCriteria);
-        String value = null;
+        Configs configs = getUpdateConfig(configsList);
+        logger.info("getConfigsValueByExample successful");
+        return configs != null ? configs.getValue() : null;
+    }
+
+    /**
+     * 获取配置表对象
+     *
+     * @param configsList 配置表对象集合
+     * @return 配置表对象
+     */
+    private Configs getUpdateConfig(List<Configs> configsList) {
+        Configs configs = null;
         if (configsList.size() == 1) {
-            value = configsList.get(0).getValue();
+            configs = configsList.get(0);
         }
         if (configsList.size() > 1) {
             Date createTime = configsList.get(0).getCreateTime();
-            value = configsList.get(0).getValue();
-            for (Configs configs : configsList) {
-                if (configs.getCreateTime().getTime() > createTime.getTime()) {
-                    value = configs.getValue();
+            configs = configsList.get(0);
+            for (Configs configsVal : configsList) {
+                if (configsVal.getCreateTime().getTime() > createTime.getTime()) {
+                    configs = configsVal;
                 }
             }
         }
-        logger.info("getConfigsValueByExample successful");
-        return value;
+        return configs;
     }
 
 
@@ -206,11 +224,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         configsDto.setConfigItem(configs.getConfigItem());
         configsDto.setRemark(configs.getRemark());
         configsDto.setValue(configs.getValue());
-        Short deleteFlag = configs.getDeleteFlag();
-        if (deleteFlag == null) {
-            deleteFlag = 1;
-        }
-        configsDto.setDeleteFlag(deleteFlag);
+        configsDto.setDeleteFlag(configs.getDeleteFlag());
         configsDto.setCreateTime(configs.getCreateTime());
         configsDto.setUpdateTime(configs.getUpdateTime());
         configsDto.setCreateUser(configs.getCreateUser());

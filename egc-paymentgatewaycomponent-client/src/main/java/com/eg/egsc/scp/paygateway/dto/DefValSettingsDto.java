@@ -11,16 +11,34 @@ public class DefValSettingsDto extends PaymentBusinessDto {
 
     private static final long serialVersionUID = 7406861594956795559L;
 
+    /**
+     * 支付平台代码，如：WEIXIN、ALIPAY
+     */
     private String platform;
 
+    /**
+     * 消息方法的代码
+     */
     private String method;
 
+    /**
+     * 参数名
+     */
     private String fieldName;
 
+    /**
+     * 参数的默认值
+     */
     private String value;
 
+    /**
+     * 备注信息
+     */
     private String remark;
 
+    /**
+     * 逻辑删除标记：0-已删除 1-未删除（默认）
+     */
     private Short deleteFlag;
 
     public String getPlatform() {

@@ -7,6 +7,8 @@ import com.eg.egsc.common.component.utils.Base64;
 
 
 /**
+ * base64编码工具类
+ *
  * @author gucunyang
  * @since 2018-02-08
  */
