@@ -51,7 +51,7 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
    * 微信统一下单接口的消息格式-微信支付分配的商户号
    * 
    */
-  private String mch_id;
+  private String partnerid;
   
   /**
    * 设备号
@@ -63,7 +63,7 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
    * 随机字符串
    * 微信返回的随机字符串（验签用，不向缴费后台传送）
    */
-  private String nonce_str;
+  private String noncestr;
 
   /**
    * 签名
@@ -99,7 +99,7 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
    * 预支付交易会话标识
    *
    */
-  private String prepay_id;
+  private String prepayid;
 
   /**
    * 支付跳转链接
@@ -114,6 +114,26 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
    * @return
    */
   private String orderStr;
+
+  /**
+   * 微信时间戳
+   * @return
+   */
+  private String timestamp;
+
+  /**
+   * 微信，固定值
+   * @return
+   */
+  private String packageValue;
+
+  public String getPackageValue() {
+    return packageValue;
+  }
+
+  public void setPackageValue(String packageValue) {
+    this.packageValue = packageValue;
+  }
 
   public static long getSerialVersionUID() {
     return serialVersionUID;
@@ -155,20 +175,6 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
     this.appid = appid;
   }
 
-  /**
-   * @Return the String mch_id
-   */
-  public String getMch_id() {
-    return mch_id;
-  }
-
-  /**
-   * @Param String mch_id to set
-   */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
-  }
-
   public String getReturn_code() {
     return return_code;
   }
@@ -191,14 +197,6 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
 
   public void setDevice_info(String device_info) {
     this.device_info = device_info;
-  }
-
-  public String getNonce_str() {
-    return nonce_str;
-  }
-
-  public void setNonce_str(String nonce_str) {
-    this.nonce_str = nonce_str;
   }
 
   public String getSign() {
@@ -233,14 +231,6 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
     this.err_code_des = err_code_des;
   }
 
-  public String getPrepay_id() {
-    return prepay_id;
-  }
-
-  public void setPrepay_id(String prepay_id) {
-    this.prepay_id = prepay_id;
-  }
-
   public String getMweb_url() {
     return mweb_url;
   }
@@ -255,5 +245,37 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
 
   public void setOrderStr(String orderStr) {
     this.orderStr = orderStr;
+  }
+
+  public String getPartnerid() {
+    return partnerid;
+  }
+
+  public void setPartnerid(String partnerid) {
+    this.partnerid = partnerid;
+  }
+
+  public String getNoncestr() {
+    return noncestr;
+  }
+
+  public void setNoncestr(String noncestr) {
+    this.noncestr = noncestr;
+  }
+
+  public String getPrepayid() {
+    return prepayid;
+  }
+
+  public void setPrepayid(String prepayid) {
+    this.prepayid = prepayid;
+  }
+
+  public String getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(String timestamp) {
+    this.timestamp = timestamp;
   }
 }

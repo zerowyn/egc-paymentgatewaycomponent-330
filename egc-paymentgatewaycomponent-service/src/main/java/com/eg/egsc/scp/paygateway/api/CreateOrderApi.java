@@ -13,6 +13,7 @@ import com.eg.egsc.framework.service.base.BaseController;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.CreateOrderService;
+import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -54,19 +55,16 @@ public class CreateOrderApi extends BaseController {
         ResponseDto result = new ResponseDto();
         try {
             createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
-            String message = "";
-            if (createOrderResponseForBackendDto == null) {
-                message = "程序异常，数据返回对象为空";
-                logger.error(message);
-                result.setMessage(message);
-            } else {
-                message = "数据返回正常";
-                result.setMessage(message);
+            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturn_code())) {
+                logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
+                result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
+            }else{
+                result.setMessage("数据返回正常");
             }
             result.setData(createOrderResponseForBackendDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            result.setMessage("支付网关：创建订单出现异常");
+            result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
         }
         return result;
     }

@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.util;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /**
  * @Class Name PaymentBusinessConstant
  * @Author caiqinli
@@ -48,5 +50,12 @@ public class PaymentBusinessConstant {
 
     public static final String SUCCESS_CODE = "200";
 
+    public static final String FAIL_MESSAGE = "支付网关：创建订单出现异常";
+
+    public static final String PRODUCT_CODE = "QUICK_MSECURITY_PAY";
+
+    public static final String SUCCESS_MESSAGE = "SUCCESS";
+
+    public static final String PACKAGE="Sign=WXPay";
 
 }
