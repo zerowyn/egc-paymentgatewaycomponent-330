@@ -143,12 +143,8 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
     }
 
     @Override
-    public Map excodeConvertToIncode(Map codeConvertMap) {
-        String platform = (String) codeConvertMap.get("platform");
-        String exField = (String) codeConvertMap.get("exField");
-        String method = (String) codeConvertMap.get("method");
-        String exCode = (String) codeConvertMap.get("exCode");
-        String exMsg = (String) codeConvertMap.get("exMsg");
+    public Map excodeConvertToIncode(String platform, String method, String exField, String exCode, String exMsg) {
+
         if (StringUtils.isEmpty(platform) || StringUtils.isEmpty(exField)) {
             logger.error("Param is null!");
             return null;
@@ -164,6 +160,11 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
             codeMapTypesList = getListWithoutMethod(platform, exField);
         }
         return getResultMap(exCode, exMsg, codeMapTypesList);
+    }
+
+    @Override
+    public Map excodeConvertToIncode(String platform, String method, String exField, String exCode) {
+        return excodeConvertToIncode(platform, method, exField, exCode, "");
     }
 
     private Map getResultMap(String exCode, String exMsg, List<CodeMapTypes> codeMapTypesList) {
