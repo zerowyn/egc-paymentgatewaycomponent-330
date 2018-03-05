@@ -39,7 +39,6 @@ public class NotifyApi extends BaseController {
 
   /**
    * 缴费后台通知缴费结果
-   *
    * @param 支付结果通知请求微信的数据
    * @return ResponseDto 返回的结果
    */
@@ -62,6 +61,7 @@ public class NotifyApi extends BaseController {
 
   /**
    * 缴费后台通知缴费结果
+   *
    *
    * @param 支付结果通知请求支付宝的数据
    * @return ResponseDto 返回的结果
