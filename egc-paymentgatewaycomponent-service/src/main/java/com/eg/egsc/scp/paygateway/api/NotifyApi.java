@@ -46,9 +46,9 @@ public class NotifyApi extends BaseController {
   @RequestMapping(value = "/weixinNotifyResult", method = RequestMethod.POST)
   public ResponseDto weixinNotifyResult(@RequestBody String requestData) {
     ResponseDto responseDto = new ResponseDto();
-    if (StringUtils.isEmpty(requestData)) {
-      logger.warn("param is blank");
-      responseDto.setMessage("param is blank");
+    if(StringUtils.isEmpty(requestData)) {
+      logger.warn("The parameters are empty");
+      responseDto.setMessage("parameters is blank");
       responseDto.setData(null);
       // 调用缴费后台接口
       return responseDto;
@@ -61,8 +61,6 @@ public class NotifyApi extends BaseController {
 
   /**
    * 缴费后台通知缴费结果
-   *
-   *
    * @param 支付结果通知请求支付宝的数据
    * @return ResponseDto 返回的结果
    */
