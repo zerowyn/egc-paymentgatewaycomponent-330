@@ -12,7 +12,7 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<!--日志文件输出的文件名 -->
-			<fileNamePattern>/data/logs/demo-${server.port}-%d{yyyy-MM-dd}-%i.log
+			<fileNamePattern>/data/logs/paymentgateway-${server.port}-%d{yyyy-MM-dd}-%i.log
 			</fileNamePattern>
 			<!--文件最多保留的天数 -->
 			<maxHistory>7</maxHistory>
@@ -30,7 +30,7 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<!--日志文件输出的文件名 -->
-			<fileNamePattern>/data/logs/error/demo-${server.port}-%d{yyyy-MM-dd}-%i.log
+			<fileNamePattern>/data/logs/error/paymentgateway-${server.port}-%d{yyyy-MM-dd}-%i.log
 			</fileNamePattern>
 			<!--文件最多保留的天数 -->
 			<maxHistory>7</maxHistory>
