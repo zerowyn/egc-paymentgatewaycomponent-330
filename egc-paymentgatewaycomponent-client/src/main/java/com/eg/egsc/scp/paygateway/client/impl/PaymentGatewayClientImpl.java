@@ -7,6 +7,9 @@
  */
 package com.eg.egsc.scp.paygateway.client.impl;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.eg.egsc.common.exception.CommonException;
 import com.eg.egsc.framework.client.core.BaseApiClient;
 import com.eg.egsc.framework.client.dto.ResponseDto;
@@ -15,7 +18,6 @@ import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -23,7 +25,8 @@ import org.springframework.stereotype.Component;
  * @Author caiqinli
  * @Create In 2018年3月5日
  */
-@Component
+@Component 
+@Scope("prototype")
 public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGatewayClient {
   
   public PaymentGatewayClientImpl(){
