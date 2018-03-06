@@ -13,30 +13,15 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
-
-
-
-
-
-
-
-
-
-
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +44,7 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
+import com.eg.egsc.scp.paygateway.service.CodeMapsSerivce;
 import com.eg.egsc.scp.paygateway.service.ConfigsService;
 import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
@@ -93,6 +79,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   @Autowired
   DefValSettingsService defValSettingsServiceImpl;
   
+  @Autowired
+  CodeMapsSerivce codeMapsSerivceImpl;
+  
   /////
 //  @Value("${payment.third.party.wechat.order.query.uri}")
 //  private String wechatOrderQueryUri;
@@ -100,8 +89,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 //  @Value("${payment.third.party.alipay.order.query.uri}")
 //  private String aliPayOrderQueryUri;
 //  
-  @Value("${payment.third.party.alipay.sign.type}")
-  private String aliPaySignType; 
+//  @Value("${payment.third.party.alipay.sign.type}")
+//  private String aliPaySignType; 
 //  
 //  @Value("${payment.third.party.alipay.order.query.uri.method}")
 //  private String aliPayOrderQueryMethod;
@@ -139,7 +128,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   
   private String wechatOrderQueryUri = ""; 
   private String aliPayOrderQueryUri = "";  
-//  private String aliPaySignType = ""; 
+  private String aliPaySignType = ""; 
   private String aliPayOrderQueryMethod = "";
   private String aliPayOrderQueryPrivateKey = "";
   private String aliPayOrderQueryPublicKey = "";
@@ -277,12 +266,18 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
     
     orderQueryResponseForBackendDto.setTransaction_id(AlipayTradeQueryResponse.getTrade_no());
-    orderQueryResponseForBackendDto.setOut_trade_no(AlipayTradeQueryResponse.getOut_trade_no());    
-    orderQueryResponseForBackendDto.setTrade_state(getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"1"));
+    orderQueryResponseForBackendDto.setOut_trade_no(AlipayTradeQueryResponse.getOut_trade_no());
     
-    String alipayTradeResult = getTradeStateOrResultCode(AlipayTradeQueryResponse.getTrade_status(),"2");
-    if(!"".equals(alipayTradeResult)){
-      orderQueryResponseForBackendDto.setResult_code(alipayTradeResult);
+    Map getTradeStateMap = codeMapsSerivceImpl.excodeConvertToIncode(
+        PaymentBusinessConstant.ALI_PAY, "query", "trade_status", AlipayTradeQueryResponse.getTrade_status());
+    if(getTradeStateMap != null){
+      orderQueryResponseForBackendDto.setTrade_state((String)getTradeStateMap.get("trade_state"));
+    }
+    
+    Map getResultCodeMap = codeMapsSerivceImpl.excodeConvertToIncode(
+        PaymentBusinessConstant.ALI_PAY, "query", "trade_status", AlipayTradeQueryResponse.getTrade_status());
+    if(getResultCodeMap != null && !"".equals((String)getResultCodeMap.get("trade_state"))){      
+      orderQueryResponseForBackendDto.setResult_code((String)getResultCodeMap.get("trade_state"));
     }
     
     orderQueryResponseForBackendDto.setTotal_fee(
@@ -465,27 +460,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       
   }
   
-  
-  /**
-   * 
-   * @param tradeStatusFromAlipay 支付宝接口返回的trade status; 
-   * @param flag : 1-表示需要转换为缴费后台的trade_state; 2-表示需要转换为缴费后台的result_code
-   * @return String
-   */
-  private String getTradeStateOrResultCode(String tradeStatusFromAlipay,String flag){
-    String result = "";
-    if("TRADE_SUCCESS".equals(tradeStatusFromAlipay)){
-      result = "SUCCESS";
-    }else if("WAIT_BUYER_PAY".equals(tradeStatusFromAlipay)){
-      result = "USERPAYING";
-    }else if("TRADE_CLOSED".equals(tradeStatusFromAlipay)){
-      result = "TRADE_CLOSED";
-    }else if("TRADE_FINISHED".equals(tradeStatusFromAlipay)){
-      result = "TRADE_FINISHED";
-    }
-    return result;    
-  }  
-  
+   
   private String getReturn_code(String codeFromAlipay){
     String result = "FAIL";
     if("10000".equals(codeFromAlipay)){
@@ -589,7 +564,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     aliPayOrderQueryPrivateKey = configsServiceImpl.getConfigsValueByExample("KEY", "ALIPAY-APP-PRIVATE");
     aliPayOrderQueryPublicKey = configsServiceImpl.getConfigsValueByExample("KEY", "ALIPAY-PUBLIC");
     
-    //aliPaySignType = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "signType"); 
+    aliPaySignType = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "sign_type"); 
     aliPayOrderQueryMethod = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "method");    
     aliPayOrderQueryFormat = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "format");
     aliPayOrderQueryCharset = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY", "query", "charset");

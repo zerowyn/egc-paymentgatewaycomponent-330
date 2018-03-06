@@ -3,11 +3,11 @@ server:
   context-path: /
 spring: 
   application:
-    name: demo
+    name: paymentgateway
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://192.168.0.161:38761/eureka/
+      defaultZone: http://192.168.0.139:38761/eureka/
   instance:
     statusPageUrlPath: /swagger-ui.html
     lease-expiration-duration-in-seconds: 30 
@@ -24,5 +24,5 @@ security:
     enabled: false
     
 gateway:
-  service-url: http://192.168.0.161:30940
+  service-url: http://192.168.0.139:30940
 

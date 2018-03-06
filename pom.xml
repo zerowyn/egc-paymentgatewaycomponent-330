@@ -31,7 +31,7 @@
 		<!-- 通用工具包版本设置 -->
 		<slf4j.version>1.7.7</slf4j.version>
 		<commons-lang3.version>3.3.2</commons-lang3.version>
-		<common.framework.version>1.1.0-SNAPSHOT</common.framework.version>
+		<common.framework.version>1.2.0-SNAPSHOT</common.framework.version>
 	</properties>
 
 	<dependencyManagement>
