@@ -20,6 +20,7 @@ import com.eg.egsc.scp.paygateway.service.CreateOrderService;
 import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.*;
+import com.eg.egsc.scp.paygateway.util.ErrorCodeConstant;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
 import com.google.gson.Gson;
@@ -248,12 +249,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 createOrderResponseForWeiXin = (CreateOrderResponseForWeiXin) unmarshaller.unmarshal(sr);
                 createOrderResponseForBackendDto =
                         transferWeiXinMessageForBackendSystme(createOrderResponseForWeiXin);
-            } catch (HttpClientErrorException e) {
-                logger.error("error:  " + e.getResponseBodyAsString());
-                new PaymentGatewayException(e.getStatusCode().toString(),e.getMessage());
-            } catch (Exception e) {
+            }catch (Exception e) {
                 logger.error("error:  " + e.getMessage());
-                new PaymentGatewayException(e.getMessage());
+                throw new PaymentGatewayException(ErrorCodeConstant.WEIXIN_CREATE_ORDER_ERROR);
             }
         }
 
@@ -323,7 +321,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     }
 
     private String getSign(CreateOrderResponseForBackendDto createOrderResponseForBackendDto) {
-        Gson gson = new Gson();
         Map<String, Object> signatureMap = new HashMap<String, Object>();
         signatureMap.put("appid",createOrderResponseForBackendDto.getAppid());
         signatureMap.put("partnerid",createOrderResponseForBackendDto.getPartnerid());
@@ -354,7 +351,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
         } catch (JAXBException e) {
             e.printStackTrace();
-            new PaymentGatewayException(e.getErrorCode(),e.getMessage());
+           throw new PaymentGatewayException(ErrorCodeConstant.XML_ABNORMAL_CONVERSION);
         }
 
         return xmlString;
@@ -377,8 +374,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         try {
             response = alipayClient.sdkExecute(request);
         } catch (AlipayApiException e) {
+            logger.error(e.getMessage());
             // TODO Auto-generated catch block
-            new PaymentGatewayException(e.getErrCode(),e.getMessage());
+            throw new PaymentGatewayException(ErrorCodeConstant.CREATE_ORDER_FOR_ALIPAY);
         }
         if (response.isSuccess()) {
             System.out.println("调用成功。。。");
