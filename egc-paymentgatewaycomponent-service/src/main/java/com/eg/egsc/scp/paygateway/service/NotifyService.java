@@ -22,7 +22,7 @@ public interface NotifyService {
    * Map ----> 验签 转换数据 微信请求实体 转换成 缴费后台微信对象实体 return
    */
 
-  public void transferWeChatMessageForWeiXinString(String requestData);
+  public String transferWeChatMessageForWeiXinString(String requestData);
 
   /**
    * 

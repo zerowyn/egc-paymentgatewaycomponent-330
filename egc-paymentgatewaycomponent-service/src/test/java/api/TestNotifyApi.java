@@ -1,11 +1,16 @@
 package api;
 
+import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
+import com.eg.egsc.scp.paygateway.api.NotifyApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -23,19 +28,32 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * @Create In 2018年3月5日
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {TestNotifyApi.class})
+@SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
 public class TestNotifyApi extends AbstractUnitTestSupport {
 
+    @Autowired
+    private NotifyApi notifyApi;
     @Test
 //    @Transactional
 //    @Rollback(false)
     public void test() throws Exception {
+        String s = notifyApi.weixinNotifyResult(this.getString());
+        logger.info(s);
+    }
+
+    @Test
+//    @Transactional
+//    @Rollback(false)
+    public void testWeiXin() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String dto = objectMapper.writeValueAsString(this.getString());
         RequestBuilder request = MockMvcRequestBuilders.post("/pay/weixinNotifyResult")
                 .contentType(MediaType.APPLICATION_JSON).content(dto.getBytes());
-        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+        MvcResult mvcResult = mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String string = response.getContentAsString();
+        logger.info(string + "&&&&&&&&&");
     }
 
     public String getString() {
