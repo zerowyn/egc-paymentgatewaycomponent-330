@@ -40,7 +40,7 @@ public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGa
   @Override
   protected String getContextPath() {
     
-    return "/paymentgateway";
+    return "/egc-paymentgatewaycomponent";
   }
   
   
