@@ -3,7 +3,7 @@ server:
   context-path: /
 spring: 
   application:
-    name: paymentgateway
+    name: egc-paymentgatewaycomponent
 eureka:
   client:
     serviceUrl:
