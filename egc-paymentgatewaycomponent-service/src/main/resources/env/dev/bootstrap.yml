@@ -24,4 +24,4 @@ security:
     enabled: false
 
 gateway:
-  service-url: http://192.168.0.242:30940
+  service-url: http://192.168.0.186:30940
