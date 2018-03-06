@@ -1,18 +1,15 @@
+package api;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @Probject Name: egc-paymentgatewaycomponent-service
  * @Path: TestNotifyApi.java
@@ -27,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {TestNotifyApi.class})
-public class TestNotifyApi extends com.eg.egsc.scp.paygateway.api.AbstractUnitTestSupport {
+public class TestNotifyApi extends AbstractUnitTestSupport {
 
     @Test
 //    @Transactional
