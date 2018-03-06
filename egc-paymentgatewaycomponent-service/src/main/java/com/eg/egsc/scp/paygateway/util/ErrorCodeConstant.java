@@ -24,4 +24,10 @@ public class ErrorCodeConstant {
     public static final String GENERATE_PUBLIC_KEY_FAIL = "pgc.signature.generate.publicKey.fail";
 
     public static final String ALIPAY_SIGNATURE_CHECK_FAIL = "pgc.signature.alipay.signatureCheck.fail";
+
+    public static final String WEIXIN_CREATE_ORDER_ERROR = "create.order.request.from.backend.systme.request.http.or.conversion.exception";
+
+    public static final String XML_ABNORMAL_CONVERSION = "transform.exception";
+
+    public static final String CREATE_ORDER_FOR_ALIPAY ="create.order.for.alipay.error";
 }
