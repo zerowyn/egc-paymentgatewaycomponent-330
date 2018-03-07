@@ -93,7 +93,7 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean weixinSignatureCheck(Map responseParamsMap) {
-        if(checkParamIsEmpty(responseParamsMap)){
+        if(!checkParamIsEmpty(responseParamsMap)){
             return false;
         }
         String sign = (String) responseParamsMap.get(SIGN);
@@ -146,7 +146,7 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean alipaySignatureAsyCheck(Map responseParamsMap) {
-        if(checkParamIsEmpty(responseParamsMap)){
+        if(!checkParamIsEmpty(responseParamsMap)){
             return false;
         }
         String sign = (String) responseParamsMap.get(SIGN);
