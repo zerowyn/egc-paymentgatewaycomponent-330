@@ -14,6 +14,9 @@ import com.eg.egsc.common.component.utils.Base64;
  */
 public class Base64Utils {
 
+    private Base64Utils() {
+    }
+
     /**
      * 将base64编码字符串解码为字节数组
      *

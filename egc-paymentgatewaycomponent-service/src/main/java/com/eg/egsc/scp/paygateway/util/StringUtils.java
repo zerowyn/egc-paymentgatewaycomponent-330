@@ -22,9 +22,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class StringUtils {
-  
-  protected final static Logger logger = LoggerFactory.getLogger(StringUtils.class);
-  
+
+    protected final static Logger logger = LoggerFactory.getLogger(StringUtils.class);
+
+    private StringUtils() {
+    }
+
     /**
      * 生成随机uuid
      *
@@ -64,37 +67,36 @@ public class StringUtils {
             return true;
         }
     }
-    
-    
+
+
     /*
      *===>group(0): <nonce_str>LphINq5fQrdpPNnm</nonce_str>
       ===>group(1): nonce_str
       ===>group(2): LphINq5fQrdpPNnm
       ===>group(3): nonce_str
-     */    
-    public static Map<String,Object> transferXMLtoMap(String xmlString,String xmlCustomizedHeader){
-      
-      Map<String,Object> newMap = new HashMap<String,Object>();
-      //<trade_state><![CDATA[SUCCESS]]></trade_state>
-      xmlString = xmlString.replaceAll("<\\!\\[CDATA\\[", "");
-      xmlString = xmlString.replaceAll("\\]\\]>", "");
-      xmlString = xmlString.replaceAll("</xml>", "");
-      xmlString = xmlString.replaceAll("<xml>", "");    
-      logger.debug("=====>xmlString: "+xmlString);   
-     
-      Pattern p = Pattern.compile("<([^</]+)>([^</]*)</([^</]+)>");
-      Matcher m = p.matcher(xmlString);
-     
-      while(m.find()){
-        newMap.put(m.group(1), m.group(2));      
-       }
-      
-      logger.debug("====newMap: "+newMap);
-      
-      return newMap;
-      
+     */
+    public static Map<String, Object> transferXMLtoMap(String xmlString, String xmlCustomizedHeader) {
+
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        //<trade_state><![CDATA[SUCCESS]]></trade_state>
+        xmlString = xmlString.replaceAll("<\\!\\[CDATA\\[", "");
+        xmlString = xmlString.replaceAll("\\]\\]>", "");
+        xmlString = xmlString.replaceAll("</xml>", "");
+        xmlString = xmlString.replaceAll("<xml>", "");
+        logger.debug("=====>xmlString: " + xmlString);
+
+        Pattern p = Pattern.compile("<([^</]+)>([^</]*)</([^</]+)>");
+        Matcher m = p.matcher(xmlString);
+
+        while (m.find()) {
+            newMap.put(m.group(1), m.group(2));
+        }
+
+        logger.debug("====newMap: " + newMap);
+
+        return newMap;
+
     }
-    
-    
+
 
 }

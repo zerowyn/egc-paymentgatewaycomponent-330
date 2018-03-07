@@ -7,8 +7,6 @@
  */
 package com.eg.egsc.scp.paygateway.util;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
  * @Class Name PaymentBusinessConstant
  * @Author caiqinli
@@ -57,5 +55,7 @@ public class PaymentBusinessConstant {
     public static final String SUCCESS_MESSAGE = "SUCCESS";
 
     public static final String PACKAGE="Sign=WXPay";
+
+    public static final String MESSAGE_UNSUPPORT_SIGN_TYPE = "Unsupported Signature Type: ";
 
 }

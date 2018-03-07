@@ -127,9 +127,10 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
      */
     @Override
     public List<CodeMapsDto> getCodeMapsList(PageQueryDto pageQueryDto) {
+        List<CodeMapsDto> codeMapsDtoList = new ArrayList<>();
         if (pageQueryDto == null) {
             logger.error("Param pageQueryDto is null!");
-            return null;
+            return codeMapsDtoList;
         }
         logger.info("getCodeMapsList start");
         CodeMapsCriteria codeMapsCriteria = new CodeMapsCriteria();
@@ -137,7 +138,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         RowBounds rowBounds = new RowBounds(PageUtils.getOffset(pageQueryDto.getPageNo(), pageQueryDto.getPageSize()),
                 pageQueryDto.getPageSize());
         List<CodeMaps> codeMapsList = codeMapsMapper.selectByExampleWithRowbounds(codeMapsCriteria, rowBounds);
-        List<CodeMapsDto> codeMapsDtoList = codeMapsListConvertToCodeMapsDtoList(codeMapsList);
+        codeMapsDtoList = codeMapsListConvertToCodeMapsDtoList(codeMapsList);
         logger.info("getCodeMapsList successful");
         return codeMapsDtoList;
     }
@@ -216,10 +217,8 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         }
         CodeMapTypes codeMapTypes = codeMapTypesMapper.selectByPrimaryKey(codeMaps.getTypeId());
         resultMap.put(codeMapTypes.getInField(), codeMaps.getInCode());
-        if (codeMapTypes.getMsgOverwrite() == 0 && !StringUtils.isEmpty(exMsg)) {
-            if (exMsg.equals(codeMaps.getExMsg())) {
-                resultMap.put(codeMapTypes.getInMsgField(), codeMaps.getInMsg());
-            }
+        if (codeMapTypes.getMsgOverwrite() == 0 && !StringUtils.isEmpty(exMsg) && exMsg.equals(codeMaps.getExMsg())) {
+            resultMap.put(codeMapTypes.getInMsgField(), codeMaps.getInMsg());
         }
         return resultMap;
     }
@@ -252,8 +251,7 @@ public class CodeMapsSerivceImpl implements CodeMapsSerivce {
         CodeMapTypesCriteria codeMapTypesCriteria = new CodeMapTypesCriteria();
         codeMapTypesCriteria.createCriteria().andPlatformEqualTo(platform).andMethodIsNull()
                 .andExFieldEqualTo(exField).andDeleteFlagEqualTo((short) 1);
-        List<CodeMapTypes> codeMapTypesList = codeMapTypesMapper.selectByExample(codeMapTypesCriteria);
-        return codeMapTypesList;
+        return codeMapTypesMapper.selectByExample(codeMapTypesCriteria);
     }
 
     /**

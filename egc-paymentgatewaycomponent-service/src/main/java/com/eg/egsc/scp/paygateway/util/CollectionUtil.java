@@ -15,6 +15,8 @@ import java.util.Collection;
  */
 public class CollectionUtil {
 
+    private CollectionUtil() {
+    }
 
     /**
      * 判断集合是否为空

@@ -3,6 +3,7 @@
  */
 package com.eg.egsc.scp.paygateway.service.impl;
 
+import com.eg.egsc.scp.paygateway.exception.PaymentGatewayException;
 import com.eg.egsc.scp.paygateway.service.ConfigsService;
 import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant.*;
+import static com.eg.egsc.scp.paygateway.util.ErrorCodeConstant.*;
 
 /**
  * 签名和验签算法
@@ -56,11 +58,10 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public String weixinSignature(Map requestParamsMap) {
-        String sign = null;
+        String sign = "";
 
         if (requestParamsMap == null) {
-            String errorMeg = "requestParamsMap from paymentgateway is null!";
-            logger.error(errorMeg);
+            logger.error("Params of method weixinSignature is null!");
             return sign;
         }
         String weixinKey = configsServiceImpl.getConfigsValueByExample(KEY, WEI_XIN);
@@ -68,21 +69,19 @@ public class SignatureServiceImpl implements SignatureService {
         if (StringUtils.isEmpty(charset)) {
             charset = getCharset(WEI_XIN);
         }
-        StringBuffer content = getSignContent(requestParamsMap);
+        StringBuilder content = getSignContent(requestParamsMap);
         content.append("&key=" + weixinKey);
         String signType = (String) requestParamsMap.get(SIGN_TYPE);
         if (StringUtils.isEmpty(signType)) {
             signType = getSignType(WEI_XIN);
         }
-        if (SIGN_TYPE_MD5.toUpperCase().equals(signType.toUpperCase())) {
-            sign = md5Sign(content, charset);
-        } else if (SIGN_TYPE_HMAC.toUpperCase().equals(signType.toUpperCase())) {
-            sign = hmacSHA256Sign(content, weixinKey, charset);
+        if (SIGN_TYPE_MD5.equalsIgnoreCase(signType)) {
+            sign = md5Sign(content.toString(), charset);
+        } else if (SIGN_TYPE_HMAC.equalsIgnoreCase(signType)) {
+            sign = hmacSHA256Sign(content.toString(), weixinKey, charset);
         } else {
-            String errorMeg = "Unsupported Signature Type: signType = " + signType;
-            logger.error(errorMeg);
+            logger.error(MESSAGE_UNSUPPORT_SIGN_TYPE + signType);
         }
-
         return sign;
     }
 
@@ -94,18 +93,10 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean weixinSignatureCheck(Map responseParamsMap) {
-        if (responseParamsMap == null) {
-            String errorMeg = "responseParamsMap from paymentgateway is null!";
-            logger.error(errorMeg);
+        if(checkParamIsEmpty(responseParamsMap)){
             return false;
         }
-
         String sign = (String) responseParamsMap.get(SIGN);
-        if (StringUtils.isEmpty(sign)) {
-            String errorMeg = "sign is empty";
-            logger.error(errorMeg);
-            return false;
-        }
         responseParamsMap.remove(SIGN);
         String signCheck = weixinSignature(responseParamsMap);
         return sign.equals(signCheck);
@@ -119,20 +110,17 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public String alipaySignature(Map requestParamsMap) {
-        String sign = null;
+        String sign = "";
 
         if (requestParamsMap == null) {
-            String errorMeg = "requestParamsMap from paymentgateway is null!";
-            logger.error(errorMeg);
+            logger.error("Params of method alipaySignature is null!");
             return sign;
         }
 
-        StringBuffer content = getSignContent(requestParamsMap);
-        System.out.println(content);
+        String content = getSignContent(requestParamsMap).toString();
         String signType = (String) requestParamsMap.get(SIGN_TYPE);
         if (StringUtils.isEmpty(signType)) {
-            String errorMeg = "sign_type is null";
-            logger.error(errorMeg);
+            logger.error("sign_type is null");
             return sign;
         }
         String charset = (String) requestParamsMap.get(CHARSET);
@@ -144,8 +132,7 @@ public class SignatureServiceImpl implements SignatureService {
         } else if (SIGN_TYPE_RSA.equals(signType)) {
             sign = rsaSign(content, charset);
         } else {
-            String errorMeg = "Unsupported Signature Type: signType = " + signType;
-            logger.error(errorMeg);
+            logger.error("Unsupported Signature Type: signType = " + signType);
         }
 
         return sign;
@@ -159,18 +146,10 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean alipaySignatureAsyCheck(Map responseParamsMap) {
-        if (responseParamsMap == null) {
-            String errorMeg = "responseParamsMap from paymentgateway is null!";
-            logger.error(errorMeg);
+        if(checkParamIsEmpty(responseParamsMap)){
             return false;
         }
-
         String sign = (String) responseParamsMap.get(SIGN);
-        if (StringUtils.isEmpty(sign)) {
-            String errorMeg = "sign is empty";
-            logger.error(errorMeg);
-            return false;
-        }
         responseParamsMap.remove(SIGN);
         String signType = (String) responseParamsMap.get(SIGN_TYPE);
         if (StringUtils.isEmpty(signType)) {
@@ -197,21 +176,41 @@ public class SignatureServiceImpl implements SignatureService {
     }
 
     /**
+     * 验证参数集合
+     *
+     * @param responseParamsMap 返回参数集合
+     * @return 验证结果
+     */
+    private boolean checkParamIsEmpty(Map responseParamsMap) {
+        if (responseParamsMap == null) {
+            logger.error("Params of method weixinSignatureCheck is null!");
+            return false;
+        }
+
+        String sign = (String) responseParamsMap.get(SIGN);
+        if (StringUtils.isEmpty(sign)) {
+            logger.error("sign is empty");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * MD5签名
      *
      * @param content 验签字符串
      * @param charset 字符集
      * @return 签名
      */
-    private String md5Sign(StringBuffer content, String charset) {
-        String sign = null;
+    private String md5Sign(String content, String charset) {
+        String sign;
         try {
             MessageDigest md5 = MessageDigest.getInstance(SIGN_TYPE_MD5);
-            byte[] bytes = md5.digest(content.toString().getBytes(charset));
+            byte[] bytes = md5.digest(content.getBytes(charset));
             sign = encodeBytes(bytes);
         } catch (Exception e) {
-            String errorMeg = "MD5 Signature ERROR";
-            logger.error(errorMeg);
+            logger.error("MD5 Signature FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(MD5_SIGNATURE_FAIL);
         }
         return sign;
     }
@@ -224,18 +223,17 @@ public class SignatureServiceImpl implements SignatureService {
      * @param charset   字符集
      * @return 签名
      */
-    private String hmacSHA256Sign(StringBuffer content, String weixinKey, String charset) {
-        String sign = null;
+    private String hmacSHA256Sign(String content, String weixinKey, String charset) {
+        String sign;
         try {
             Mac hmacSHA256 = Mac.getInstance(SIGN_TYPE_HMAC);
             SecretKeySpec secretKey = new SecretKeySpec(weixinKey.getBytes(charset), SIGN_TYPE_HMAC);
             hmacSHA256.init(secretKey);
-            byte[] bytes = hmacSHA256.doFinal(content.toString().getBytes(charset));
+            byte[] bytes = hmacSHA256.doFinal(content.getBytes(charset));
             sign = encodeBytes(bytes);
         } catch (Exception e) {
-            String errorMeg = "HMAC-SHA256 Signature ERROR";
-            logger.error(errorMeg);
-            e.printStackTrace();
+            logger.error("HMAC-SHA256 Signature FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(HMAC_SHA256_SIGNATURE_FAIL);
         }
         return sign;
     }
@@ -247,7 +245,7 @@ public class SignatureServiceImpl implements SignatureService {
      * @param charset 字符集
      * @return 签名
      */
-    private String rsa256Sign(StringBuffer content, String charset) {
+    private String rsa256Sign(String content, String charset) {
         String sign = null;
         try {
             PrivateKey privateK = getPrivateKey();
@@ -256,11 +254,11 @@ public class SignatureServiceImpl implements SignatureService {
                 return sign;
             }
             signature.initSign(privateK);
-            signature.update(content.toString().getBytes(charset));
+            signature.update(content.getBytes(charset));
             sign = Base64Utils.encode(signature.sign());
         } catch (Exception e) {
-            String errorMeg = "RSA2 Signature ERROR";
-            logger.error(errorMeg);
+            logger.error("RSA2 Signature FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(RSA2_SIGNATURE_FAIL);
         }
         return sign;
     }
@@ -272,7 +270,7 @@ public class SignatureServiceImpl implements SignatureService {
      * @param charset 字符集
      * @return 签名
      */
-    private String rsaSign(StringBuffer content, String charset) {
+    private String rsaSign(String content, String charset) {
         String sign = null;
         try {
             Signature signature = Signature.getInstance(RSA_INSTANCE_NAME);
@@ -281,11 +279,11 @@ public class SignatureServiceImpl implements SignatureService {
                 return sign;
             }
             signature.initSign(privateK);
-            signature.update(content.toString().getBytes(charset));
+            signature.update(content.getBytes(charset));
             sign = Base64Utils.encode(signature.sign());
         } catch (Exception e) {
-            String errorMeg = "RSA Signature ERROR";
-            logger.error(errorMeg);
+            logger.error("RSA Signature FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(RSA_SIGNATURE_FAIL);
         }
         return sign;
     }
@@ -296,9 +294,9 @@ public class SignatureServiceImpl implements SignatureService {
      * @param requestParamsMap 请求参数集合
      * @return 验签字符串
      */
-    private StringBuffer getSignContent(Map requestParamsMap) {
-        StringBuffer content = new StringBuffer();
-        List<String> keys = new ArrayList(requestParamsMap.keySet());
+    private StringBuilder getSignContent(Map<String, Object> requestParamsMap) {
+        StringBuilder content = new StringBuilder();
+        List<String> keys = new ArrayList<>(requestParamsMap.keySet());
 
         Collections.sort(keys);
 
@@ -317,7 +315,7 @@ public class SignatureServiceImpl implements SignatureService {
     /**
      * byte数组转换成字符串
      *
-     * @param bytes
+     * @param bytes 转换数组
      * @return String
      */
     private String encodeBytes(byte[] bytes) {
@@ -344,11 +342,9 @@ public class SignatureServiceImpl implements SignatureService {
             KeyFactory keyFactory = KeyFactory.getInstance(SIGN_TYPE_RSA);
             return keyFactory.generatePrivate(pkcs8KeySpec);
         } catch (Exception e) {
-            String errorMeg = "Get Private Key ERROR";
-            logger.error(errorMeg);
-            e.printStackTrace();
+            logger.error("Get Private Key FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(GENERATE_PRIVATE_KEY_FAIL);
         }
-        return null;
     }
 
     /**
@@ -382,13 +378,12 @@ public class SignatureServiceImpl implements SignatureService {
                     new ByteArrayInputStream(alipayPublicKey.getBytes()));
             Signature signature = Signature.getInstance(rsaInstanceName);
             signature.initVerify(pubKey);
-            signature.update(content.toString().getBytes(charset));
+            signature.update(content.getBytes(charset));
             return signature.verify(Base64.decodeBase64(sign.getBytes()));
         } catch (Exception e) {
-            String errorMeg = "Signature Check ERROR";
-            logger.error(errorMeg);
+            logger.error("Signature Check ERROR:" + e.getMessage());
+            throw new PaymentGatewayException(ALIPAY_SIGNATURE_CHECK_FAIL);
         }
-        return false;
     }
 
     /**
@@ -407,8 +402,7 @@ public class SignatureServiceImpl implements SignatureService {
         } else if (SIGN_TYPE_RSA.equals(signType)) {
             return checkSign(content, sign, alipayPublicKey, charset, RSA_INSTANCE_NAME);
         } else {
-            String errorMeg = "Unsupported Signature Type: signType = " + signType;
-            logger.error(errorMeg);
+            logger.error("Unsupported Signature Type: signType = " + signType);
             return false;
         }
     }
@@ -431,17 +425,21 @@ public class SignatureServiceImpl implements SignatureService {
      * getPublicKeyFromX509
      *
      * @param algorithm 签名方式
-     * @param ins
-     * @return
-     * @throws Exception
+     * @param ins InputStream
+     * @return PublicKey
      */
-    private PublicKey getPublicKeyFromX509(String algorithm, InputStream ins) throws Exception {
-        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        StringWriter writer = new StringWriter();
-        StreamUtil.io(new InputStreamReader(ins), writer);
-        byte[] encodedKey = writer.toString().getBytes();
-        encodedKey = Base64.decodeBase64(encodedKey);
-        return keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+    private PublicKey getPublicKeyFromX509(String algorithm, InputStream ins) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+            StringWriter writer = new StringWriter();
+            StreamUtil.io(new InputStreamReader(ins), writer);
+            byte[] encodedKey = writer.toString().getBytes();
+            encodedKey = Base64.decodeBase64(encodedKey);
+            return keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+        } catch (Exception e) {
+            logger.error("Get Public Key FAIL:" + e.getMessage());
+            throw new PaymentGatewayException(GENERATE_PUBLIC_KEY_FAIL);
+        }
     }
 
 }

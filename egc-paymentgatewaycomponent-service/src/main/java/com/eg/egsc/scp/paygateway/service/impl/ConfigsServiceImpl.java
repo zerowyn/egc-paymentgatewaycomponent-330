@@ -126,9 +126,10 @@ public class ConfigsServiceImpl implements ConfigsService {
      */
     @Override
     public List<ConfigsDto> getConfigsList(PageQueryDto pageQueryDto) {
+        List<ConfigsDto> configsDtoList = new ArrayList<>();
         if (pageQueryDto == null) {
             logger.error("Param pageQueryDto is null!");
-            return null;
+            return configsDtoList;
         }
         logger.info("getConfigsList start");
         ConfigsCriteria configsCriteria = new ConfigsCriteria();
@@ -136,7 +137,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         RowBounds rowBounds = new RowBounds(PageUtils.getOffset(pageQueryDto.getPageNo(), pageQueryDto.getPageSize()),
                 pageQueryDto.getPageSize());
         List<Configs> configsList = configsMapper.selectByExampleWithRowbounds(configsCriteria, rowBounds);
-        List<ConfigsDto> configsDtoList = configsListConvertToConfigsDtoList(configsList);
+        configsDtoList = configsListConvertToConfigsDtoList(configsList);
         logger.info("getConfigsList successful");
         return configsDtoList;
     }
@@ -154,13 +155,11 @@ public class ConfigsServiceImpl implements ConfigsService {
             logger.error("Param is null!");
             return null;
         }
-        logger.info("getConfigsValueByExample start");
         ConfigsCriteria configsCriteria = new ConfigsCriteria();
         configsCriteria.createCriteria().andTypeCodeEqualTo(typeCode).andConfigItemEqualTo(configItem)
                 .andDeleteFlagEqualTo((short) 1);
         List<Configs> configsList = configsMapper.selectByExample(configsCriteria);
         Configs configs = getUpdateConfig(configsList);
-        logger.info("getConfigsValueByExample successful");
         return configs != null ? configs.getValue() : null;
     }
 

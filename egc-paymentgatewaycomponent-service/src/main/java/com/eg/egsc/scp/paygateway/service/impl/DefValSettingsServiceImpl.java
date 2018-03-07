@@ -126,9 +126,10 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
      */
     @Override
     public List<DefValSettingsDto> getDefValSettingsList(PageQueryDto pageQueryDto) {
+        List<DefValSettingsDto> defValSettingsDtoList = new ArrayList<>();
         if (pageQueryDto == null) {
             logger.error("Param pageQueryDto is null!");
-            return null;
+            return defValSettingsDtoList;
         }
         logger.info("getDefValSettingsList start");
         DefValSettingsCriteria defValSettingsCriteria = new DefValSettingsCriteria();
@@ -137,8 +138,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
                 pageQueryDto.getPageSize());
         List<DefValSettings> defValSettingsList
                 = defValSettingsMapper.selectByExampleWithRowbounds(defValSettingsCriteria, rowBounds);
-        List<DefValSettingsDto> defValSettingsDtoList
-                = defValSettingsListConvertToDefValSettingsDtoList(defValSettingsList);
+        defValSettingsDtoList = defValSettingsListConvertToDefValSettingsDtoList(defValSettingsList);
         logger.info("getDefValSettingsList successful");
         return defValSettingsDtoList;
     }
