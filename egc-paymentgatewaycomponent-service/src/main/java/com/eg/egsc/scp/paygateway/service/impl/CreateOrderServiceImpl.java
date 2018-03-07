@@ -57,50 +57,36 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     protected final Logger logger = LoggerFactory.getLogger(CreateOrderService.class);
 
-    @Value("${payment.third.party.wechat.order.create.uri}")
-    private String wechatCreateOrderUri;
-
-    @Value("${payment.third.party.alipay.order.create.uri}")
-    private String aliPayCreateOrderUri;
-
-    @Value("${payment.third.party.alipay.order.query.private.key}")
-    private String aliPayOrderQueryPrivateKey;
-
-    @Value("${payment.third.party.alipay.order.query.public.key}")
-    private String aliPayOrderQueryPublicKey;
-
-    @Value("${payment.third.party.alipay.order.create.uri.method}")
-    private String aliPayCreateOrderMethod;
-
+//    @Value("${payment.third.party.wechat.order.create.uri}")
+//    private String wechatCreateOrderUri;
+//    @Value("${payment.third.party.alipay.order.create.uri}")
+//    private String aliPayCreateOrderUri;
+//    @Value("${payment.third.party.alipay.order.query.private.key}")
+//    private String aliPayOrderQueryPrivateKey;
+//    @Value("${payment.third.party.alipay.order.query.public.key}")
+//    private String aliPayOrderQueryPublicKey;
+//    @Value("${payment.third.party.alipay.order.create.uri.method}")
+//    private String aliPayCreateOrderMethod;
     @Value("${payment.error.message.request.platform.out.of.scope}")
     private String requestPlatformOutOfScopeMessage;
-
     @Value("${payment.error.message.confirm.sign.not.pass}")
     private String confirmSignNotPassMessage;
-
-    @Value("${payment.third.party.alipay.order.create.product.code}")
-    private String productCode;
-
+//    @Value("${payment.third.party.alipay.order.create.product.code}")
+//    private String productCode;
     @Value("${xml.customized.header}")
     private String xmlCustomizedHeader;
-
-    @Value("${payment.third.party.alipay.order.query.format}")
-    private String aliPayOrderQueryFormat;
-
-    @Value("${payment.third.party.alipay.order.query.charset}")
-    private String aliPayOrderQueryCharset;
-
-    @Value("${payment.third.party.alipay.order.query.version}")
-    private String aliPayOrderQueryVersion;
-
-    @Value("${payment.third.party.alipay.sign.type}")
-    private String aliPaySignType;
-
-    @Value("${payment.third.party.alipay.order.create.notify.url}")
-    private String aliPayNotifyUrl;
-
-    @Value("${payment.third.party.weixin.order.create.notify.url}")
-    private String weiXinNotifyUrl;
+//    @Value("${payment.third.party.alipay.order.query.format}")
+//    private String aliPayOrderQueryFormat;
+//    @Value("${payment.third.party.alipay.order.query.charset}")
+//    private String aliPayOrderQueryCharset;
+//    @Value("${payment.third.party.alipay.order.query.version}")
+//    private String aliPayOrderQueryVersion;
+//    @Value("${payment.third.party.alipay.sign.type}")
+//    private String aliPaySignType;
+//    @Value("${payment.third.party.alipay.order.create.notify.url}")
+//    private String aliPayNotifyUrl;
+//    @Value("${payment.third.party.weixin.order.create.notify.url}")
+//    private String weiXinNotifyUrl;
 
     @Autowired
     private CreateOrderResponseForWeiXin createOrderResponseForWeiXin;
@@ -114,12 +100,26 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     @Autowired
     private DefValSettingsService defValSettingsServiceImpl;
 
+    private String wechatCreateOrderUri;
+    private String aliPayCreateOrderUri;
+    private String aliPayOrderQueryPrivateKey;
+    private String aliPayOrderQueryPublicKey;
+    private String aliPayCreateOrderMethod;
+    private String productCode;
+    private String aliPayOrderQueryFormat;
+    private String aliPayOrderQueryCharset;
+    private String aliPayOrderQueryVersion;
+    private String aliPaySignType;
+    private String aliPayNotifyUrl;
+    private String weiXinNotifyUrl;
+    private String weiXinDeviceInfo;
+
     @Override
     public CreateOrderRequestForWeiXin transferBackendMessageForWeiXin(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
         CreateOrderRequestForWeiXin createOrderRequestForWeiXin = new CreateOrderRequestForWeiXin();
         createOrderRequestForWeiXin.setAppid(createOrderRequestForBackendDto.getAppid());
         createOrderRequestForWeiXin.setMch_id(createOrderRequestForBackendDto.getMch_id());
-        createOrderRequestForWeiXin.setDevice_info("WEB");
+        createOrderRequestForWeiXin.setDevice_info(weiXinDeviceInfo);
         createOrderRequestForWeiXin.setNonce_str(getNonce_str());
         createOrderRequestForWeiXin.setSign_type(PaymentBusinessConstant.SIGN_TYPE_MD5);
         createOrderRequestForWeiXin.setBody(createOrderRequestForBackendDto.getBody());
@@ -128,13 +128,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setOut_trade_no(createOrderRequestForBackendDto.getOut_trade_no());
         createOrderRequestForWeiXin.setFee_type(createOrderRequestForBackendDto.getFee_type());
         createOrderRequestForWeiXin.setTotal_fee(createOrderRequestForBackendDto.getTotal_fee());
-        createOrderRequestForWeiXin.setSpbill_create_ip(createOrderRequestForBackendDto.getSpbill_create_ip());
+//        createOrderRequestForWeiXin.setSpbill_create_ip(createOrderRequestForBackendDto.getSpbill_create_ip());
         createOrderRequestForWeiXin.setTime_start(createOrderRequestForBackendDto.getTime_start());
         createOrderRequestForWeiXin.setTime_expire(createOrderRequestForBackendDto.getTime_expire());
         createOrderRequestForWeiXin.setNotify_url(weiXinNotifyUrl);
         createOrderRequestForWeiXin.setProduct_id(createOrderRequestForBackendDto.getProduct_id());
         createOrderRequestForWeiXin.setLimit_pay(createOrderRequestForBackendDto.getLimit_pay());
-        createOrderRequestForWeiXin.setOpenid(createOrderRequestForBackendDto.getOpenid());
         createOrderRequestForWeiXin.setTrade_type(createOrderRequestForBackendDto.getTrade_type());
         createOrderRequestForWeiXin.setSign(getSign(createOrderRequestForWeiXin));
         return createOrderRequestForWeiXin;
@@ -179,7 +178,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         String timestampForAliPay = df.format(now);
         String biz_content = ""
                 + "{\"out_trade_no\":\""+createOrderRequestForBackendDto.getOut_trade_no()+"\","
-                + "\"product_code\":\""+PaymentBusinessConstant.PRODUCT_CODE+"\","
+                + "\"product_code\":\""+productCode+"\","
                 + "\"total_amount\":\""+createOrderRequestForBackendDto.getTotal_fee()+"\","
                 + "\"subject\":\""+createOrderRequestForBackendDto.getDetail()+"\"}";
 
@@ -202,6 +201,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         if(alipayTradeAppPayResponse.isSuccess()){
             createOrderResponseForBackendDto.setReturn_code(PaymentBusinessConstant.SUCCESS_MESSAGE);
             createOrderResponseForBackendDto.setReturn_msg("支付宝下单请求成功！");
+            createOrderResponseForBackendDto.setResult_code(PaymentBusinessConstant.SUCCESS_MESSAGE);
             createOrderResponseForBackendDto.setOrderStr(alipayTradeAppPayResponse.getBody());
         }else{
             createOrderResponseForBackendDto.setReturn_code("FIAL");
@@ -222,6 +222,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             logger.error(errorMsg);
             return null;
         }
+        assignVariables();
         //for wechat
         if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())) {
             CreateOrderRequestForWeiXin createOrderRequestForWeiXin = transferBackendMessageForWeiXin(createOrderRequestForBackendDto);
@@ -240,7 +241,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 if (!confirmSignForWeiXin(responseMap)) {
                     logger.error("Business Exception! The WeiXin Signature Check failed! "
                             + "This responese message stop here and will not pass to payment backend system!");
-                    createOrderResponseForBackendDto.setErr_code_des(confirmSignNotPassMessage);
+                    createOrderResponseForBackendDto.setErr_code_des(confirmSignNotPassMessage +"-->"+ responseMap.get("return_msg"));
                     return createOrderResponseForBackendDto;
                 }
                 StringReader sr = new StringReader(messageFromWeiXin);
@@ -386,5 +387,21 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         String body = response.getBody();
         return response;
 
+    }
+
+    private void assignVariables(){
+        wechatCreateOrderUri = configsServiceImpl.getConfigsValueByExample("WEIXIN-URL","create");
+        aliPayCreateOrderUri = configsServiceImpl.getConfigsValueByExample("ALIPAY-URL","create");
+        aliPayOrderQueryPrivateKey = configsServiceImpl.getConfigsValueByExample("KEY","ALIPAY-APP-PRIVATE");
+        aliPayOrderQueryPublicKey = configsServiceImpl.getConfigsValueByExample("KEY","ALIPAY-PUBLIC");
+        aliPayCreateOrderMethod = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","create","method");
+        productCode = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","create","product_code");
+        aliPayOrderQueryFormat = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","format");
+        aliPayOrderQueryCharset = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","charset");
+        aliPayOrderQueryVersion = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","version");
+        aliPaySignType = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","sign_type");
+        aliPayNotifyUrl = defValSettingsServiceImpl.getDefValSettingsValueByExample("ALIPAY","create","notify_url");
+        weiXinNotifyUrl = defValSettingsServiceImpl.getDefValSettingsValueByExample("WEIXIN","create","notify_url");
+        weiXinDeviceInfo = defValSettingsServiceImpl.getDefValSettingsValueByExample("WEIXIN","create","device_info");
     }
 }
