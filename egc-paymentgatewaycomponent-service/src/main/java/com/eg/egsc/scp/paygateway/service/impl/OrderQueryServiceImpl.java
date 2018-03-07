@@ -80,36 +80,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   DefValSettingsService defValSettingsServiceImpl;
   
   @Autowired
-  CodeMapsSerivce codeMapsSerivceImpl;
+  CodeMapsSerivce codeMapsSerivceImpl;  
   
-  /////
-//  @Value("${payment.third.party.wechat.order.query.uri}")
-//  private String wechatOrderQueryUri;
-// 
-//  @Value("${payment.third.party.alipay.order.query.uri}")
-//  private String aliPayOrderQueryUri;
-//  
-//  @Value("${payment.third.party.alipay.sign.type}")
-//  private String aliPaySignType; 
-//  
-//  @Value("${payment.third.party.alipay.order.query.uri.method}")
-//  private String aliPayOrderQueryMethod;
-//  
-//  @Value("${payment.third.party.alipay.order.query.private.key}")
-//  private String aliPayOrderQueryPrivateKey;
-//  
-//  @Value("${payment.third.party.alipay.order.query.public.key}")
-//  private String aliPayOrderQueryPublicKey;
-//  
-//  @Value("${payment.third.party.alipay.order.query.format}")
-//  private String aliPayOrderQueryFormat;
-//  
-//  @Value("${payment.third.party.alipay.order.query.charset}")
-//  private String aliPayOrderQueryCharset;
-//  
-//  @Value("${payment.third.party.alipay.order.query.version}")
-//  private String aliPayOrderQueryVersion;
-  /////  
   
   @Value("${xml.customized.header}")
   private String xmlCustomizedHeader; 
@@ -187,7 +159,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     requestForAliPay.setVersion(aliPayOrderQueryVersion);
     requestForAliPay.setBiz_content(biz_content);    
     requestForAliPay.setFormat(aliPayOrderQueryFormat);
-  //requestForAliPay.setSign(getSign(requestForAliPay)); 
     
     return requestForAliPay;        
   }
@@ -395,8 +366,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       StringReader sr = new StringReader(responseMessageFromWeiXin);
       JAXBContext jaxbContext = JAXBContext.newInstance(OrderQueryResponseForWeiXin.class);
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-      OrderQueryResponseForWeiXin orderQueryResponseForWeiXin = new OrderQueryResponseForWeiXin();
-      orderQueryResponseForWeiXin = (OrderQueryResponseForWeiXin) unmarshaller.unmarshal(sr);
+      
+      OrderQueryResponseForWeiXin orderQueryResponseForWeiXin = 
+          (OrderQueryResponseForWeiXin) unmarshaller.unmarshal(sr);
       
       //update coupon_list_json_string to accept multiple coupons
       orderQueryResponseForWeiXin = updateCouponListJsonString(orderQueryResponseForWeiXin,responseMap);  
