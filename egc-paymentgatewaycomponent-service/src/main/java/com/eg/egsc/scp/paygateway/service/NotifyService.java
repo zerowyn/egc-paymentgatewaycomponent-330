@@ -6,6 +6,8 @@
  */
 package com.eg.egsc.scp.paygateway.service;
 
+import java.util.Map;
+
 /**
  * 提供API与Controller调用的接口类
  * 
@@ -31,7 +33,7 @@ public interface NotifyService {
    * @param requestData
    * @return PayResultsNotifyResponseForBackendDto
    */
-  public void transferAlipaytMessageForAlipayString(String requestData);
+  public String transferAlipaytMessageForAlipayString(Map<String, Object> parameterMap);
 
 
 

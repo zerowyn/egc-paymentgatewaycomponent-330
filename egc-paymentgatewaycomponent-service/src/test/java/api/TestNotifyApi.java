@@ -57,27 +57,21 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
     }
 
     public String getString() {
-        return "<xml>\r\n" + "<appid><![CDATA[wx2421b1c4370ec43b]]></appid>\r\n"
-                + "  <attach><![CDATA[支付测试]]></attach>\r\n" + "  <bank_type><![CDATA[CFT]]></bank_type>\r\n"
-                + "  <fee_type><![CDATA[CNY]]></fee_type>\r\n"
-                + "  <is_subscribe><![CDATA[Y]]></is_subscribe>\r\n"
-                + "  <mch_id><![CDATA[10000100]]></mch_id>\r\n"
-                + "  <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>\r\n"
-                + "  <openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>\r\n"
-                + "  <out_trade_no><![CDATA[1409811653]]></out_trade_no>\r\n"
+        return "<xml>\r\n" + "<return_code><![CDATA[SUCCESS]]></return_code>\r\n"
+                + "  <appid><![CDATA[wx5332d47f724492fa]]></appid>\r\n" + "  <mch_id><![CDATA[1497973582]]></mch_id>\r\n"
+                + "   <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>\r\n"
+                + "  <sign><![CDATA[C276B6A85A3FE93B52A36D1D433BA163]]></sign>\r\n"
                 + "  <result_code><![CDATA[SUCCESS]]></result_code>\r\n"
-                + "  <return_code><![CDATA[SUCCESS]]></return_code>\r\n"
-                + "  <sign><![CDATA[B552ED6B279343CB493C5DD0D78AB241]]></sign>\r\n"
-                + "  <sub_mch_id><![CDATA[10000100]]></sub_mch_id>\r\n"
-                + "  <time_end><![CDATA[20140903131540]]></time_end>\r\n"
-                + "  <total_fee>1</total_fee><coupon_fee><![CDATA[10]]></coupon_fee>\r\n"
-                + "<coupon_count><![CDATA[1]]></coupon_count>\r\n"
-                + "<coupon_type><![CDATA[CASH]]></coupon_type>\r\n"
-                + "<coupon_id><![CDATA[10000]]></coupon_id>\r\n"
-                + "<coupon_fee><![CDATA[100]]></coupon_fee>\r\n"
-                + "  <trade_type><![CDATA[JSAPI]]></trade_type>\r\n"
-                + "  <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>\r\n"
-                + "</xml>\r\n" + "";
+                + "  <openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>\r\n"
+                +"<trade_type><![CDATA[JSAPI]]></trade_type>\r\n"
+                +"<bank_type><![CDATA[CFT]]></bank_type>\r\n"
+                +"<total_fee>1</total_fee>\r\n"
+                +"<cash_fee>1</cash_fee>\r\n"
+                +"<out_trade_no><![CDATA[44444444444441444]]></out_trade_no>\r\n"
+                +" <time_end><![CDATA[20140903131540]]></time_end>\r\n"
+                +  "</xml>";
+
+
     }
 
 }
