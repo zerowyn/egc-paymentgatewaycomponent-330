@@ -465,10 +465,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     logger.debug("===aliResponse.getBody(): "+aliResponse.getBody());
           
     Gson gson=new Gson();
-    OrderQueryResponseForAliPay orderQueryResponseForAliPay = gson.fromJson(aliResponse.getBody(), OrderQueryResponseForAliPay.class);    
-    orderQueryResponseForBackendDto = transferAliPayMessageForBackendSystme(orderQueryResponseForAliPay);
-   
-    return orderQueryResponseForBackendDto;    
+    OrderQueryResponseForAliPay orderQueryResponseForAliPay = gson.fromJson(aliResponse.getBody(), OrderQueryResponseForAliPay.class);
+    
+    return transferAliPayMessageForBackendSystme(orderQueryResponseForAliPay);   
+        
   }
   
   
