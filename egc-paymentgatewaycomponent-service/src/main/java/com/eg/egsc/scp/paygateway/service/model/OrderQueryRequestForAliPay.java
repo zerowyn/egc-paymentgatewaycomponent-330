@@ -9,6 +9,8 @@ package com.eg.egsc.scp.paygateway.service.model;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @Class Name OrderQueryRequestForAliPay
  * @Author caiqinli
@@ -22,7 +24,8 @@ public class OrderQueryRequestForAliPay {
    * 支付宝分配给开发者的应用ID
    * 
    */
-  private String app_id;
+  @JsonProperty(value = "app_id")
+  private String appId;
   
   /**
    * 接口名称-根据platform参数从配置表获取外发地址
@@ -59,27 +62,31 @@ public class OrderQueryRequestForAliPay {
    * 业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
    * 
    */
-  private String biz_content; 
+  @JsonProperty(value = "biz_content")
+  private String bizContent; 
  
   
   /**
    * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
    * 
    */
-  private String transaction_id;
+  @JsonProperty(value = "transaction_id")
+  private String transactionId;
   
   /**
    * 随机字符串，不长于32位。推荐随机数生成算法
    * 
    */
-  private String nonce_str;
+  @JsonProperty(value = "nonce_str")
+  private String nonceStr;
   
   
   /**
    * 支付宝的订单号，优先使用
    * 
    */
-  private String trade_no;
+  @JsonProperty(value = "trade_no")
+  private String tradeNo;
   
   /**
    * 转发给微信订单查询接口的消息格式-缴费后台内部订单号，
@@ -87,13 +94,15 @@ public class OrderQueryRequestForAliPay {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    * 
    */
-  private String out_trade_no;
+  @JsonProperty(value = "out_trade_no")
+  private String outTradeNo;
   
   /**
    * 由支付网关调用 随机数生成算法 生成一个32位的字符串。由签名与验签模块生成。
    * 
    */
-  private String sign_type;
+  @JsonProperty(value = "sign_type")
+  private String signType;
   
   
   /**
@@ -101,22 +110,6 @@ public class OrderQueryRequestForAliPay {
    * 
    */
   private String sign;
-
-
-  /**
-   * @Return the String app_id
-   */
-  public String getApp_id() {
-    return app_id;
-  }
-
-
-  /**
-   * @Param String app_id to set
-   */
-  public void setApp_id(String app_id) {
-    this.app_id = app_id;
-  }
 
 
   /**
@@ -200,98 +193,98 @@ public class OrderQueryRequestForAliPay {
 
 
   /**
-   * @Return the String biz_content
+   * @Return the String bizContent
    */
-  public String getBiz_content() {
-    return biz_content;
+  public String getBizContent() {
+    return bizContent;
   }
 
 
   /**
-   * @Param String biz_content to set
+   * @Param String bizContent to set
    */
-  public void setBiz_content(String biz_content) {
-    this.biz_content = biz_content;
+  public void setBizContent(String bizContent) {
+    this.bizContent = bizContent;
   }
 
 
   /**
-   * @Return the String transaction_id
+   * @Return the String transactionId
    */
-  public String getTransaction_id() {
-    return transaction_id;
+  public String getTransactionId() {
+    return transactionId;
   }
 
 
   /**
-   * @Param String transaction_id to set
+   * @Param String transactionId to set
    */
-  public void setTransaction_id(String transaction_id) {
-    this.transaction_id = transaction_id;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
 
   /**
-   * @Return the String nonce_str
+   * @Return the String nonceStr
    */
-  public String getNonce_str() {
-    return nonce_str;
+  public String getNonceStr() {
+    return nonceStr;
   }
 
 
   /**
-   * @Param String nonce_str to set
+   * @Param String nonceStr to set
    */
-  public void setNonce_str(String nonce_str) {
-    this.nonce_str = nonce_str;
+  public void setNonceStr(String nonceStr) {
+    this.nonceStr = nonceStr;
   }
 
 
   /**
-   * @Return the String trade_no
+   * @Return the String tradeNo
    */
-  public String getTrade_no() {
-    return trade_no;
+  public String getTradeNo() {
+    return tradeNo;
   }
 
 
   /**
-   * @Param String trade_no to set
+   * @Param String tradeNo to set
    */
-  public void setTrade_no(String trade_no) {
-    this.trade_no = trade_no;
+  public void setTradeNo(String tradeNo) {
+    this.tradeNo = tradeNo;
   }
 
 
   /**
-   * @Return the String out_trade_no
+   * @Return the String outTradeNo
    */
-  public String getOut_trade_no() {
-    return out_trade_no;
+  public String getOutTradeNo() {
+    return outTradeNo;
   }
 
 
   /**
-   * @Param String out_trade_no to set
+   * @Param String outTradeNo to set
    */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
 
 
   /**
-   * @Return the String sign_type
+   * @Return the String signType
    */
-  public String getSign_type() {
-    return sign_type;
+  public String getSignType() {
+    return signType;
   }
 
 
   /**
-   * @Param String sign_type to set
+   * @Param String signType to set
    */
-  public void setSign_type(String sign_type) {
-    this.sign_type = sign_type;
+  public void setSignType(String signType) {
+    this.signType = signType;
   }
 
 
@@ -309,7 +302,24 @@ public class OrderQueryRequestForAliPay {
   public void setSign(String sign) {
     this.sign = sign;
   }
-  
+
+
+  /**
+   * @Return the String appId
+   */
+  public String getAppId() {
+    return appId;
+  }
+
+
+  /**
+   * @Param String appId to set
+   */
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
+
+
   
 
 }

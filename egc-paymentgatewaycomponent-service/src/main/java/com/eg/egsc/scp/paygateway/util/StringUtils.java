@@ -4,10 +4,13 @@
 package com.eg.egsc.scp.paygateway.util;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +99,30 @@ public class StringUtils {
         return newMap;
 
     }
+    
+    public static String getJson2Xml(JSONObject json){
+      Iterator<String> it = json.keys();
+      StringBuilder sb = new StringBuilder();
+      String key = "";
+      String value = "";
+      sb.append("<xml>");
+      while(it.hasNext()){
+          key = it.next();
+          value = json.optString(key);
+          if(!"null".equalsIgnoreCase(value)) {
+              try{
+                  JSONObject jsonSon = JSONObject.fromObject(value);
+                  sb.append("<").append(key).append(">");
+                  sb.append(getJson2Xml(jsonSon));
+                  sb.append(sb.append("</").append(key).append(">"));
+              }catch(Exception e){
+                  sb.append("<").append(key).append(">").append(value).append("</").append(key).append(">");
+              }
+          }
+      }
+      sb.append("</xml>");
+      return sb.toString();
+  }
 
 
 }

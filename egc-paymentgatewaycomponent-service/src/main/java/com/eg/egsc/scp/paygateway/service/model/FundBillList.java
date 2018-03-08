@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @Class Name FundBillList
  * @Author caiqinli
@@ -20,7 +22,8 @@ public class FundBillList {
    * 交易使用的资金渠道，详见 支付渠道列表 
    * 
    */ 
-  private String fund_channel;
+  @JsonProperty(value = "fund_channel")
+  private String fundChannel;
   
   /**
    * 该支付工具类型所使用的金额
@@ -32,20 +35,21 @@ public class FundBillList {
    * 渠道实际付款金额 
    * 
    */ 
-  private Double real_amount;
+  @JsonProperty(value = "real_amount")
+  private Double realAmount;
 
   /**
-   * @Return the String fund_channel
+   * @Return the String fundChannel
    */
-  public String getFund_channel() {
-    return fund_channel;
+  public String getFundChannel() {
+    return fundChannel;
   }
 
   /**
-   * @Param String fund_channel to set
+   * @Param String fundChannel to set
    */
-  public void setFund_channel(String fund_channel) {
-    this.fund_channel = fund_channel;
+  public void setFundChannel(String fundChannel) {
+    this.fundChannel = fundChannel;
   }
 
   /**
@@ -63,18 +67,20 @@ public class FundBillList {
   }
 
   /**
-   * @Return the Double real_amount
+   * @Return the Double realAmount
    */
-  public Double getReal_amount() {
-    return real_amount;
+  public Double getRealAmount() {
+    return realAmount;
   }
 
   /**
-   * @Param Double real_amount to set
+   * @Param Double realAmount to set
    */
-  public void setReal_amount(Double real_amount) {
-    this.real_amount = real_amount;
+  public void setRealAmount(Double realAmount) {
+    this.realAmount = realAmount;
   }
+
+ 
  
 
 

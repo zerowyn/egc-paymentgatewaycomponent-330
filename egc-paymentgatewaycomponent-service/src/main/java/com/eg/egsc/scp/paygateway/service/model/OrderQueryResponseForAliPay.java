@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @Class Name OrderQueryResponseForAliPay
  * @Author caiqinli
@@ -14,22 +16,11 @@ package com.eg.egsc.scp.paygateway.service.model;
  */
 public class OrderQueryResponseForAliPay {
   
-  
-  private AlipayOrderQueryResponse alipay_trade_query_response;
+  @JsonProperty(value = "alipay_trade_query_response")
+  private AlipayOrderQueryResponse alipayTradeQueryResponse;
   private String sign;
   
-  /**
-   * @Return the AlipayTradeQueryResponse alipayTradeQueryResponse
-   */
-  public AlipayOrderQueryResponse getAlipayTradeQueryResponse() {
-    return alipay_trade_query_response;
-  }
-  /**
-   * @Param AlipayTradeQueryResponse alipayTradeQueryResponse to set
-   */
-  public void setAlipayTradeQueryResponse(AlipayOrderQueryResponse alipayTradeQueryResponse) {
-    this.alipay_trade_query_response = alipayTradeQueryResponse;
-  }
+
   /**
    * @Return the String sign
    */
@@ -41,6 +32,18 @@ public class OrderQueryResponseForAliPay {
    */
   public void setSign(String sign) {
     this.sign = sign;
+  }
+  /**
+   * @Return the AlipayOrderQueryResponse alipayTradeQueryResponse
+   */
+  public AlipayOrderQueryResponse getAlipayTradeQueryResponse() {
+    return alipayTradeQueryResponse;
+  }
+  /**
+   * @Param AlipayOrderQueryResponse alipayTradeQueryResponse to set
+   */
+  public void setAlipayTradeQueryResponse(AlipayOrderQueryResponse alipayTradeQueryResponse) {
+    this.alipayTradeQueryResponse = alipayTradeQueryResponse;
   }
   
 }

@@ -198,7 +198,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             try {
                 String requestXmlString = new ObjectMapper().writeValueAsString(createOrderRequestForWeiXin);
                 JSONObject jsonObject = JSONObject.fromObject(requestXmlString);
-                requestXmlString = getJson2Xml(jsonObject);
+                requestXmlString = StringUtils.getJson2Xml(jsonObject);
                 logger.info("requestXmlString = [" + requestXmlString + "]");
                 ResponseEntity<String> responseEntiryFromWeiXin = callThirdPartyCreateOrderApi(
                         createOrderRequestForBackendDto.getPlatform(), requestXmlString);
@@ -248,30 +248,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         result = signatureServiceImpl.weixinSignatureCheck(responseMap);
         return result;
     }
-
-    private String getJson2Xml(JSONObject json){
-        Iterator<String> it = json.keys();
-        StringBuilder sb = new StringBuilder();
-        String key = "";
-        String value = "";
-        sb.append("<xml>");
-        while(it.hasNext()){
-            key = it.next();
-            value = json.optString(key);
-            if(!"null".equalsIgnoreCase(value)) {
-                try{
-                    JSONObject jsonSon = JSONObject.fromObject(value);
-                    sb.append("<").append(key).append(">");
-                    sb.append(getJson2Xml(jsonSon));
-                    sb.append(sb.append("</").append(key).append(">"));
-                }catch(Exception e){
-                    sb.append("<").append(key).append(">").append(value).append("</").append(key).append(">");
-                }
-            }
-        }
-        sb.append("</xml>");
-        return sb.toString();
-    }
+    
 
     private ResponseEntity<String> callThirdPartyCreateOrderApi(String platform, String requestString) {
         RestTemplate rt = new RestTemplate();

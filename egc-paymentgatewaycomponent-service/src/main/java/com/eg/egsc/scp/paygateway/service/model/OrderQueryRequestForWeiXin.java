@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @Class Name OrderQueryRequestForWeiXin
  * @Author caiqinli
@@ -25,21 +27,21 @@ public class OrderQueryRequestForWeiXin {
    * 转发给微信订单查询接口的消息格式-微信开放平台审核通过的应用APPID
    * 
    */
-  @NotBlank(message = "scp.pay.gateway.app.pay.request.appid.notblank")
   private String appid;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信支付分配的商户号
    * 
    */
-  @NotBlank(message = "scp.pay.gateway.app.pay.request.mch_id.notblank")
-  private String mch_id;
+  @JsonProperty(value = "mch_id")
+  private String mchId;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
    * 
    */
-  private String transaction_id;
+  @JsonProperty(value = "transaction_id")
+  private String transactionId;
   
   /**
    * 转发给微信订单查询接口的消息格式-缴费后台内部订单号，
@@ -47,13 +49,15 @@ public class OrderQueryRequestForWeiXin {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    * 
    */
-  private String out_trade_no;
+  @JsonProperty(value = "out_trade_no")
+  private String outTradeNo;
   
   /**
    * 转发给微信订单查询接口的消息格式-随机字符串，不长于32位。推荐随机数生成算法
    * 
    */
-  private String nonce_str;
+  @JsonProperty(value = "nonce_str")
+  private String nonceStr;
   
   /**
    * 转发给微信订单查询接口的消息格式-签名
@@ -76,59 +80,59 @@ public class OrderQueryRequestForWeiXin {
   }
 
   /**
-   * @Return the String mch_id
+   * @Return the String mchId
    */
-  public String getMch_id() {
-    return mch_id;
+  public String getMchId() {
+    return mchId;
   }
 
   /**
-   * @Param String mch_id to set
+   * @Param String mchId to set
    */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
   }
 
   /**
-   * @Return the String transaction_id
+   * @Return the String transactionId
    */
-  public String getTransaction_id() {
-    return transaction_id;
+  public String getTransactionId() {
+    return transactionId;
   }
 
   /**
-   * @Param String transaction_id to set
+   * @Param String transactionId to set
    */
-  public void setTransaction_id(String transaction_id) {
-    this.transaction_id = transaction_id;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   /**
-   * @Return the String out_trade_no
+   * @Return the String outTradeNo
    */
-  public String getOut_trade_no() {
-    return out_trade_no;
+  public String getOutTradeNo() {
+    return outTradeNo;
   }
 
   /**
-   * @Param String out_trade_no to set
+   * @Param String outTradeNo to set
    */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
 
   /**
-   * @Return the String nonce_str
+   * @Return the String nonceStr
    */
-  public String getNonce_str() {
-    return nonce_str;
+  public String getNonceStr() {
+    return nonceStr;
   }
 
   /**
-   * @Param String nonce_str to set
+   * @Param String nonceStr to set
    */
-  public void setNonce_str(String nonce_str) {
-    this.nonce_str = nonce_str;
+  public void setNonceStr(String nonceStr) {
+    this.nonceStr = nonceStr;
   }
 
   /**
@@ -144,6 +148,8 @@ public class OrderQueryRequestForWeiXin {
   public void setSign(String sign) {
     this.sign = sign;
   }
+
+
 
 
 }
