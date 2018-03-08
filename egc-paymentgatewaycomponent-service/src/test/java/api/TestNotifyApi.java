@@ -1,5 +1,6 @@
 package api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
 import com.eg.egsc.scp.paygateway.api.NotifyApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * @Probject Name: egc-paymentgatewaycomponent-service
  * @Path: TestNotifyApi.java
@@ -33,13 +37,6 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
 
     @Autowired
     private NotifyApi notifyApi;
-    @Test
-//    @Transactional
-//    @Rollback(false)
-    public void test() throws Exception {
-        String s = notifyApi.weixinNotifyResult(this.getString());
-        logger.info(s);
-    }
 
     @Test
 //    @Transactional
@@ -70,8 +67,23 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
                 +"<out_trade_no><![CDATA[44444444444441444]]></out_trade_no>\r\n"
                 +" <time_end><![CDATA[20140903131540]]></time_end>\r\n"
                 +  "</xml>";
+    }
 
+    @Test
+    public void testAlipay() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String dto = objectMapper.writeValueAsString(this.alipayString());
+        RequestBuilder request = MockMvcRequestBuilders.get("/pay/alipayNotifyResult")
+                .contentType(MediaType.APPLICATION_JSON).content(dto.getBytes());
+        MvcResult mvcResult = mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print()).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String string = response.getContentAsString();
+        logger.info(string + "&&&&&&&&&");
+    }
 
+    public String alipayString(){
+        return "?app_id=2018020102122242&charset=utf-8&notify_id=ac05099524730693a8b330c5ecf72da9786&notify_time=2016-07-19 14:10:49&notify_type=trade_status_sync&out_trade_no=2018022300007150&trade_no=2013112011001004330000121536&version=1.0&sign=pFDrP4R21/DSD2z1Dn3j4PTRg2ZhHW491ynPagH22wTpH658wZ2D9/izUyOrBMtbTXMhadzcwSIiWjbaG4lydSoGljhM9MeYczcD454CuVZi83P9DhrFhM1xn3XtRIlGq4UNkA4ckIBQnzoiuWZPzWFIWIvoPe6nyXutU139wajYTkx+IamzPJZZivaWoWysT4tZiny3eQbdjuVGr3RuIe9GBEVlDRhPJJLJOvrSSHd0BqCvAuBv1tGxhH/ZseguV5JOHGCBWgUJw+oWf9+kJQBNC2uzUzTkOXW1O8xUyANPOKXoBJfWt1PFmelBDl3yNaZK0KLRzNdgk2OXnAt0Bg==";
     }
 
 }

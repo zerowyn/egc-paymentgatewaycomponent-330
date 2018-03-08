@@ -6,11 +6,16 @@
  */
 package com.eg.egsc.scp.paygateway.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.framework.service.base.api.BaseApiController;
+import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
+import com.eg.egsc.scp.paygateway.util.NotifyConstant;
+import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,60 +37,60 @@ import java.util.*;
 @RequestMapping(value = "/pay")
 public class NotifyApi extends BaseApiController {
 
-  @Autowired
-  NotifyService notifyServiceImpl;
+    @Autowired
+    NotifyService notifyServiceImpl;
 
-  @Value("${xml.customized.header}")
-  private String xmlCustomizedHeader;
+    @Value("${xml.customized.header}")
+    private String xmlCustomizedHeader;
 
+    protected final Logger logger = LoggerFactory.getLogger(NotifyApi.class);
 
-  protected final Logger logger = LoggerFactory.getLogger(NotifyApi.class);
-
-  /**
-   *
-   * @param requestData
-   * @return
-   */
-  @ApiOperation(value = "缴费后台通知缴费结果")
-  @RequestMapping(value = "/weixinNotifyResult", method = RequestMethod.POST)
-  public String weixinNotifyResult(@RequestBody String requestData) {
-    //验签
-    if(!StringUtils.isEmpty(requestData)) {
-      //调用缴费后台
-      requestData = notifyServiceImpl.transferWeChatMessageForWeiXinString(requestData);
-    }
-    return requestData;
-  }
-
-  /**
-   *
-   * @param request
-   * @return
-   */
-  @ApiOperation(value = "缴费后台通知缴费结果")
-  @RequestMapping(value = "/alipayNotifyResult", method = RequestMethod.POST)
-  public String alipayNotifyResult(HttpServletRequest request) {
-
-    Enumeration<String> parameterNames = request.getParameterNames();
-    List<String> list = new ArrayList<String>();
-    while(parameterNames.hasMoreElements()){
-      list.add(parameterNames.nextElement());
-    }
-    Map<String, Object> maps = new HashMap<String, Object>();
-    for(String str :list){
-      maps.put(str,request.getParameter(str));
+    /**
+     * @param requestData
+     * @return
+     */
+    @ApiOperation(value = "缴费后台通知缴费结果")
+    @RequestMapping(value = "/weixinNotifyResult", method = RequestMethod.POST)
+    public String weixinNotifyResult(@RequestBody String requestData) {
+        WeiXinNotifyResponse responseData = new WeiXinNotifyResponse();
+        if (StringUtils.isEmpty(requestData)) {
+            logger.warn("The request parameter is empty.");
+            responseData.setReturn_msg("The request parameter is empty.");
+            responseData.setReturn_code(NotifyConstant.FAIL);
+            return ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(responseData);
+        }
+        // 将request xml字符串转为map
+        Map<String, Object> map = StringUtils.transferXMLtoMap(requestData, "");
+        if (!ObjectUtils.isEmpty(map)) {
+            requestData = notifyServiceImpl.disposeMessage(map,true);
+        }
+        return requestData;
     }
 
-
-    //验签
-    if(null!=maps){
-      String s = notifyServiceImpl.transferAlipaytMessageForAlipayString(maps);
-      return s;
+    /**
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "缴费后台通知缴费结果")
+    @RequestMapping(value = "/alipayNotifyResult", method = RequestMethod.GET)
+    public String alipayNotifyResult(HttpServletRequest request) {
+        logger.info("Start processing the request parameters.");
+        Enumeration<String> parameterNames = request.getParameterNames();
+        List<String> list = new ArrayList<>();
+        while (parameterNames.hasMoreElements()) {
+            list.add(parameterNames.nextElement());
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (String str : list) {
+            map.put(str, request.getParameter(str));
+        }
+        logger.info("The input parameter is:{} ", JSONObject.toJSONString(map));
+        //验签
+        if (!ObjectUtils.isEmpty(map)) {
+            return notifyServiceImpl.disposeMessage(map,false);
+        }
+        return null;
     }
-
-
-    return null;
-  }
 }
 
 
