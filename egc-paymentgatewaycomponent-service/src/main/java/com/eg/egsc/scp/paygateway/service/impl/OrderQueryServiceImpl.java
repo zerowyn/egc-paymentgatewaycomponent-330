@@ -68,7 +68,7 @@ import com.google.gson.Gson;
 @Service
 public class OrderQueryServiceImpl implements OrderQueryService {
 
-  protected final Logger logger = LoggerFactory.getLogger(OrderQueryServiceImpl.class);
+  protected final static Logger logger = LoggerFactory.getLogger(OrderQueryServiceImpl.class);
   
   @Autowired
   SignatureService signatureServiceImpl;
@@ -224,40 +224,40 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     
     OrderQueryResponseForBackendDto orderQueryResponseForBackendDto = new OrderQueryResponseForBackendDto();
     
-    AlipayOrderQueryResponse AlipayTradeQueryResponse = orderQueryResponseForAliPay.getAlipayTradeQueryResponse();
+    AlipayOrderQueryResponse alipayTradeQueryResponse = orderQueryResponseForAliPay.getAlipayTradeQueryResponse();
     
     orderQueryResponseForBackendDto.setPlatform(PaymentBusinessConstant.ALI_PAY);    
-    orderQueryResponseForBackendDto.setReturn_code(getReturn_code(AlipayTradeQueryResponse.getCode()));
-    orderQueryResponseForBackendDto.setReturn_msg(AlipayTradeQueryResponse.getMsg());
-    orderQueryResponseForBackendDto.setResult_code(AlipayTradeQueryResponse.getSub_code());
+    orderQueryResponseForBackendDto.setReturn_code(getReturn_code(alipayTradeQueryResponse.getCode()));
+    orderQueryResponseForBackendDto.setReturn_msg(alipayTradeQueryResponse.getMsg());
+    orderQueryResponseForBackendDto.setResult_code(alipayTradeQueryResponse.getSub_code());
     
-    if(!PaymentBusinessConstant.ACQ_TRADE_HAS_SUCCESS.equals(AlipayTradeQueryResponse.getSub_code())){
-      orderQueryResponseForBackendDto.setErr_code(AlipayTradeQueryResponse.getSub_code());
-      orderQueryResponseForBackendDto.setErr_code_des(AlipayTradeQueryResponse.getSub_msg());
+    if(!PaymentBusinessConstant.ACQ_TRADE_HAS_SUCCESS.equals(alipayTradeQueryResponse.getSub_code())){
+      orderQueryResponseForBackendDto.setErr_code(alipayTradeQueryResponse.getSub_code());
+      orderQueryResponseForBackendDto.setErr_code_des(alipayTradeQueryResponse.getSub_msg());
     }
     
-    orderQueryResponseForBackendDto.setTransaction_id(AlipayTradeQueryResponse.getTrade_no());
-    orderQueryResponseForBackendDto.setOut_trade_no(AlipayTradeQueryResponse.getOut_trade_no());
+    orderQueryResponseForBackendDto.setTransaction_id(alipayTradeQueryResponse.getTrade_no());
+    orderQueryResponseForBackendDto.setOut_trade_no(alipayTradeQueryResponse.getOut_trade_no());
     
     Map getTradeStateMap = codeMapsSerivceImpl.excodeConvertToIncode(
-        PaymentBusinessConstant.ALI_PAY, PaymentBusinessConstant.QUERY, PaymentBusinessConstant.TRADE_STATUS, AlipayTradeQueryResponse.getTrade_status());
+        PaymentBusinessConstant.ALI_PAY, PaymentBusinessConstant.QUERY, PaymentBusinessConstant.TRADE_STATUS, alipayTradeQueryResponse.getTrade_status());
     if(getTradeStateMap != null){
       orderQueryResponseForBackendDto.setTrade_state((String)getTradeStateMap.get(PaymentBusinessConstant.TRADE_STATE));
     }
     
     Map getResultCodeMap = codeMapsSerivceImpl.excodeConvertToIncode(
-        PaymentBusinessConstant.ALI_PAY, PaymentBusinessConstant.QUERY, PaymentBusinessConstant.TRADE_STATUS, AlipayTradeQueryResponse.getTrade_status());
+        PaymentBusinessConstant.ALI_PAY, PaymentBusinessConstant.QUERY, PaymentBusinessConstant.TRADE_STATUS, alipayTradeQueryResponse.getTrade_status());
     if(getResultCodeMap != null && !"".equals((String)getResultCodeMap.get(PaymentBusinessConstant.TRADE_STATE))){      
       orderQueryResponseForBackendDto.setResult_code((String)getResultCodeMap.get(PaymentBusinessConstant.TRADE_STATE));
     }
     
     orderQueryResponseForBackendDto.setTotal_fee(
-        Double.parseDouble(AlipayTradeQueryResponse.getTotal_amount()==null ? PaymentBusinessConstant.NUM_ZERO : AlipayTradeQueryResponse.getTotal_amount() ));
+        Double.parseDouble(alipayTradeQueryResponse.getTotal_amount()==null ? PaymentBusinessConstant.NUM_ZERO : alipayTradeQueryResponse.getTotal_amount() ));
     orderQueryResponseForBackendDto.setCash_fee(Double.parseDouble(
-        AlipayTradeQueryResponse.getBuyer_pay_amount() ==null ? PaymentBusinessConstant.NUM_ZERO : AlipayTradeQueryResponse.getBuyer_pay_amount()));
-    orderQueryResponseForBackendDto.setMch_id(AlipayTradeQueryResponse.getStore_id());    
+        alipayTradeQueryResponse.getBuyer_pay_amount() ==null ? PaymentBusinessConstant.NUM_ZERO : alipayTradeQueryResponse.getBuyer_pay_amount()));
+    orderQueryResponseForBackendDto.setMch_id(alipayTradeQueryResponse.getStore_id());    
   
-    FundBillList[] fundBillList = AlipayTradeQueryResponse.getFundBillList();
+    FundBillList[] fundBillList = alipayTradeQueryResponse.getFundBillList();
     orderQueryResponseForBackendDto = updateFunBillList(orderQueryResponseForBackendDto,fundBillList);
     
     return orderQueryResponseForBackendDto;
@@ -276,8 +276,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       {        
         if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){
           singleBillAmount = fb.getAmount()==null? 0.00 : fb.getAmount();
-          coupon_jsonString = coupon_jsonString+"{\""+PaymentBusinessConstant.COUPON_ID_+coupon_num+"\":\"\","
-              + "\""+PaymentBusinessConstant.COUPON_TYPE_+fb.getFund_channel()+"\":\"\",\""+PaymentBusinessConstant.COUPON_FEE_+singleBillAmount+"\":\"\",},";          
+          coupon_jsonString = coupon_jsonString+"{\""+PaymentBusinessConstant.COUPON_ID+coupon_num+"\":\"\","
+              + "\""+PaymentBusinessConstant.COUPON_TYPE+fb.getFund_channel()+"\":\"\",\""+PaymentBusinessConstant.COUPON_FEE+singleBillAmount+"\":\"\",},";          
           coupon_fee = coupon_fee+singleBillAmount;
           coupon_num++;
         }        
@@ -392,7 +392,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     if(!responseMap.isEmpty()){
       Set<String> xmlFiledsFromWeiXin = responseMap.keySet();
       List<String> keys_startwith_coupon = 
-          xmlFiledsFromWeiXin.stream().filter(st->st.startsWith(PaymentBusinessConstant.COUPON_ID_)).collect(Collectors.toList());
+          xmlFiledsFromWeiXin.stream().filter(st->st.startsWith(PaymentBusinessConstant.COUPON_ID)).collect(Collectors.toList());
       
       if(keys_startwith_coupon.size()>0){
         Integer maxID = 0;
@@ -401,7 +401,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         
         for(String sk : keys_startwith_coupon)
         {
-          tempID = Integer.valueOf(sk.replaceAll(PaymentBusinessConstant.COUPON_ID_, ""));
+          tempID = Integer.valueOf(sk.replaceAll(PaymentBusinessConstant.COUPON_ID, ""));
           if(maxID<tempID){
             maxID = tempID;
           }              
@@ -410,20 +410,25 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         for(int i=0;i<maxID;i++)
         {             
           coupon_json_string = coupon_json_string+"{"
-              + "\""+PaymentBusinessConstant.COUPON_ID_+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_ID_+i)+"\","
-                  + "\""+PaymentBusinessConstant.COUPON_TYPE_+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_TYPE_+i)+"\","
-                      + "\""+PaymentBusinessConstant.COUPON_FEE_+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_FEE_+i)+"\"},";
-        }
-        if(!"".equals(coupon_json_string)){
-          coupon_json_string = "["+coupon_json_string.substring(0, coupon_json_string.length()-1)+"]";
-          orderQueryResponseForWeiXin.setCoupon_list_json_string(coupon_json_string);
-        }            
-        
+              + "\""+PaymentBusinessConstant.COUPON_ID+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_ID+i)+"\","
+                  + "\""+PaymentBusinessConstant.COUPON_TYPE+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_TYPE+i)+"\","
+                      + "\""+PaymentBusinessConstant.COUPON_FEE+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_FEE+i)+"\"},";
+        }        
+        orderQueryResponseForWeiXin.setCoupon_list_json_string(customizedCouponJsonString(coupon_json_string));        
       }
      
     }
     
     return orderQueryResponseForWeiXin;    
+  }
+  
+  
+  private String customizedCouponJsonString(String coupon_json_string){
+    if(!"".equals(coupon_json_string)){
+      coupon_json_string = "["+coupon_json_string.substring(0, coupon_json_string.length()-1)+"]";
+      return coupon_json_string;
+    } 
+    return null;
   }
   
   
@@ -457,7 +462,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       xmlString = sw.toString();
 
     }catch(JAXBException e){        
-      e.printStackTrace();
+      //e.printStackTrace();     
+      logger.error("context_JAXBException: ", e);
     }
 
     return xmlString;
@@ -468,7 +474,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   private String getReturn_code(String codeFromAlipay){
     String result = PaymentBusinessConstant.RETURN_CODE_ERROR;
     if(PaymentBusinessConstant.ALIPAY_RETURN_CODE_SUCCESS.equals(codeFromAlipay)){
-      result = PaymentBusinessConstant.RETURN_CODE_SUCCESS;
+      result = PaymentBusinessConstant.SUCCESS_MESSAGE;
     }
     return result;    
   }
