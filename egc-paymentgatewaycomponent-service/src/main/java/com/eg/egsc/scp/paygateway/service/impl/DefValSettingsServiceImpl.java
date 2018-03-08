@@ -198,7 +198,7 @@ public class DefValSettingsServiceImpl implements DefValSettingsService {
      * @return 默认设置表对象
      */
     private DefValSettings getUpdateDefValSetting(List<DefValSettings> defValSettingsList) {
-        DefValSettings defValSettings = null;
+        DefValSettings defValSettings = new DefValSettings();
         if (defValSettingsList.size() == 1) {
             defValSettings = defValSettingsList.get(0);
         }
