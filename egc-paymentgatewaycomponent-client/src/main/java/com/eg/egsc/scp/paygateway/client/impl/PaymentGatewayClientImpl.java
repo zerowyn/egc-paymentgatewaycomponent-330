@@ -52,9 +52,9 @@ public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGa
   }
 
   @Override
-  public CreateOrderResponseForBackendDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
+  public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
     ResponseDto res = post("/pay/createorder", createOrderRequestForBackendDto);
-    return (CreateOrderResponseForBackendDto) res.getData();
+    return res;
   }
 
 
