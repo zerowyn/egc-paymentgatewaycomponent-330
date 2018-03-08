@@ -11,7 +11,6 @@ import com.eg.egsc.common.exception.CommonException;
 import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 
 
 /**
@@ -20,8 +19,8 @@ import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
  * @Create In 2018年3月5日
  */
 public interface PaymentGatewayClient {
-  
-  OrderQueryResponseForBackendDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException;
+
+  ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException;
 
   /**
    * 通过组件或者应用封装的CreateOrderRequestForBackendDto下单
