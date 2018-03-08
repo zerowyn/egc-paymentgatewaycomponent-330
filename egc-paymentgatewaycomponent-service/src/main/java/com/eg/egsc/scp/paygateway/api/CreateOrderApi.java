@@ -58,11 +58,11 @@ public class CreateOrderApi extends BaseController {
         ResponseDto result = new ResponseDto();
         try {
             createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
-            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
-            !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
+            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturn_code()) ||
+                    !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturn_code())) {
                 logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
                 result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
-            }else{
+            } else {
                 result.setMessage("00000:数据返回正常");
             }
             result.setData(createOrderResponseForBackendDto);
