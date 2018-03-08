@@ -343,9 +343,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       OrderQueryRequestForBackendDto orderQueryRequestForBackendDto,OrderQueryResponseForBackendDto orderQueryResponseForBackendDto){        
     
     OrderQueryRequestForWeiXin orderQueryRequestForWeiXin = 
-        transferBackendMessageForWeiXin(orderQueryRequestForBackendDto);    
-//    String requestXmlString = 
-//        jaxbRequestObjectToXMLForWeiXin(orderQueryRequestForWeiXin);   
+        transferBackendMessageForWeiXin(orderQueryRequestForBackendDto);  
   
     try{  
       String requestXmlString = new ObjectMapper().writeValueAsString(orderQueryRequestForWeiXin);
@@ -463,10 +461,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     } catch (IOException e) {
       logger.error("orderQueryAlipayRequestFromBackendSystme IOException: ",e);
     }
-          
-//    Gson gson=new Gson();
-//    OrderQueryResponseForAliPay orderQueryResponseForAliPay = gson.fromJson(aliResponse.getBody(), OrderQueryResponseForAliPay.class);
-    
+  
     return transferAliPayMessageForBackendSystme(orderQueryResponseForAliPay);   
         
   }
