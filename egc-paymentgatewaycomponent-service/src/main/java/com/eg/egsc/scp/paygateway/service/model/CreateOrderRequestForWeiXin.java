@@ -7,7 +7,7 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
-import com.sun.tools.corba.se.idl.StringGen;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
@@ -34,19 +34,22 @@ public class CreateOrderRequestForWeiXin {
    * 
    */
   @NotBlank(message = "scp.pay.gateway.app.pay.request.mch_id.notblank")
-  private String mch_id;
+  @JsonProperty(value = "mch_id")
+  private String mchId;
   
   /**
    * 设备号
    * 写入默认值“WEB”（从配置表读取）
    */
-  private String device_info;
+  @JsonProperty("device_info")
+  private String deviceInfo;
   
   /**
    * 转发给微信订单查询接口的消息格式-随机字符串，不长于32位。推荐随机数生成算法
    * 
    */
-  private String nonce_str;
+  @JsonProperty("nonce_str")
+  private String nonceStr;
 
   /**
    * 转发给微信订单查询接口的消息格式-签名
@@ -58,7 +61,8 @@ public class CreateOrderRequestForWeiXin {
    * 签名类型
    * 写入默认值“MD5”（从配置表读取）
    */
-  private String sign_type;
+  @JsonProperty(value = "sign_type")
+  private String signType;
 
   /**
    * 商品描述
@@ -81,57 +85,67 @@ public class CreateOrderRequestForWeiXin {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    *
    */
-  private String out_trade_no;
+  @JsonProperty(value = "out_trade_no")
+  private String outTradeNo;
 
   /**
    *货币类型
    */
-  private String fee_type;
+  @JsonProperty(value = "fee_type")
+  private String feeType;
 
   /**
    * 总金额
    */
-  private String total_fee;
+  @JsonProperty(value = "total_fee")
+  private String totalFee;
 
   /**
    * 终端IP
    */
-  private String spbill_create_ip;
+  @JsonProperty(value = "spbill_create_ip")
+  private String spbillCreateIp;
 
   /**
    * 交易起始时间
    */
-  private String time_start;
+  @JsonProperty(value = "time_start\t")
+  private String timeStart;
 
   /**
    * 交易结束时间
    */
-  private String time_expire;
+  @JsonProperty(value = "time_expire")
+  private String timeExpire;
 
   /**
    * 订单优惠标记
    */
-  private String goods_tag;
+  @JsonProperty(value = "goods_tag")
+  private String goodsTag;
 
   /**
    * 通知地址
    */
-  private String notify_url;
+  @JsonProperty(value = "notify_url")
+  private String notifyUrl;
 
   /**
    * 交易类型
    */
-  private String trade_type;
+  @JsonProperty(value = "trade_type")
+  private String tradeType;
 
   /**
    * 商品ID
    */
-  private String product_id;
+  private String productId;
 
   /**
    * 指定支付方式
    */
-  private String limit_pay;
+  @JsonProperty(value = "limit_pay")
+  private String limitPay;
 
   /**
    * openid
@@ -141,7 +155,8 @@ public class CreateOrderRequestForWeiXin {
   /**
    * 场景信息
    */
-  private String scene_info;
+  @JsonProperty(value = "scene_info")
+  private String sceneInfo;
 
   /**
    * @Return the String appid
@@ -158,48 +173,6 @@ public class CreateOrderRequestForWeiXin {
   }
 
   /**
-   * @Return the String mch_id
-   */
-  public String getMch_id() {
-    return mch_id;
-  }
-
-  /**
-   * @Param String mch_id to set
-   */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
-  }
-
-  /**
-   * @Return the String out_trade_no
-   */
-  public String getOut_trade_no() {
-    return out_trade_no;
-  }
-
-  /**
-   * @Param String out_trade_no to set
-   */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
-  }
-
-  /**
-   * @Return the String nonce_str
-   */
-  public String getNonce_str() {
-    return nonce_str;
-  }
-
-  /**
-   * @Param String nonce_str to set
-   */
-  public void setNonce_str(String nonce_str) {
-    this.nonce_str = nonce_str;
-  }
-
-  /**
    * @Return the String sign
    */
   public String getSign() {
@@ -211,22 +184,6 @@ public class CreateOrderRequestForWeiXin {
    */
   public void setSign(String sign) {
     this.sign = sign;
-  }
-
-  public String getDevice_info() {
-    return device_info;
-  }
-
-  public void setDevice_info(String device_info) {
-    this.device_info = device_info;
-  }
-
-  public String getSign_type() {
-    return sign_type;
-  }
-
-  public void setSign_type(String sign_type) {
-    this.sign_type = sign_type;
   }
 
   public String getBody() {
@@ -253,86 +210,6 @@ public class CreateOrderRequestForWeiXin {
     this.attach = attach;
   }
 
-  public String getFee_type() {
-    return fee_type;
-  }
-
-  public void setFee_type(String fee_type) {
-    this.fee_type = fee_type;
-  }
-
-  public String getTotal_fee() {
-    return total_fee;
-  }
-
-  public void setTotal_fee(String total_fee) {
-    this.total_fee = total_fee;
-  }
-
-  public String getSpbill_create_ip() {
-    return spbill_create_ip;
-  }
-
-  public void setSpbill_create_ip(String spbill_create_ip) {
-    this.spbill_create_ip = spbill_create_ip;
-  }
-
-  public String getTime_start() {
-    return time_start;
-  }
-
-  public void setTime_start(String time_start) {
-    this.time_start = time_start;
-  }
-
-  public String getTime_expire() {
-    return time_expire;
-  }
-
-  public void setTime_expire(String time_expire) {
-    this.time_expire = time_expire;
-  }
-
-  public String getGoods_tag() {
-    return goods_tag;
-  }
-
-  public void setGoods_tag(String goods_tag) {
-    this.goods_tag = goods_tag;
-  }
-
-  public String getNotify_url() {
-    return notify_url;
-  }
-
-  public void setNotify_url(String notify_url) {
-    this.notify_url = notify_url;
-  }
-
-  public String getTrade_type() {
-    return trade_type;
-  }
-
-  public void setTrade_type(String trade_type) {
-    this.trade_type = trade_type;
-  }
-
-  public String getProduct_id() {
-    return product_id;
-  }
-
-  public void setProduct_id(String product_id) {
-    this.product_id = product_id;
-  }
-
-  public String getLimit_pay() {
-    return limit_pay;
-  }
-
-  public void setLimit_pay(String limit_pay) {
-    this.limit_pay = limit_pay;
-  }
-
   public String getOpenid() {
     return openid;
   }
@@ -341,11 +218,131 @@ public class CreateOrderRequestForWeiXin {
     this.openid = openid;
   }
 
-  public String getScene_info() {
-    return scene_info;
+  public String getMchId() {
+    return mchId;
   }
 
-  public void setScene_info(String scene_info) {
-    this.scene_info = scene_info;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
+  }
+
+  public String getDeviceInfo() {
+    return deviceInfo;
+  }
+
+  public void setDeviceInfo(String deviceInfo) {
+    this.deviceInfo = deviceInfo;
+  }
+
+  public String getNonceStr() {
+    return nonceStr;
+  }
+
+  public void setNonceStr(String nonceStr) {
+    this.nonceStr = nonceStr;
+  }
+
+  public String getSignType() {
+    return signType;
+  }
+
+  public void setSignType(String signType) {
+    this.signType = signType;
+  }
+
+  public String getOutTradeNo() {
+    return outTradeNo;
+  }
+
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
+  }
+
+  public String getFeeType() {
+    return feeType;
+  }
+
+  public void setFeeType(String feeType) {
+    this.feeType = feeType;
+  }
+
+  public String getTotalFee() {
+    return totalFee;
+  }
+
+  public void setTotalFee(String totalFee) {
+    this.totalFee = totalFee;
+  }
+
+  public String getSpbillCreateIp() {
+    return spbillCreateIp;
+  }
+
+  public void setSpbillCreateIp(String spbillCreateIp) {
+    this.spbillCreateIp = spbillCreateIp;
+  }
+
+  public String getTimeStart() {
+    return timeStart;
+  }
+
+  public void setTimeStart(String timeStart) {
+    this.timeStart = timeStart;
+  }
+
+  public String getTimeExpire() {
+    return timeExpire;
+  }
+
+  public void setTimeExpire(String timeExpire) {
+    this.timeExpire = timeExpire;
+  }
+
+  public String getGoodsTag() {
+    return goodsTag;
+  }
+
+  public void setGoodsTag(String goodsTag) {
+    this.goodsTag = goodsTag;
+  }
+
+  public String getNotifyUrl() {
+    return notifyUrl;
+  }
+
+  public void setNotifyUrl(String notifyUrl) {
+    this.notifyUrl = notifyUrl;
+  }
+
+  public String getTradeType() {
+    return tradeType;
+  }
+
+  public void setTradeType(String tradeType) {
+    this.tradeType = tradeType;
+  }
+
+  public String getProductId() {
+    return productId;
+  }
+
+  public void setProductId(String productId) {
+    this.productId = productId;
+  }
+
+  public String getLimitPay() {
+    return limitPay;
+  }
+
+  public void setLimitPay(String limitPay) {
+    this.limitPay = limitPay;
+  }
+
+  public String getSceneInfo() {
+    return sceneInfo;
+  }
+
+  public void setSceneInfo(String sceneInfo) {
+    this.sceneInfo = sceneInfo;
   }
 }

@@ -7,9 +7,9 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
-import com.eg.egsc.framework.client.dto.BaseBusinessDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.springframework.stereotype.Component;
-import sun.awt.SunHints;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,15 +23,58 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class CreateOrderResponseForWeiXin {
 
   /**
+   * 返回信息
+   */
+  @JsonProperty(value = "return_msg")
+  private String returnMsg;
+
+  /**
+   * 微信统一下单接口的消息格式-微信支付分配的商户号
+   *
+   */
+  @JsonProperty(value = "mch_id")
+  private String mchId;
+
+  /**
+   * 设备号
+   * 调用接口提交的终端设备号，
+   */
+  @JsonProperty(value = "device_info")
+  private String deviceInfo;
+
+  /**
    * 返回状态码
    * SUCCESS/FAIL
    */
-  private String return_code;
+  @JsonProperty(value = "return_code")
+  private String returnCode;
 
   /**
-   * 返回信息
+   * 随机字符串
+   * 微信返回的随机字符串（验签用，不向缴费后台传送）
    */
-  private String return_msg;
+  @JsonProperty(value = "nonce_str")
+  private String nonceStr;
+  /**
+   * 签名
+   *
+   */
+  private String sign;
+
+
+  /**
+   * 业务结果
+   *
+   */
+  @JsonProperty(value = "result_code")
+  private String resultCode;
+
+  /**
+   * 错误代码
+   *
+   */
+  @JsonProperty(value = "err_code")
+  private String errCode;
 
   /**
    * 微信统一下单接口的消息格式-微信开放平台审核通过的应用APPID
@@ -40,73 +83,32 @@ public class CreateOrderResponseForWeiXin {
   private String appid;
 
   /**
-   * 微信统一下单接口的消息格式-微信支付分配的商户号
-   *
-   */
-  private String mch_id;
-
-  /**
-   * 设备号
-   * 调用接口提交的终端设备号，
-   */
-  private String device_info;
-
-  /**
-   * 随机字符串
-   * 微信返回的随机字符串（验签用，不向缴费后台传送）
-   */
-  private String nonce_str;
-
-  /**
-   * 签名
-   *
-   */
-  private String sign;
-
-  /**
-   * 业务结果
-   *
-   */
-  private String result_code;
-
-  /**
-   * 错误代码
-   *
-   */
-  private String err_code;
-
-  /**
-   * 错误代码描述
-   *
-   */
-  private String err_code_des;
-
-  /**
    * 微信统一下单接口的消息格式-微信的交易类型
    *
    */
-  private String trade_type;
+  @JsonProperty(value = "trade_type")
+  private String tradeType;
 
   /**
    * 预支付交易会话标识
    *
    */
-  private String prepay_id;
+  @JsonProperty(value = "prepay_id")
+  private String prepayId;
 
   /**
    * 支付跳转链接
    * mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟。
    * 当trade_type为MWEB时返回。
    */
-  private String mweb_url;
+  private String mwebUrl;
 
-  public String getTrade_type() {
-    return trade_type;
-  }
-
-  public void setTrade_type(String trade_type) {
-    this.trade_type = trade_type;
-  }
+  /**
+   * 错误代码描述
+   *
+   */
+  @JsonProperty(value = "err_code_des")
+  private String errCodeDes;
 
   /**
    * @Return the String appid
@@ -122,52 +124,6 @@ public class CreateOrderResponseForWeiXin {
     this.appid = appid;
   }
 
-  /**
-   * @Return the String mch_id
-   */
-  public String getMch_id() {
-    return mch_id;
-  }
-
-  /**
-   * @Param String mch_id to set
-   */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
-  }
-
-  public String getReturn_code() {
-    return return_code;
-  }
-
-  public void setReturn_code(String return_code) {
-    this.return_code = return_code;
-  }
-
-  public String getReturn_msg() {
-    return return_msg;
-  }
-
-  public void setReturn_msg(String return_msg) {
-    this.return_msg = return_msg;
-  }
-
-  public String getDevice_info() {
-    return device_info;
-  }
-
-  public void setDevice_info(String device_info) {
-    this.device_info = device_info;
-  }
-
-  public String getNonce_str() {
-    return nonce_str;
-  }
-
-  public void setNonce_str(String nonce_str) {
-    this.nonce_str = nonce_str;
-  }
-
   public String getSign() {
     return sign;
   }
@@ -176,43 +132,91 @@ public class CreateOrderResponseForWeiXin {
     this.sign = sign;
   }
 
-  public String getResult_code() {
-    return result_code;
+  public String getReturnMsg() {
+    return returnMsg;
   }
 
-  public void setResult_code(String result_code) {
-    this.result_code = result_code;
+  public void setReturnMsg(String returnMsg) {
+    this.returnMsg = returnMsg;
   }
 
-  public String getErr_code() {
-    return err_code;
+  public String getMchId() {
+    return mchId;
   }
 
-  public void setErr_code(String err_code) {
-    this.err_code = err_code;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
   }
 
-  public String getErr_code_des() {
-    return err_code_des;
+  public String getDeviceInfo() {
+    return deviceInfo;
   }
 
-  public void setErr_code_des(String err_code_des) {
-    this.err_code_des = err_code_des;
+  public void setDeviceInfo(String deviceInfo) {
+    this.deviceInfo = deviceInfo;
   }
 
-  public String getPrepay_id() {
-    return prepay_id;
+  public String getReturnCode() {
+    return returnCode;
   }
 
-  public void setPrepay_id(String prepay_id) {
-    this.prepay_id = prepay_id;
+  public void setReturnCode(String returnCode) {
+    this.returnCode = returnCode;
   }
 
-  public String getMweb_url() {
-    return mweb_url;
+  public String getNonceStr() {
+    return nonceStr;
   }
 
-  public void setMweb_url(String mweb_url) {
-    this.mweb_url = mweb_url;
+  public void setNonceStr(String nonceStr) {
+    this.nonceStr = nonceStr;
+  }
+
+  public String getResultCode() {
+    return resultCode;
+  }
+
+  public void setResultCode(String resultCode) {
+    this.resultCode = resultCode;
+  }
+
+  public String getErrCode() {
+    return errCode;
+  }
+
+  public void setErrCode(String errCode) {
+    this.errCode = errCode;
+  }
+
+  public String getTradeType() {
+    return tradeType;
+  }
+
+  public void setTradeType(String tradeType) {
+    this.tradeType = tradeType;
+  }
+
+  public String getPrepayId() {
+    return prepayId;
+  }
+
+  public void setPrepayId(String prepayId) {
+    this.prepayId = prepayId;
+  }
+
+  public String getMwebUrl() {
+    return mwebUrl;
+  }
+
+  public void setMwebUrl(String mwebUrl) {
+    this.mwebUrl = mwebUrl;
+  }
+
+  public String getErrCodeDes() {
+    return errCodeDes;
+  }
+
+  public void setErrCodeDes(String errCodeDes) {
+    this.errCodeDes = errCodeDes;
   }
 }

@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @Class Name CreateOrderRequestForAliPay
  * @Author lihui
@@ -18,7 +20,8 @@ public class CreateOrderRequestForAliPay {
    * 应用ID
    * 
    */
-  private String app_id;
+  @JsonProperty(value = "app_id")
+  private String appId;
 
   /**
    * 接口名称
@@ -33,7 +36,8 @@ public class CreateOrderRequestForAliPay {
   /**
    * 商户生成签名所使用的字符串
    */
-  private String sign_type;
+  @JsonProperty(value = "sign_type")
+  private String signType;
 
   /**
    * 签名
@@ -59,20 +63,14 @@ public class CreateOrderRequestForAliPay {
   /**
    * 通知地址
    */
-  private String notify_url;
+  @JsonProperty(value = "notify_uri")
+  private String notifyUrl;
 
   /**
    * 业务请求参数的集合
    */
-  private String biz_content;
-
-  public String getApp_id() {
-    return app_id;
-  }
-
-  public void setApp_id(String app_id) {
-    this.app_id = app_id;
-  }
+  @JsonProperty(value = "biz_content")
+  private String bizContent;
 
   public String getMethod() {
     return method;
@@ -88,14 +86,6 @@ public class CreateOrderRequestForAliPay {
 
   public void setCharset(String charset) {
     this.charset = charset;
-  }
-
-  public String getSign_type() {
-    return sign_type;
-  }
-
-  public void setSign_type(String sign_type) {
-    this.sign_type = sign_type;
   }
 
   public String getSign() {
@@ -122,27 +112,43 @@ public class CreateOrderRequestForAliPay {
     this.version = version;
   }
 
-  public String getNotify_url() {
-    return notify_url;
-  }
-
-  public void setNotify_url(String notify_url) {
-    this.notify_url = notify_url;
-  }
-
-  public String getBiz_content() {
-    return biz_content;
-  }
-
-  public void setBiz_content(String biz_content) {
-    this.biz_content = biz_content;
-  }
-
   public String getFormat() {
     return format;
   }
 
   public void setFormat(String format) {
     this.format = format;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
+
+  public String getSignType() {
+    return signType;
+  }
+
+  public void setSignType(String signType) {
+    this.signType = signType;
+  }
+
+  public String getNotifyUrl() {
+    return notifyUrl;
+  }
+
+  public void setNotifyUrl(String notifyUrl) {
+    this.notifyUrl = notifyUrl;
+  }
+
+  public String getBizContent() {
+    return bizContent;
+  }
+
+  public void setBizContent(String bizContent) {
+    this.bizContent = bizContent;
   }
 }

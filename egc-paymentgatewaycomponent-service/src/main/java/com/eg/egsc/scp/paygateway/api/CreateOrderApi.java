@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
-
 /**
  * @Class Name CreateOrderApi
  * @Author lihui
@@ -58,8 +55,8 @@ public class CreateOrderApi extends BaseController {
         ResponseDto result = new ResponseDto();
         try {
             createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
-            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturn_code()) ||
-            !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResult_code())) {
+            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
+            !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
                 logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
                 result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
             } else {

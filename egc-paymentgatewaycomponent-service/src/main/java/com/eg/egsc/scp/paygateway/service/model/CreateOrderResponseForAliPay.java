@@ -15,24 +15,19 @@ package com.eg.egsc.scp.paygateway.service.model;
 public class CreateOrderResponseForAliPay {
 
     /**
-     * 网关返回码
-     */
-    private String code;
-
-    /**
      *网关返回码描述
      */
     private String msg;
 
     /**
-     * 业务返回码
-     */
-    private String sub_code;
-
-    /**
      * 业务返回码描述
      */
-    private String sub_msg;
+    private String subMsg;
+
+    /**
+     * 网关返回码
+     */
+    private String code;
 
     /**
      * 签名
@@ -42,12 +37,17 @@ public class CreateOrderResponseForAliPay {
     /**
      * 支付宝交易号
      */
-    private String trade_no;
+    private String tradeNo;
 
     /**
      * 上家订单号
      */
-    private String out_trade_no;
+    private String outTradeNo;
+
+    /**
+     * 业务返回码
+     */
+    private String subCode;
 
     public String getCode() {
         return code;
@@ -55,30 +55,6 @@ public class CreateOrderResponseForAliPay {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getSub_code() {
-        return sub_code;
-    }
-
-    public void setSub_code(String sub_code) {
-        this.sub_code = sub_code;
-    }
-
-    public String getSub_msg() {
-        return sub_msg;
-    }
-
-    public void setSub_msg(String sub_msg) {
-        this.sub_msg = sub_msg;
     }
 
     public String getSign() {
@@ -89,19 +65,43 @@ public class CreateOrderResponseForAliPay {
         this.sign = sign;
     }
 
-    public String getTrade_no() {
-        return trade_no;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setTrade_no(String trade_no) {
-        this.trade_no = trade_no;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getOut_trade_no() {
-        return out_trade_no;
+    public String getSubMsg() {
+        return subMsg;
     }
 
-    public void setOut_trade_no(String out_trade_no) {
-        this.out_trade_no = out_trade_no;
+    public void setSubMsg(String subMsg) {
+        this.subMsg = subMsg;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getSubCode() {
+        return subCode;
+    }
+
+    public void setSubCode(String subCode) {
+        this.subCode = subCode;
     }
 }

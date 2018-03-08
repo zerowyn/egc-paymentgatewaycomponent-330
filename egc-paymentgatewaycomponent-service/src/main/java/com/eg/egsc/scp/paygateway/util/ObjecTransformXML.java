@@ -22,7 +22,7 @@ public class ObjecTransformXML {
 
         } catch (JAXBException e) {
             e.printStackTrace();
-            throw new PaymentGatewayException(ErrorCodeConstant.XML_ABNORMAL_CONVERSION);
+            throw new PaymentGatewayException(ErrorCodeConstant.ABNORMAL_CONVERSION);
         }
 
         return xmlString;
