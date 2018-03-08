@@ -4,10 +4,8 @@
 package com.eg.egsc.scp.paygateway.service.impl;
 
 import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
-import com.eg.egsc.scp.paygateway.dto.ConfigsDto;
 import com.eg.egsc.scp.paygateway.dto.DefValSettingsDto;
 import com.eg.egsc.scp.paygateway.dto.PageQueryDto;
-import com.eg.egsc.scp.paygateway.service.ConfigsService;
 import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,7 +110,7 @@ public class DefValSettingsServiceImplTest {
         String platform = "ALIPAY";
         String fieldName = "sign_type";
         String value = defValSettingsServiceImpl.getDefValSettingsValueByExample(platform, fieldName);
-        System.out.println(value);
+        logger.info("the value is:" + value);
     }
 
 }

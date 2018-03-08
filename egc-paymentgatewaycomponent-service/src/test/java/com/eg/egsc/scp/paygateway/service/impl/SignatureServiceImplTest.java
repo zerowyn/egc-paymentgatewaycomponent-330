@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant.SIGN_TYPE;
+
 
 /**
  * @author gucunyang
@@ -48,10 +50,10 @@ public class SignatureServiceImplTest {
         weixinRequestMap.put("out_trade_no", "44444444444441444");
         sign = signatureServiceImpl.weixinSignature(weixinRequestMap);
         logger.info("test the default sign type, the result is sign=" + sign);
-        weixinRequestMap.put("sign_type", "HmacSHA256");
+        weixinRequestMap.put(SIGN_TYPE, "HmacSHA256");
         sign = signatureServiceImpl.weixinSignature(weixinRequestMap);
         logger.info("test the sign type of HmacSHA256, the result is sign=" + sign);
-        weixinRequestMap.put("sign_type", "RSA");
+        weixinRequestMap.put(SIGN_TYPE, "RSA");
         sign = signatureServiceImpl.weixinSignature(weixinRequestMap);
         logger.info("test the unsupported sign type, the result is sign=" + sign);
     }
@@ -109,13 +111,13 @@ public class SignatureServiceImplTest {
         alipayRequestMap.put("version", "1.0");
         String sign = signatureServiceImpl.alipaySignature(alipayRequestMap);
         logger.info("test the sign type is null, the result is sign=" + sign);
-        alipayRequestMap.put("sign_type", "RSA2");
+        alipayRequestMap.put(SIGN_TYPE, "RSA2");
         sign = signatureServiceImpl.alipaySignature(alipayRequestMap);
         logger.info("test the sign type of RSA2, the result is sign=" + sign);
-        alipayRequestMap.put("sign_type", "RSA");
+        alipayRequestMap.put(SIGN_TYPE, "RSA");
         sign = signatureServiceImpl.alipaySignature(alipayRequestMap);
         logger.info("test the sign type of RSA, the result is sign=" + sign);
-        alipayRequestMap.put("sign_type", "MD5");
+        alipayRequestMap.put(SIGN_TYPE, "MD5");
         sign = signatureServiceImpl.alipaySignature(alipayRequestMap);
         logger.info("test other sign type , the result is sign=" + sign);
     }
