@@ -151,7 +151,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Timestamp now = new Timestamp(System.currentTimeMillis());
     String timestampForAliPay = df.format(now);
-    String biz_content = ""
+    String bizContent = ""
         + "{\""+PaymentBusinessConstant.OUT_TRADE_NO+"\":\""+orderQueryRequestForBackendDto.getOutTradeNo()+"\","
             + "\""+PaymentBusinessConstant.TRADE_NO+"\":\""+orderQueryRequestForBackendDto.getTransactionId()+"\"}";
     
@@ -161,7 +161,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     requestForAliPay.setSignType(aliPaySignType);
     requestForAliPay.setTimestamp(timestampForAliPay);
     requestForAliPay.setVersion(aliPayOrderQueryVersion);
-    requestForAliPay.setBizContent(biz_content);    
+    requestForAliPay.setBizContent(bizContent);    
     requestForAliPay.setFormat(aliPayOrderQueryFormat);
     
     return requestForAliPay;        
@@ -231,7 +231,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     AlipayOrderQueryResponse alipayTradeQueryResponse = orderQueryResponseForAliPay.getAlipayTradeQueryResponse();
     
     orderQueryResponseForBackendDto.setPlatform(PaymentBusinessConstant.ALI_PAY);    
-    orderQueryResponseForBackendDto.setReturnCode(getReturn_code(alipayTradeQueryResponse.getCode()));
+    orderQueryResponseForBackendDto.setReturnCode(getReturnCode(alipayTradeQueryResponse.getCode()));
     orderQueryResponseForBackendDto.setReturnMsg(alipayTradeQueryResponse.getMsg());
     orderQueryResponseForBackendDto.setResultCode(alipayTradeQueryResponse.getSubCode());
     
@@ -403,7 +403,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       List<String> keysStartwithCoupon = 
           xmlFiledsFromWeiXin.stream().filter(st->st.startsWith(PaymentBusinessConstant.COUPON_ID)).collect(Collectors.toList());
       
-      if(keysStartwithCoupon.size()>0){
+      if(!keysStartwithCoupon.isEmpty()){
         Integer maxID = 0;
         Integer tempID = 0;
         String couponJsonString = "";
@@ -488,7 +488,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   }
   
    
-  private String getReturn_code(String codeFromAlipay){
+  private String getReturnCode(String codeFromAlipay){
     String result = PaymentBusinessConstant.RETURN_CODE_ERROR;
     if(PaymentBusinessConstant.ALIPAY_RETURN_CODE_SUCCESS.equals(codeFromAlipay)){
       result = PaymentBusinessConstant.SUCCESS_MESSAGE;
@@ -500,15 +500,14 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   private ResponseEntity<String> callThirdPartyOrderQueryApi(String platform,String requestString){  
     
     RestTemplate rt = new RestTemplate();
-    rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName(PaymentBusinessConstant.CHARSET_UTF8)));;
+    rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName(PaymentBusinessConstant.CHARSET_UTF8)));
     HttpHeaders httpHeaders = new HttpHeaders();
     MediaType mediaType = MediaType.parseMediaType("application/xml; charset=utf-8");
     
     httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_ATOM_XML));
     httpHeaders.setContentType(mediaType);
     
-    HttpEntity<String> formEntity = 
-        new HttpEntity<String>(requestString.toString(), httpHeaders);
+    HttpEntity<String> formEntity = new HttpEntity<String>(requestString, httpHeaders);
     
     logger.error("====Final platform: "+platform);
     logger.error("====Final requestString: "+requestString);
@@ -533,11 +532,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     logger.info("orderQRForWeiXinJsonString: ["+orderQRForWeiXinJsonString+"]");
     
     Map signatureMapForWeiXin = 
-        (Map) com.alibaba.fastjson.JSONObject.parse(orderQRForWeiXinJsonString);    
+        (Map) com.alibaba.fastjson.JSONObject.parse(orderQRForWeiXinJsonString);
    
-    String paySignature = signatureServiceImpl.weixinSignature(signatureMapForWeiXin);
-   
-    return paySignature;
+    return signatureServiceImpl.weixinSignature(signatureMapForWeiXin);
   }
   
   

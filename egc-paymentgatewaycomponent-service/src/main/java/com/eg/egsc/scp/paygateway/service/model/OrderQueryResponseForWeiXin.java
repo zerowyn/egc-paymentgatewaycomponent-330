@@ -9,7 +9,6 @@ package com.eg.egsc.scp.paygateway.service.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
