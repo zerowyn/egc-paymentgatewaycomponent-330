@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.CreateOrderApi.java
  * @Create By lihui
  * @Create In 2018年2月25日 s上午午10:42
- * TODO
  */
 package com.eg.egsc.scp.paygateway.api;
 

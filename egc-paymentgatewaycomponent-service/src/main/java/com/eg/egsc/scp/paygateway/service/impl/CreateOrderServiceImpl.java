@@ -3,11 +3,9 @@
  * @Path: com.eg.egsc.scp.paygateway.service.impl.CreateOrderServiceImpl.java
  * @Create By lihui
  * @Create In 2018年2月25日 上午11:09
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -26,27 +24,16 @@ import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.google.gson.Gson;
-import com.netflix.discovery.converters.wrappers.CodecWrappers;
-import com.sun.tools.corba.se.idl.StringGen;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.hash.Jackson2HashMapper;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -104,7 +91,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setAppid(createOrderRequestForBackendDto.getAppid());
         createOrderRequestForWeiXin.setMchId(createOrderRequestForBackendDto.getMchId());
         createOrderRequestForWeiXin.setDeviceInfo(weiXinDeviceInfo);
-        createOrderRequestForWeiXin.setNonceStr(getNonce_str());
+        createOrderRequestForWeiXin.setNonceStr(getNonceStr());
         createOrderRequestForWeiXin.setSignType(PaymentBusinessConstant.SIGN_TYPE_MD5);
         createOrderRequestForWeiXin.setBody(createOrderRequestForBackendDto.getBody());
         createOrderRequestForWeiXin.setDetail(createOrderRequestForBackendDto.getDetail());
@@ -148,7 +135,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             createOrderResponseForBackendDto.setPackageValue(PaymentBusinessConstant.PACKAGE);
             createOrderResponseForBackendDto.setNoncestr(createOrderResponseForWeiXin.getNonceStr());
         }
-        createOrderResponseForBackendDto.setSign(getSign(createOrderResponseForBackendDto));
+        createOrderResponseForBackendDto.setSign(getBackSign(createOrderResponseForBackendDto));
         return createOrderResponseForBackendDto;
     }
 
@@ -159,7 +146,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp now = new Timestamp(System.currentTimeMillis());
         String timestampForAliPay = df.format(now);
-        String biz_content = ""
+        String bizContent = ""
                 + "{\"out_trade_no\":\"" + createOrderRequestForBackendDto.getOutTradeNo() + "\","
                 + "\"product_code\":\"" + productCode + "\","
                 + "\"total_amount\":\"" + createOrderRequestForBackendDto.getTotalFee() + "\","
@@ -170,7 +157,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         requestForAliPay.setSignType(aliPaySignType);
         requestForAliPay.setTimestamp(timestampForAliPay);
         requestForAliPay.setVersion(aliPayOrderQueryVersion);
-        requestForAliPay.setBizContent(biz_content);
+        requestForAliPay.setBizContent(bizContent);
         requestForAliPay.setFormat(aliPayOrderQueryFormat);
         requestForAliPay.setNotifyUrl(aliPayNotifyUrl);
         return requestForAliPay;
@@ -212,7 +199,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String requestXmlString = new ObjectMapper().writeValueAsString(createOrderRequestForWeiXin);
                 JSONObject jsonObject = JSONObject.fromObject(requestXmlString);
                 requestXmlString = getJson2Xml(jsonObject);
-//                requestXmlString = jaxbRequestObjectToXMLForWeiXin(createOrderRequestForWeiXin);
                 logger.info("requestXmlString = [" + requestXmlString + "]");
                 ResponseEntity<String> responseEntiryFromWeiXin = callThirdPartyCreateOrderApi(
                         createOrderRequestForBackendDto.getPlatform(), requestXmlString);
@@ -228,11 +214,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 }
                 String jsonStr = new ObjectMapper().writeValueAsString(responseMap);
                 createOrderResponseForWeiXin = new ObjectMapper().readValue(jsonStr, CreateOrderResponseForWeiXin.class);
-//                String newMessageFromWeiXin = xmlReplace2(messageFromWeiXin);
-//                StringReader sr = new StringReader(newMessageFromWeiXin);
-//                JAXBContext jaxbContext = JAXBContext.newInstance(CreateOrderResponseForWeiXin.class);
-//                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-//                this.createOrderResponseForWeiXin = (CreateOrderResponseForWeiXin) unmarshaller.unmarshal(sr);
                 createOrderResponseForBackendDto =
                         transferWeiXinMessageForBackendSystme(this.createOrderResponseForWeiXin);
             } catch (Exception e) {
@@ -270,12 +251,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     private String getJson2Xml(JSONObject json){
         Iterator<String> it = json.keys();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String key = "";
         String value = "";
         sb.append("<xml>");
         while(it.hasNext()){
-            key = it.next().toString();
+            key = it.next();
             value = json.optString(key);
             if(!"null".equalsIgnoreCase(value)) {
                 try{
@@ -292,35 +273,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return sb.toString();
     }
 
-    public String xmlReplace2(String xmlString) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int size = xmlString.length();
-        int left = xmlString.indexOf("<");
-        int right = xmlString.indexOf(">",left);
-        stringBuilder.append(xmlString.substring(0,left+1));
-        String str ="";
-        while(right<size) {
-            str = xmlString.substring(left+1,right);
-            for(int i = 0;i<str.length();i++) {
-                Character c = str.charAt(i);
-                if(c == '_') {
-                    Character d = str.charAt(i + 1);
-                    str = str.replace(c.toString() + d,(""+d).toUpperCase());
-                }
-            }
-            stringBuilder.append(str);
-            left = xmlString.indexOf("<",right+1);
-            if(left == -1) {
-                stringBuilder.append(xmlString.substring(right));
-                return stringBuilder.toString();
-            }else {
-                stringBuilder.append(xmlString.substring(right,left+1));
-                right = xmlString.indexOf(">",left);
-            }
-        }
-        return stringBuilder.toString();
-    }
-
     private ResponseEntity<String> callThirdPartyCreateOrderApi(String platform, String requestString) {
         RestTemplate rt = new RestTemplate();
         rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
@@ -329,14 +281,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_ATOM_XML));
         headers.setContentType(type);
         HttpEntity<String> formEntity =
-                new HttpEntity<String>(requestString.toString(), headers);
+                new HttpEntity<>(requestString, headers);
         String thirdPartyUri = "";
         if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(platform)) {
             thirdPartyUri = wechatCreateOrderUri;
         }
-        ResponseEntity<String> responseEntiryFromThirdPartyApi =
-                (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.POST, formEntity, String.class);
-        return responseEntiryFromThirdPartyApi;
+        return (ResponseEntity<String>) rt.exchange(thirdPartyUri, HttpMethod.POST, formEntity, String.class);
 
     }
 
@@ -351,11 +301,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         logger.info("createOrderRequestForWeiXinBefore: [" + createOrderRequestForWeiXin + "]");
         Map signatureMap =
                 (Map) com.alibaba.fastjson.JSONObject.parse(createOrderForWeiXinJsonString);
-        String paySignature = signatureServiceImpl.weixinSignature(signatureMap);
-        return paySignature;
+        return signatureServiceImpl.weixinSignature(signatureMap);
     }
 
-    private String getSign(CreateOrderResponseForBackendDto createOrderResponseForBackendDto) {
+    private String getBackSign(CreateOrderResponseForBackendDto createOrderResponseForBackendDto) {
         Map<String, Object> signatureMap = new HashMap<>();
         signatureMap.put("appid", createOrderResponseForBackendDto.getAppid());
         signatureMap.put("partnerid", createOrderResponseForBackendDto.getPartnerid());
@@ -366,26 +315,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return signatureServiceImpl.weixinSignature(signatureMap);
     }
 
-    private String getNonce_str() {
-        String uuid = StringUtils.generateUuid();
-        return uuid;
-    }
-
-    public static String jaxbRequestObjectToXMLForWeiXin(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
-        String xmlString = "";
-        try {
-            JAXBContext context = JAXBContext.newInstance(CreateOrderRequestForWeiXin.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            StringWriter sw = new StringWriter();
-            m.marshal(createOrderRequestForWeiXin, sw);
-            xmlString = sw.toString();
-
-        } catch (JAXBException e) {
-            logger.info(e.getMessage());
-            throw new PaymentGatewayException(ErrorCodeConstant.ABNORMAL_CONVERSION);
-        }
-        return xmlString;
+    private String getNonceStr() {
+        return StringUtils.generateUuid();
     }
 
     private AlipayTradeAppPayResponse createOrderForAlipay(CreateOrderRequestForAliPay createOrderRequestForAliPay) {

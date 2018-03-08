@@ -3,12 +3,10 @@
  * @Path: com.eg.egsc.scp.paygateway.daoCreateOrderResponseForWeiXin.java
  * @Create By lihui
  * @Create In 2018年2月25日 上午：11:51
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.annotation.XmlRootElement;

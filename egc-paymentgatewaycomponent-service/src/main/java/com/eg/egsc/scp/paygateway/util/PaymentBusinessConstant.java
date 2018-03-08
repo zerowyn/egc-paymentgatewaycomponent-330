@@ -7,8 +7,6 @@
  */
 package com.eg.egsc.scp.paygateway.util;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
  * @Class Name PaymentBusinessConstant
  * @Author caiqinli

@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.dtoCreateOrderResponseForBackendDto.java
  * @Create By lihui
  * @Create In 2018年2月25日 上午：11:51
- * TODO
  */
 package com.eg.egsc.scp.paygateway.dto;
 

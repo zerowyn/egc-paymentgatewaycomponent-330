@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.daoCreateOrderRequestForAliPay.java
  * @Create By lihui
  * @Create In 2018年2月25日 上午11:16
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.model;
 

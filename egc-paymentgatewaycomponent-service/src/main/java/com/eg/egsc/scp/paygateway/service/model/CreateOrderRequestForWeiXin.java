@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.daoCreateOrderRequestForWeiXin.java
  * @Create By lihui
  * @Create In 2018年2月25日 上午11:15
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
