@@ -44,12 +44,13 @@ public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGa
   
   public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException{
     
-   return post("/api/pay/orderquery", orderQueryRequestForBackendDto);
+    return post("/api/pay/orderquery", orderQueryRequestForBackendDto);    
   }
 
   @Override
   public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
-    return post("/pay/createorder", createOrderRequestForBackendDto);
+    
+    return post("/pay/createorder", createOrderRequestForBackendDto);    
   }
 
 

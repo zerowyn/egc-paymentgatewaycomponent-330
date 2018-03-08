@@ -35,19 +35,19 @@ public class OrderQueryRequestForBackendDto  extends BaseBusinessDto {
    * 转发给微信订单查询接口的消息格式-微信开放平台审核通过的应用APPID
    * 
    */
-  private String appid;
+  private String appId;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信支付分配的商户号
    * 
    */
-  private String mch_id;
+  private String mchId;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
    * 
    */
-  private String transaction_id;
+  private String transactionId;
   
   /**
    * 转发给微信订单查询接口的消息格式-缴费后台内部订单号，
@@ -55,7 +55,7 @@ public class OrderQueryRequestForBackendDto  extends BaseBusinessDto {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    * 
    */
-  private String out_trade_no;
+  private String outTradeNo;
 
   /**
    * @Return the String platform
@@ -72,60 +72,63 @@ public class OrderQueryRequestForBackendDto  extends BaseBusinessDto {
   }
 
   /**
-   * @Return the String appid
+   * @Return the String appId
    */
-  public String getAppid() {
-    return appid;
+  public String getAppId() {
+    return appId;
   }
 
   /**
-   * @Param String appid to set
+   * @Param String appId to set
    */
-  public void setAppid(String appid) {
-    this.appid = appid;
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 
   /**
-   * @Return the String mch_id
+   * @Return the String mchId
    */
-  public String getMch_id() {
-    return mch_id;
+  public String getMchId() {
+    return mchId;
   }
 
   /**
-   * @Param String mch_id to set
+   * @Param String mchId to set
    */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
   }
 
   /**
-   * @Return the String transaction_id
+   * @Return the String transactionId
    */
-  public String getTransaction_id() {
-    return transaction_id;
+  public String getTransactionId() {
+    return transactionId;
   }
 
   /**
-   * @Param String transaction_id to set
+   * @Param String transactionId to set
    */
-  public void setTransaction_id(String transaction_id) {
-    this.transaction_id = transaction_id;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   /**
-   * @Return the String out_trade_no
+   * @Return the String outTradeNo
    */
-  public String getOut_trade_no() {
-    return out_trade_no;
+  public String getOutTradeNo() {
+    return outTradeNo;
   }
 
   /**
-   * @Param String out_trade_no to set
+   * @Param String outTradeNo to set
    */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
+
+
+
 
 
 }

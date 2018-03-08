@@ -47,8 +47,12 @@ public class PaymentBusinessConstant {
     public static final String SIGN = "sign";
 
     public static final String SUCCESS_CODE = "200";
+    
+    public static final String FAIL_CODE = "500";
+    
+    public static final String SUCCESS_CODE_DESC = "200:返回数据正常";
 
-    public static final String FAIL_MESSAGE = "500:支付网关：创建订单出现异常";
+    public static final String FAIL_MESSAGE = "500:支付网关：创建|查询订单出现异常";
 
     public static final String PRODUCT_CODE = "QUICK_MSECURITY_PAY";
 

@@ -7,7 +7,6 @@
  */
 package com.eg.egsc.scp.paygateway.dto;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,15 +21,13 @@ public class OrderQueryResponseForBackendDto {
    * 指定请求的目标平台-‘WEIXIN’或‘ALIPAY’，必填
    * 
    */
-  @NotBlank(message = "scp.pay.gateway.app.backend.request.platform.notblank")
   private String platform;  
   
   /**
    * SUCCESS/FAIL - 此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
    * 
    */
-  @NotBlank(message = "scp.pay.gateway.app.backend.response.return_code.notblank")
-  private String return_code;
+  private String returnCode;
   
   /**
    * 返回信息，如非空，为错误原因 
@@ -42,25 +39,25 @@ public class OrderQueryResponseForBackendDto {
    * 未收到返回消息
    * 
    */ 
-  private String return_msg;
+  private String returnMsg;
   
   /**
    * 调用接口提交的应用ID
    * 
    */
-  private String appid;
+  private String appId;
   
   /**
    * 调用接口提交的商户号
    * 
    */
-   private String mch_id;
+   private String mchId;
   
   /**
    * 调用接口提交的终端设备号
    * 
    */
-  private String device_info;
+  private String deviceInfo;
   
   
   /**
@@ -71,92 +68,92 @@ public class OrderQueryResponseForBackendDto {
      TRADE_SUCCESS->SUCCESS  交易支付成功
    * 
    */
-  private String result_code;
+  private String resultCode;
   
   /**
    * 错误代码
    * 
    */
-  private String err_code;
+  private String errCode;
   
   /**
    * 错误代码描述
    * 
    */
-  private String err_code_des;
+  private String errCodeDes;
   
   /**
    * 用户在商户appid下的唯一标识
    * 
    */
-  private String openid;
+  private String openId;
   
   /**
    * 用户是否关注公众账号，Y-关注，N-未关注，仅在公众账号类型支付有效
    * 
    */
-  private String is_subscribe;
+  private String isSubscribe;
   
   /**
    * 调用接口提交的交易类型
    * 
    */
-  private String trade_type;
+  private String tradeType;
   
   /**
    * 交易状态
    * 
    */
-  private String trade_state;
+  private String tradeState;
   
   /**
    * 银行类型，采用字符串类型的银行标识
    * 
    */
-  private String bank_type;
+  private String bankType;
   
   /**
    * 订单总金额，单位为分
    * 
    */
-  private Double total_fee;
+  private Double totalFee;
   
   
   /**
    * 订单总金额类型
    * 
    */
-  private String fee_type;
+  private String feeType;
   
   /**
    * 现金支付金额订单现金支付金额
    * 
    */
-  private Double cash_fee;
+  private Double cashFee;
   
   /**
    * 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY
    * 
    */
-  private String cash_fee_type;
+  private String cashFeeType;
   
   /**
    * 应结订单金额： 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
    * 
    */
-  private Double settlement_total_fee;
+  private Double settlementTotalFee;
   
   /**
    * 代金券金额：“代金券或立减优惠”金额<=订单总金额，订单总金额-“代金券或立减优惠”金额=现金支付金额
    * 
    */
-  private Double coupon_fee;
+  private Double couponFee;
   
   /**
    * 代金券或立减优惠使用数量
    * 
    */
-  private String coupon_count;
+  private String couponCount;
   
   /**
    * 代金券类别：
@@ -170,13 +167,13 @@ public class OrderQueryResponseForBackendDto {
      MCOUPON 商户红包
    * 
    */
-  private String coupon_list_json_string;
+  private String couponListJsonString;
   
   /**
    * 转发给微信订单查询接口的消息格式-微信的订单号，优先使用
    * 
    */
-  private String transaction_id;
+  private String transactionId;
   
   /**
    * 转发给微信订单查询接口的消息格式-缴费后台内部订单号，
@@ -184,7 +181,7 @@ public class OrderQueryResponseForBackendDto {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    * 
    */
-  private String out_trade_no;
+  private String outTradeNo;
   
   /**
    * 附加数据，原样返回
@@ -196,13 +193,13 @@ public class OrderQueryResponseForBackendDto {
    * 订单支付时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
    * 
    */
-  private String time_end;
+  private String timeEnd;
   
   /**
    * 交易状态描述： 对当前查询订单状态的描述和下一步操作的指引
    * 
    */
-  private String trade_state_desc;
+  private String tradeStateDesc;
 
   /**
    * @Return the String platform
@@ -219,242 +216,325 @@ public class OrderQueryResponseForBackendDto {
   }
 
   /**
-   * @Return the String return_code
+   * @Return the String returnCode
    */
-  public String getReturn_code() {
-    return return_code;
+  public String getReturnCode() {
+    return returnCode;
   }
 
   /**
-   * @Param String return_code to set
+   * @Param String returnCode to set
    */
-  public void setReturn_code(String return_code) {
-    this.return_code = return_code;
+  public void setReturnCode(String returnCode) {
+    this.returnCode = returnCode;
   }
 
   /**
-   * @Return the String return_msg
+   * @Return the String returnMsg
    */
-  public String getReturn_msg() {
-    return return_msg;
+  public String getReturnMsg() {
+    return returnMsg;
   }
 
   /**
-   * @Param String return_msg to set
+   * @Param String returnMsg to set
    */
-  public void setReturn_msg(String return_msg) {
-    this.return_msg = return_msg;
+  public void setReturnMsg(String returnMsg) {
+    this.returnMsg = returnMsg;
   }
 
   /**
-   * @Return the String appid
+   * @Return the String appId
    */
-  public String getAppid() {
-    return appid;
+  public String getAppId() {
+    return appId;
   }
 
   /**
-   * @Param String appid to set
+   * @Param String appId to set
    */
-  public void setAppid(String appid) {
-    this.appid = appid;
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 
   /**
-   * @Return the String mch_id
+   * @Return the String mchId
    */
-  public String getMch_id() {
-    return mch_id;
+  public String getMchId() {
+    return mchId;
   }
 
   /**
-   * @Param String mch_id to set
+   * @Param String mchId to set
    */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
   }
 
   /**
-   * @Return the String device_info
+   * @Return the String deviceInfo
    */
-  public String getDevice_info() {
-    return device_info;
+  public String getDeviceInfo() {
+    return deviceInfo;
   }
 
   /**
-   * @Param String device_info to set
+   * @Param String deviceInfo to set
    */
-  public void setDevice_info(String device_info) {
-    this.device_info = device_info;
+  public void setDeviceInfo(String deviceInfo) {
+    this.deviceInfo = deviceInfo;
   }
 
   /**
-   * @Return the String result_code
+   * @Return the String resultCode
    */
-  public String getResult_code() {
-    return result_code;
+  public String getResultCode() {
+    return resultCode;
   }
 
   /**
-   * @Param String result_code to set
+   * @Param String resultCode to set
    */
-  public void setResult_code(String result_code) {
-    this.result_code = result_code;
+  public void setResultCode(String resultCode) {
+    this.resultCode = resultCode;
   }
 
   /**
-   * @Return the String err_code
+   * @Return the String errCode
    */
-  public String getErr_code() {
-    return err_code;
+  public String getErrCode() {
+    return errCode;
   }
 
   /**
-   * @Param String err_code to set
+   * @Param String errCode to set
    */
-  public void setErr_code(String err_code) {
-    this.err_code = err_code;
+  public void setErrCode(String errCode) {
+    this.errCode = errCode;
   }
 
   /**
-   * @Return the String err_code_des
+   * @Return the String errCodeDes
    */
-  public String getErr_code_des() {
-    return err_code_des;
+  public String getErrCodeDes() {
+    return errCodeDes;
   }
 
   /**
-   * @Param String err_code_des to set
+   * @Param String errCodeDes to set
    */
-  public void setErr_code_des(String err_code_des) {
-    this.err_code_des = err_code_des;
+  public void setErrCodeDes(String errCodeDes) {
+    this.errCodeDes = errCodeDes;
   }
 
   /**
-   * @Return the String openid
+   * @Return the String openId
    */
-  public String getOpenid() {
-    return openid;
+  public String getOpenId() {
+    return openId;
   }
 
   /**
-   * @Param String openid to set
+   * @Param String openId to set
    */
-  public void setOpenid(String openid) {
-    this.openid = openid;
+  public void setOpenId(String openId) {
+    this.openId = openId;
   }
 
   /**
-   * @Return the String is_subscribe
+   * @Return the String isSubscribe
    */
-  public String getIs_subscribe() {
-    return is_subscribe;
+  public String getIsSubscribe() {
+    return isSubscribe;
   }
 
   /**
-   * @Param String is_subscribe to set
+   * @Param String isSubscribe to set
    */
-  public void setIs_subscribe(String is_subscribe) {
-    this.is_subscribe = is_subscribe;
+  public void setIsSubscribe(String isSubscribe) {
+    this.isSubscribe = isSubscribe;
   }
 
   /**
-   * @Return the String trade_type
+   * @Return the String tradeType
    */
-  public String getTrade_type() {
-    return trade_type;
+  public String getTradeType() {
+    return tradeType;
   }
 
   /**
-   * @Param String trade_type to set
+   * @Param String tradeType to set
    */
-  public void setTrade_type(String trade_type) {
-    this.trade_type = trade_type;
+  public void setTradeType(String tradeType) {
+    this.tradeType = tradeType;
   }
 
   /**
-   * @Return the String trade_state
+   * @Return the String tradeState
    */
-  public String getTrade_state() {
-    return trade_state;
+  public String getTradeState() {
+    return tradeState;
   }
 
   /**
-   * @Param String trade_state to set
+   * @Param String tradeState to set
    */
-  public void setTrade_state(String trade_state) {
-    this.trade_state = trade_state;
+  public void setTradeState(String tradeState) {
+    this.tradeState = tradeState;
   }
 
   /**
-   * @Return the String bank_type
+   * @Return the String bankType
    */
-  public String getBank_type() {
-    return bank_type;
+  public String getBankType() {
+    return bankType;
   }
 
   /**
-   * @Param String bank_type to set
+   * @Param String bankType to set
    */
-  public void setBank_type(String bank_type) {
-    this.bank_type = bank_type;
-  }
-  
-  /**
-   * @Return the String cash_fee_type
-   */
-  public String getCash_fee_type() {
-    return cash_fee_type;
+  public void setBankType(String bankType) {
+    this.bankType = bankType;
   }
 
   /**
-   * @Param String cash_fee_type to set
+   * @Return the Double totalFee
    */
-  public void setCash_fee_type(String cash_fee_type) {
-    this.cash_fee_type = cash_fee_type;
+  public Double getTotalFee() {
+    return totalFee;
   }
 
   /**
-   * @Return the String coupon_count
+   * @Param Double totalFee to set
    */
-  public String getCoupon_count() {
-    return coupon_count;
+  public void setTotalFee(Double totalFee) {
+    this.totalFee = totalFee;
   }
 
   /**
-   * @Param String coupon_count to set
+   * @Return the String feeType
    */
-  public void setCoupon_count(String coupon_count) {
-    this.coupon_count = coupon_count;
-  }
-
-
-  /**
-   * @Return the String transaction_id
-   */
-  public String getTransaction_id() {
-    return transaction_id;
+  public String getFeeType() {
+    return feeType;
   }
 
   /**
-   * @Param String transaction_id to set
+   * @Param String feeType to set
    */
-  public void setTransaction_id(String transaction_id) {
-    this.transaction_id = transaction_id;
+  public void setFeeType(String feeType) {
+    this.feeType = feeType;
   }
 
   /**
-   * @Return the String out_trade_no
+   * @Return the Double cashFee
    */
-  public String getOut_trade_no() {
-    return out_trade_no;
+  public Double getCashFee() {
+    return cashFee;
   }
 
   /**
-   * @Param String out_trade_no to set
+   * @Param Double cashFee to set
    */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
+  public void setCashFee(Double cashFee) {
+    this.cashFee = cashFee;
+  }
+
+  /**
+   * @Return the String cashFeeType
+   */
+  public String getCashFeeType() {
+    return cashFeeType;
+  }
+
+  /**
+   * @Param String cashFeeType to set
+   */
+  public void setCashFeeType(String cashFeeType) {
+    this.cashFeeType = cashFeeType;
+  }
+
+  /**
+   * @Return the Double settlementTotalFee
+   */
+  public Double getSettlementTotalFee() {
+    return settlementTotalFee;
+  }
+
+  /**
+   * @Param Double settlementTotalFee to set
+   */
+  public void setSettlementTotalFee(Double settlementTotalFee) {
+    this.settlementTotalFee = settlementTotalFee;
+  }
+
+  /**
+   * @Return the Double couponFee
+   */
+  public Double getCouponFee() {
+    return couponFee;
+  }
+
+  /**
+   * @Param Double couponFee to set
+   */
+  public void setCouponFee(Double couponFee) {
+    this.couponFee = couponFee;
+  }
+
+  /**
+   * @Return the String couponCount
+   */
+  public String getCouponCount() {
+    return couponCount;
+  }
+
+  /**
+   * @Param String couponCount to set
+   */
+  public void setCouponCount(String couponCount) {
+    this.couponCount = couponCount;
+  }
+
+  /**
+   * @Return the String couponListJsonString
+   */
+  public String getCouponListJsonString() {
+    return couponListJsonString;
+  }
+
+  /**
+   * @Param String couponListJsonString to set
+   */
+  public void setCouponListJsonString(String couponListJsonString) {
+    this.couponListJsonString = couponListJsonString;
+  }
+
+  /**
+   * @Return the String transactionId
+   */
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  /**
+   * @Param String transactionId to set
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
+   * @Return the String outTradeNo
+   */
+  public String getOutTradeNo() {
+    return outTradeNo;
+  }
+
+  /**
+   * @Param String outTradeNo to set
+   */
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
 
   /**
@@ -472,117 +552,34 @@ public class OrderQueryResponseForBackendDto {
   }
 
   /**
-   * @Return the String time_end
+   * @Return the String timeEnd
    */
-  public String getTime_end() {
-    return time_end;
+  public String getTimeEnd() {
+    return timeEnd;
   }
 
   /**
-   * @Param String time_end to set
+   * @Param String timeEnd to set
    */
-  public void setTime_end(String time_end) {
-    this.time_end = time_end;
+  public void setTimeEnd(String timeEnd) {
+    this.timeEnd = timeEnd;
   }
 
   /**
-   * @Return the String trade_state_desc
+   * @Return the String tradeStateDesc
    */
-  public String getTrade_state_desc() {
-    return trade_state_desc;
+  public String getTradeStateDesc() {
+    return tradeStateDesc;
   }
 
   /**
-   * @Param String trade_state_desc to set
+   * @Param String tradeStateDesc to set
    */
-  public void setTrade_state_desc(String trade_state_desc) {
-    this.trade_state_desc = trade_state_desc;
+  public void setTradeStateDesc(String tradeStateDesc) {
+    this.tradeStateDesc = tradeStateDesc;
   }
 
- 
-  /**
-   * @Return the String fee_type
-   */
-  public String getFee_type() {
-    return fee_type;
-  }
 
-  /**
-   * @Param String fee_type to set
-   */
-  public void setFee_type(String fee_type) {
-    this.fee_type = fee_type;
-  }
-
-  /**
-   * @Return the String coupon_list_json_string
-   */
-  public String getCoupon_list_json_string() {
-    return coupon_list_json_string;
-  }
-
-  /**
-   * @Param String coupon_list_json_string to set
-   */
-  public void setCoupon_list_json_string(String coupon_list_json_string) {
-    this.coupon_list_json_string = coupon_list_json_string;
-  }
-
-  /**
-   * @Return the Double total_fee
-   */
-  public Double getTotal_fee() {
-    return total_fee;
-  }
-
-  /**
-   * @Param Double total_fee to set
-   */
-  public void setTotal_fee(Double total_fee) {
-    this.total_fee = total_fee;
-  }
-
-  /**
-   * @Return the Double cash_fee
-   */
-  public Double getCash_fee() {
-    return cash_fee;
-  }
-
-  /**
-   * @Param Double cash_fee to set
-   */
-  public void setCash_fee(Double cash_fee) {
-    this.cash_fee = cash_fee;
-  }
-
-  /**
-   * @Return the Double settlement_total_fee
-   */
-  public Double getSettlement_total_fee() {
-    return settlement_total_fee;
-  }
-
-  /**
-   * @Param Double settlement_total_fee to set
-   */
-  public void setSettlement_total_fee(Double settlement_total_fee) {
-    this.settlement_total_fee = settlement_total_fee;
-  }
-
-  /**
-   * @Return the Double coupon_fee
-   */
-  public Double getCoupon_fee() {
-    return coupon_fee;
-  }
-
-  /**
-   * @Param Double coupon_fee to set
-   */
-  public void setCoupon_fee(Double coupon_fee) {
-    this.coupon_fee = coupon_fee;
-  }
 
 
 }

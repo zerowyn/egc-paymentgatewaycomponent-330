@@ -24,6 +24,7 @@ import com.eg.egsc.framework.service.base.api.BaseApiController;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.service.OrderQueryService;
+import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 
 /**
  * @Class Name OrderQueryApi
@@ -56,20 +57,14 @@ public class OrderQueryApi  extends BaseApiController {
    public ResponseDto orderQuery(@RequestBody RequestDto<OrderQueryRequestForBackendDto> req) {
      ResponseDto result = new ResponseDto();
      try {       
-       orderQueryResponseForBackendDto = orderQueryServiceImpl.orderQueryRequestFromBackendSystme(req.getData());
-       String message = "";
-       if(orderQueryResponseForBackendDto == null){
-         message = "程序异常,返回数据对象为空。";
-         logger.error(message);
-         result.setMessage(message);
-       }else{
-         message = "返回数据正常。";
-         result.setMessage(message);
-       }       
+       orderQueryResponseForBackendDto = orderQueryServiceImpl.orderQueryRequestFromBackendSystme(req.getData());       
+       result.setMessage(PaymentBusinessConstant.SUCCESS_CODE_DESC);
+       result.setCode(PaymentBusinessConstant.SUCCESS_CODE);     
        result.setData(orderQueryResponseForBackendDto);
      } catch (Exception e) {
        logger.error(e.getMessage());
-       result.setMessage("支付网关：支付订单查询出现异常！");
+       result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
+       result.setCode(PaymentBusinessConstant.FAIL_CODE);
      }
      return result;
    }
