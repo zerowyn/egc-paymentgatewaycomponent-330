@@ -9,8 +9,8 @@ package com.eg.egsc.scp.paygateway.api;
 import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.framework.service.base.api.BaseApiController;
 import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
-import com.eg.egsc.scp.paygateway.util.NotifyConstant;
 import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
+import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class NotifyApi extends BaseApiController {
         if (StringUtils.isEmpty(requestData)) {
             logger.warn("The request parameter is empty.");
             responseData.setReturn_msg("The request parameter is empty.");
-            responseData.setReturn_code(NotifyConstant.FAIL);
+            responseData.setReturn_code(PaymentBusinessConstant.RETURN_CODE_ERROR);
             return ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(responseData);
         }
         // 将request xml字符串转为map

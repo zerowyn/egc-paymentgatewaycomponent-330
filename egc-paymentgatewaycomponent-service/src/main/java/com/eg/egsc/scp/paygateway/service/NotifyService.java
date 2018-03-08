@@ -22,7 +22,6 @@ public interface NotifyService {
      * @param map
      * @return
      */
-
     public String disposeMessage(Map<String, Object> map,Boolean flag);
 
 }
