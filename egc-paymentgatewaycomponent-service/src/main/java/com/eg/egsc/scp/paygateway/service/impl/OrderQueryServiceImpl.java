@@ -80,11 +80,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   DefValSettingsService defValSettingsServiceImpl;
   
   @Autowired
-  CodeMapsSerivce codeMapsSerivceImpl;  
-  
-  
-  @Value("${xml.customized.header}")
-  private String xmlCustomizedHeader; 
+  CodeMapsSerivce codeMapsSerivceImpl;
   
   @Value("${payment.error.message.confirm.sign.not.pass}")
   private String confirmSignNotPassMessage; 
@@ -271,7 +267,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       int coupon_num = 0;
       String coupon_jsonString = "";
       Double coupon_fee = 0.00;
-      Double singleBillAmount = 0.00;
+      Double singleBillAmount;
       for(FundBillList fb : fundBillList)
       {        
         if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){
@@ -353,7 +349,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       String responseMessageFromWeiXin = responseEntiryFromWeiXin.getBody();       
       logger.debug("=====responseMessageFromWeiXin====================> "+responseMessageFromWeiXin);
       
-      Map<String,Object> responseMap = StringUtils.transferXMLtoMap(responseMessageFromWeiXin,xmlCustomizedHeader);
+      Map<String,Object> responseMap = StringUtils.transferXMLtoMap(responseMessageFromWeiXin);
       logger.debug("=====responseMap====================> "+responseMap);
       
       if(!confirmSignForWeiXin(responseMap)){
@@ -461,8 +457,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
       m.marshal(orderQueryRequestForWeiXin, sw);
       xmlString = sw.toString();
 
-    }catch(JAXBException e){        
-      //e.printStackTrace();     
+    }catch(JAXBException e){
       logger.error("context_JAXBException: ", e);
     }
 

@@ -168,19 +168,6 @@ public class OrderQueryResponseForWeiXin {
      MCOUPON 商户红包
    * 
    */
-//  private String coupon_type_$n;
-//  
-//  /**
-//   * 代金券或立减优惠ID, $n为下标，从0开始编号
-//   * 
-//   */
-//  private String coupon_id_$n;
-//  
-//  /**
-//   * 单个代金券或立减优惠支付金额, $n为下标，从0开始编号
-//   * 
-//   */
-//  private String coupon_fee_$n;
   private String coupon_list_json_string;
   
   /**

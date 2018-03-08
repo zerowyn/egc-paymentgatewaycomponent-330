@@ -47,7 +47,7 @@ public class NotifyServiceImpl implements NotifyService {
   public String transferWeChatMessageForWeiXinString(String requestData) {
 
     // 将request xml字符串转为map
-    Map<String, Object> map = StringUtils.transferXMLtoMap(requestData, "");
+    Map<String, Object> map = StringUtils.transferXMLtoMap(requestData);
       System.out.println("========================"+map);
     // 验签
     boolean flag;

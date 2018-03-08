@@ -75,10 +75,9 @@ public class StringUtils {
       ===>group(2): LphINq5fQrdpPNnm
       ===>group(3): nonce_str
      */
-    public static Map<String, Object> transferXMLtoMap(String xmlString, String xmlCustomizedHeader) {
+    public static Map<String, Object> transferXMLtoMap(String xmlString) {
 
-        Map<String, Object> newMap = new HashMap<String, Object>();
-        //<trade_state><![CDATA[SUCCESS]]></trade_state>
+        Map<String, Object> newMap = new HashMap<String, Object>();       
         xmlString = xmlString.replaceAll("<\\!\\[CDATA\\[", "");
         xmlString = xmlString.replaceAll("\\]\\]>", "");
         xmlString = xmlString.replaceAll("</xml>", "");
