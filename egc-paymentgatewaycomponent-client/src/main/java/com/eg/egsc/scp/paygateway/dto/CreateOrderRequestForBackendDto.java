@@ -40,7 +40,7 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    * 微信统一下单接口的消息格式-微信支付分配的商户号
    * 
    */
-  private String mch_id;
+  private String mchId;
 
   /**
    * 微信统一下单接口的消息格式-微信的商品描述
@@ -65,37 +65,37 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
    *
    */
-  private String out_trade_no;
+  private String outTradeNo;
 
   /**
    * 微信统一下单接口的消息格式-微信的总金额
    *
    */
-  private String fee_type;
+  private String feeType;
 
   /**
    * 微信统一下单接口的消息格式-微信的总金额
    *
    */
-  private String total_fee;
+  private String totalFee;
 
   /**
    * 微信统一下单接口的消息格式-微信的终端IP
    *
    */
-  private String spbill_create_ip;
+  private String spbillCreateIp;
 
   /**
    * 微信统一下单接口的消息格式-微信的交易起始时间
    *
    */
-  private String time_start;
+  private String timeStart;
 
   /**
    * 微信统一下单接口的消息格式-微信的交易结束时间
    *
    */
-  private String time_expire;
+  private String timeExpire;
 
 
   /**
@@ -105,25 +105,25 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    * trade_type=NATIVE，此参数必传
    */
 
-  private String trade_type;
+  private String tradeType;
 
   /**
    * 商品ID
    * 此id为二维码中包含的商品ID，商户自行定义
    */
-  private String product_id;
+  private String productId;
 
   /**
    * 指定支付方式
    * no_credit--指定不能使用信用卡支付
    */
-  private String limit_pay;
+  private String limitPay;
 
   /**
    * 用户标识
    *
    */
-  private String openid;
+  private String openId;
 
   public static long getSerialVersionUID() {
     return serialVersionUID;
@@ -137,60 +137,12 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.body = body;
   }
 
-  public String getSpbill_create_ip() {
-    return spbill_create_ip;
-  }
-
-  public void setSpbill_create_ip(String spbill_create_ip) {
-    this.spbill_create_ip = spbill_create_ip;
-  }
-
-  public String getTotal_fee() {
-    return total_fee;
-  }
-
-  public void setTotal_fee(String total_fee) {
-    this.total_fee = total_fee;
-  }
-
   public String getDetail() {
     return detail;
   }
 
   public void setDetail(String detail) {
     this.detail = detail;
-  }
-
-  public String getFee_type() {
-    return fee_type;
-  }
-
-  public void setFee_type(String fee_type) {
-    this.fee_type = fee_type;
-  }
-
-  public String getTime_start() {
-    return time_start;
-  }
-
-  public void setTime_start(String time_start) {
-    this.time_start = time_start;
-  }
-
-  public String getTime_expire() {
-    return time_expire;
-  }
-
-  public void setTime_expire(String time_expire) {
-    this.time_expire = time_expire;
-  }
-
-  public String getTrade_type() {
-    return trade_type;
-  }
-
-  public void setTrade_type(String trade_type) {
-    this.trade_type = trade_type;
   }
 
   /**
@@ -221,34 +173,6 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.appid = appid;
   }
 
-  /**
-   * @Return the String mch_id
-   */
-  public String getMch_id() {
-    return mch_id;
-  }
-
-  /**
-   * @Param String mch_id to set
-   */
-  public void setMch_id(String mch_id) {
-    this.mch_id = mch_id;
-  }
-
-  /**
-   * @Return the String out_trade_no
-   */
-  public String getOut_trade_no() {
-    return out_trade_no;
-  }
-
-  /**
-   * @Param String out_trade_no to set
-   */
-  public void setOut_trade_no(String out_trade_no) {
-    this.out_trade_no = out_trade_no;
-  }
-
   public String getAttach() {
     return attach;
   }
@@ -257,27 +181,91 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.attach = attach;
   }
 
-  public String getProduct_id() {
-    return product_id;
+  public String getMchId() {
+    return mchId;
   }
 
-  public void setProduct_id(String product_id) {
-    this.product_id = product_id;
+  public void setMchId(String mchId) {
+    this.mchId = mchId;
   }
 
-  public String getLimit_pay() {
-    return limit_pay;
+  public String getOutTradeNo() {
+    return outTradeNo;
   }
 
-  public void setLimit_pay(String limit_pay) {
-    this.limit_pay = limit_pay;
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
 
-  public String getOpenid() {
-    return openid;
+  public String getFeeType() {
+    return feeType;
   }
 
-  public void setOpenid(String openid) {
-    this.openid = openid;
+  public void setFeeType(String feeType) {
+    this.feeType = feeType;
+  }
+
+  public String getTotalFee() {
+    return totalFee;
+  }
+
+  public void setTotalFee(String totalFee) {
+    this.totalFee = totalFee;
+  }
+
+  public String getSpbillCreateIp() {
+    return spbillCreateIp;
+  }
+
+  public void setSpbillCreateIp(String spbillCreateIp) {
+    this.spbillCreateIp = spbillCreateIp;
+  }
+
+  public String getTimeStart() {
+    return timeStart;
+  }
+
+  public void setTimeStart(String timeStart) {
+    this.timeStart = timeStart;
+  }
+
+  public String getTimeExpire() {
+    return timeExpire;
+  }
+
+  public void setTimeExpire(String timeExpire) {
+    this.timeExpire = timeExpire;
+  }
+
+  public String getTradeType() {
+    return tradeType;
+  }
+
+  public void setTradeType(String tradeType) {
+    this.tradeType = tradeType;
+  }
+
+  public String getProductId() {
+    return productId;
+  }
+
+  public void setProductId(String productId) {
+    this.productId = productId;
+  }
+
+  public String getLimitPay() {
+    return limitPay;
+  }
+
+  public void setLimitPay(String limitPay) {
+    this.limitPay = limitPay;
+  }
+
+  public String getOpenId() {
+    return openId;
+  }
+
+  public void setOpenId(String openId) {
+    this.openId = openId;
   }
 }
