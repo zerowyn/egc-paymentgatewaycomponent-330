@@ -86,7 +86,7 @@ public class SignatureServiceImplTest {
                 "<trade_state><![CDATA[SUCCESS]]></trade_state>\n" +
                 "<cash_fee>8</cash_fee>\n" +
                 "</xml>";
-        weixinResponseMap = StringUtils.transferXMLtoMap(responseXmlString, "");
+        weixinResponseMap = StringUtils.transferXMLtoMap(responseXmlString);
         result = signatureServiceImpl.weixinSignatureCheck(weixinResponseMap);
         logger.info("test the sign is null, the result=" + result);
         weixinResponseMap.put("sign", "9F193955FA4A50B80351ECC745A94CEA");
@@ -139,7 +139,7 @@ public class SignatureServiceImplTest {
                 "/qKKzu2Z5+3wul/At/ihNORMNtFPH1i7pd6H8hFQB64gcIo3z6i1dlMCzz218tRoSFR4IcVrnpPDLWq27xTTEcc" +
                 "XTvCKJ7sR/YTGtF0JCgFpTYhmhPVw+6YEzIrd9bIBBPzszr8dTtWt3m4X3TwmyCb/nyxlzUQ6FDoP0cSqvWnV7Qn" +
                 "Sn2UPfmdH33hCer3H4kIMYjFmvxjDdp0SV9WBHKSQFV7N+OfS5bk6cFasyoRVU3lgGFcLsX7ZS5657C47jWJcmTsFg==";
-        alipayresponseMap = StringUtils.transferXMLtoMap(responseXmlString, "");
+        alipayresponseMap = StringUtils.transferXMLtoMap(responseXmlString);
         boolean result = signatureServiceImpl.alipaySignatureAsyCheck(alipayresponseMap);
         logger.info("test the sign of alipaySignatureAsyCheck is null, the result=" + result);
         alipayresponseMap.put("sign", sign);
