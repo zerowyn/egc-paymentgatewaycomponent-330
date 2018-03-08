@@ -60,7 +60,7 @@ public class NotifyApi extends BaseApiController {
             return ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(responseData);
         }
         // 将request xml字符串转为map
-        Map<String, Object> map = StringUtils.transferXMLtoMap(requestData, "");
+        Map<String, Object> map = StringUtils.transferXMLtoMap(requestData);
         if (!ObjectUtils.isEmpty(map)) {
             requestData = notifyServiceImpl.disposeMessage(map,true);
         }
