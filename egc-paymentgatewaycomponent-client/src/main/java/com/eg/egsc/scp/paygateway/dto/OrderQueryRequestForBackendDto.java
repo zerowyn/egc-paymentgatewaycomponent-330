@@ -29,7 +29,6 @@ public class OrderQueryRequestForBackendDto  extends BaseBusinessDto {
    * 指定请求的目标平台-‘WEIXIN’或‘ALIPAY’，必填
    * 
    */
-  //@NotBlank(message = "scp.pay.gateway.app.backend.request.platform.notblank")
   private String platform;
   
   /**

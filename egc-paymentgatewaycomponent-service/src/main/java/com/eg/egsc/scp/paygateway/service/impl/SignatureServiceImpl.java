@@ -93,7 +93,7 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean weixinSignatureCheck(Map responseParamsMap) {
-        if(!checkParamIsEmpty(responseParamsMap)){
+        if (!checkParamIsEmpty(responseParamsMap)) {
             return false;
         }
         String sign = (String) responseParamsMap.get(SIGN);
@@ -146,7 +146,7 @@ public class SignatureServiceImpl implements SignatureService {
      */
     @Override
     public boolean alipaySignatureAsyCheck(Map responseParamsMap) {
-        if(!checkParamIsEmpty(responseParamsMap)){
+        if (!checkParamIsEmpty(responseParamsMap)) {
             return false;
         }
         String sign = (String) responseParamsMap.get(SIGN);
@@ -303,7 +303,7 @@ public class SignatureServiceImpl implements SignatureService {
         int index = 0;
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
-            String value = requestParamsMap.get(key).toString();
+            String value = requestParamsMap.get(key) != null ? requestParamsMap.get(key).toString() : null;
             if (!StringUtils.isEmpty(value)) {
                 content.append((index == 0 ? "" : "&") + key + "=" + value);
             }
@@ -425,7 +425,7 @@ public class SignatureServiceImpl implements SignatureService {
      * getPublicKeyFromX509
      *
      * @param algorithm 签名方式
-     * @param ins InputStream
+     * @param ins       InputStream
      * @return PublicKey
      */
     private PublicKey getPublicKeyFromX509(String algorithm, InputStream ins) {

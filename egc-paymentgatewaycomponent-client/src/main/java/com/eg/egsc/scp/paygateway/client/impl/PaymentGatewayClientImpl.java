@@ -15,9 +15,7 @@ import com.eg.egsc.framework.client.core.BaseApiClient;
 import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.scp.paygateway.client.PaymentGatewayClient;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
 
 
 /**
@@ -44,17 +42,17 @@ public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGa
   }
   
   
-  public OrderQueryResponseForBackendDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException{
+  public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException{
     
     ResponseDto res = post("/api/pay/orderquery", orderQueryRequestForBackendDto);
-    return (OrderQueryResponseForBackendDto) res.getData();   
+    return res;
     
   }
 
   @Override
-  public CreateOrderResponseForBackendDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
+  public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
     ResponseDto res = post("/pay/createorder", createOrderRequestForBackendDto);
-    return (CreateOrderResponseForBackendDto) res.getData();
+    return res;
   }
 
 

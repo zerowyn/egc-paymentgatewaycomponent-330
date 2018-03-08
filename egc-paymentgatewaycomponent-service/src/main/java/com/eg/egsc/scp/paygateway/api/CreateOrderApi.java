@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -61,11 +62,13 @@ public class CreateOrderApi extends BaseController {
             !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResult_code())) {
                 logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
                 result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
-            }else{
-                result.setMessage("数据返回正常");
+            } else {
+                result.setCode("00000");
+                result.setMessage("00000:数据返回正常");
             }
             result.setData(createOrderResponseForBackendDto);
         } catch (Exception e) {
+            result.setCode("00009");
             logger.error(e.getMessage());
             result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
         }

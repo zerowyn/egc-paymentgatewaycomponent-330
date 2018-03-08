@@ -235,7 +235,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String messageFromWeiXin = responseEntiryFromWeiXin.getBody();
                 logger.debug("=====messageFromWeiXin====================> " + messageFromWeiXin);
 
-                Map<String, Object> responseMap = StringUtils.transferXMLtoMap(messageFromWeiXin, xmlCustomizedHeader);
+                Map<String, Object> responseMap = StringUtils.transferXMLtoMap(messageFromWeiXin);
                 logger.debug("=====responseMap====================> " + responseMap);
 
                 if (!confirmSignForWeiXin(responseMap)) {

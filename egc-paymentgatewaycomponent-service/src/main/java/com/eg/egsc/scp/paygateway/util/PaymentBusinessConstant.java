@@ -7,6 +7,8 @@
  */
 package com.eg.egsc.scp.paygateway.util;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /**
  * @Class Name PaymentBusinessConstant
  * @Author caiqinli
@@ -48,7 +50,7 @@ public class PaymentBusinessConstant {
 
     public static final String SUCCESS_CODE = "200";
 
-    public static final String FAIL_MESSAGE = "支付网关：创建订单出现异常";
+    public static final String FAIL_MESSAGE = "500:支付网关：创建订单出现异常";
 
     public static final String PRODUCT_CODE = "QUICK_MSECURITY_PAY";
 
@@ -57,5 +59,47 @@ public class PaymentBusinessConstant {
     public static final String PACKAGE="Sign=WXPay";
 
     public static final String MESSAGE_UNSUPPORT_SIGN_TYPE = "Unsupported Signature Type: ";
+    
+    public static final String QUERY = "query";
+    
+    public static final String TRADE_STATUS = "trade_status";
+    
+    public static final String TRADE_STATE = "trade_state";
+    
+    public static final String ACQ_TRADE_HAS_SUCCESS = "ACQ.TRADE_HAS_SUCCESS";
+    
+    public static final String NUM_ZERO = "0.00";
+    
+    public static final String OUT_TRADE_NO = "out_trade_no";
+    
+    public static final String TRADE_NO = "trade_no";
+    
+    public static final String COUPON_ID = "coupon_id_";
+    
+    public static final String COUPON_TYPE = "coupon_type_";
+    
+    public static final String COUPON_FEE = "coupon_fee_";
+    
+    public static final String RETURN_CODE_ERROR = "FAIL";    
+ 
+    public static final String ALIPAY_RETURN_CODE_SUCCESS = "10000";
+    
+    public static final String WEIXIN_URL = "WEIXIN-URL";
+
+    public static final String ALIPAY_URL = "ALIPAY-URL";    
+
+    public static final String ALIPAY_APP_PRIVATE = "ALIPAY-APP-PRIVATE";
+    
+    public static final String ALIPAY_PUBLIC = "ALIPAY-PUBLIC";
+    
+    public static final String METHOD = "method";
+    
+    public static final String FORMAT = "format";
+    
+    public static final String VERSION = "version";
+    
+    public static final String JSONDEL =  "\":\"";
+
+    public static final String CREATE_METHOD="create";
 
 }

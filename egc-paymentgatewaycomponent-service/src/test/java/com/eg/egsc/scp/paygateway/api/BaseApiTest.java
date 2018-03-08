@@ -3,7 +3,6 @@
  */
 package com.eg.egsc.scp.paygateway.api;
 
-import com.eg.egsc.framework.client.dto.Header;
 import com.eg.egsc.framework.client.dto.RequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
