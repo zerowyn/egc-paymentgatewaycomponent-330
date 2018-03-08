@@ -507,7 +507,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_ATOM_XML));
     httpHeaders.setContentType(mediaType);
     
-    HttpEntity<String> formEntity = new HttpEntity<String>(requestString, httpHeaders);
+    HttpEntity<String> formEntity = new HttpEntity<>(requestString, httpHeaders);
     
     logger.error("====Final platform: "+platform);
     logger.error("====Final requestString: "+requestString);

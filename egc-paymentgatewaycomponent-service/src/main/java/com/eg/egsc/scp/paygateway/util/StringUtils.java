@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StringUtils {
 
-    protected final static Logger logger = LoggerFactory.getLogger(StringUtils.class);
+    protected static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     private StringUtils() {
     }
@@ -80,7 +80,7 @@ public class StringUtils {
      */
     public static Map<String, Object> transferXMLtoMap(String xmlString) {
 
-        Map<String, Object> newMap = new HashMap<String, Object>();       
+        Map<String, Object> newMap = new HashMap<>();       
         xmlString = xmlString.replaceAll("<\\!\\[CDATA\\[", "");
         xmlString = xmlString.replaceAll("\\]\\]>", "");
         xmlString = xmlString.replaceAll("</xml>", "");
