@@ -63,10 +63,12 @@ public class CreateOrderApi extends BaseController {
                 logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
                 result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
             } else {
+                result.setCode("00000");
                 result.setMessage("00000:数据返回正常");
             }
             result.setData(createOrderResponseForBackendDto);
         } catch (Exception e) {
+            result.setCode("00009");
             logger.error(e.getMessage());
             result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
         }
