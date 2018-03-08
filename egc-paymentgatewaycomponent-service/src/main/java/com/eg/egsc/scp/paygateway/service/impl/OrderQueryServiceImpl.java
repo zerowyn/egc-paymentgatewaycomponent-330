@@ -264,27 +264,27 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   public OrderQueryResponseForBackendDto updateFunBillList(OrderQueryResponseForBackendDto orderQueryResponseForBackendDto, FundBillList[] fundBillList){
     
     if(fundBillList != null){
-      int coupon_num = 0;
-      String coupon_jsonString = "";
-      Double coupon_fee = 0.00;
+      int couponNum = 0;
+      String couponJsonString = "";
+      Double couponFee = 0.00;
       Double singleBillAmount;
       for(FundBillList fb : fundBillList)
       {        
         if(aliPayOrderQueryTargetFundChannel.contains(fb.getFund_channel())){
           singleBillAmount = fb.getAmount()==null? 0.00 : fb.getAmount();
-          coupon_jsonString = coupon_jsonString+"{\""+PaymentBusinessConstant.COUPON_ID+coupon_num+"\":\"\","
+          couponJsonString = couponJsonString+"{\""+PaymentBusinessConstant.COUPON_ID+couponNum+"\":\"\","
               + "\""+PaymentBusinessConstant.COUPON_TYPE+fb.getFund_channel()+"\":\"\",\""+PaymentBusinessConstant.COUPON_FEE+singleBillAmount+"\":\"\",},";          
-          coupon_fee = coupon_fee+singleBillAmount;
-          coupon_num++;
+          couponFee = couponFee+singleBillAmount;
+          couponNum++;
         }        
       }      
-      orderQueryResponseForBackendDto.setCouponCount(Integer.toString(coupon_num));
-      orderQueryResponseForBackendDto.setCouponFee(coupon_fee);
-      if(coupon_jsonString != ""){
-        coupon_jsonString = "["+coupon_jsonString.substring(0, coupon_jsonString.length()-1)+"]";
+      orderQueryResponseForBackendDto.setCouponCount(Integer.toString(couponNum));
+      orderQueryResponseForBackendDto.setCouponFee(couponFee);
+      if(couponJsonString != ""){
+        couponJsonString = "["+couponJsonString.substring(0, couponJsonString.length()-1)+"]";
       }
       
-      orderQueryResponseForBackendDto.setCouponListJsonString(coupon_jsonString);      
+      orderQueryResponseForBackendDto.setCouponListJsonString(couponJsonString);      
     } 
     
     return orderQueryResponseForBackendDto;    
@@ -387,15 +387,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     
     if(!responseMap.isEmpty()){
       Set<String> xmlFiledsFromWeiXin = responseMap.keySet();
-      List<String> keys_startwith_coupon = 
+      List<String> keysStartwithCoupon = 
           xmlFiledsFromWeiXin.stream().filter(st->st.startsWith(PaymentBusinessConstant.COUPON_ID)).collect(Collectors.toList());
       
-      if(keys_startwith_coupon.size()>0){
+      if(keysStartwithCoupon.size()>0){
         Integer maxID = 0;
         Integer tempID = 0;
-        String coupon_json_string = "";
+        String couponJsonString = "";
         
-        for(String sk : keys_startwith_coupon)
+        for(String sk : keysStartwithCoupon)
         {
           tempID = Integer.valueOf(sk.replaceAll(PaymentBusinessConstant.COUPON_ID, ""));
           if(maxID<tempID){
@@ -405,12 +405,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         
         for(int i=0;i<maxID;i++)
         {             
-          coupon_json_string = coupon_json_string+"{"
+          couponJsonString = couponJsonString+"{"
               + "\""+PaymentBusinessConstant.COUPON_ID+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_ID+i)+"\","
                   + "\""+PaymentBusinessConstant.COUPON_TYPE+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_TYPE+i)+"\","
                       + "\""+PaymentBusinessConstant.COUPON_FEE+i+PaymentBusinessConstant.JSONDEL+responseMap.get(PaymentBusinessConstant.COUPON_FEE+i)+"\"},";
         }        
-        orderQueryResponseForWeiXin.setCoupon_list_json_string(customizedCouponJsonString(coupon_json_string));        
+        orderQueryResponseForWeiXin.setCoupon_list_json_string(customizedCouponJsonString(couponJsonString));        
       }
      
     }
@@ -419,10 +419,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
   }
   
   
-  private String customizedCouponJsonString(String coupon_json_string){
-    if(!"".equals(coupon_json_string)){
-      coupon_json_string = "["+coupon_json_string.substring(0, coupon_json_string.length()-1)+"]";
-      return coupon_json_string;
+  private String customizedCouponJsonString(String couponJsonString){
+    if(!"".equals(couponJsonString)){
+      couponJsonString = "["+couponJsonString.substring(0, couponJsonString.length()-1)+"]";
+      return couponJsonString;
     } 
     return null;
   }
