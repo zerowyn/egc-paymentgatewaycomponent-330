@@ -15,7 +15,6 @@ import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.scp.paygateway.service.NotifyService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
-import com.eg.egsc.scp.paygateway.util.CollectionUtil;
 import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringNameConversionUtils;
@@ -24,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -99,8 +97,8 @@ public class NotifyServiceImpl implements NotifyService {
         if (b) {
             // 微信返回数据
             WeiXinNotifyResponse weiXinNotifyResponse = new WeiXinNotifyResponse();
-            if (notify.getReturnCode().equalsIgnoreCase("SUCCESS")) {
-                weiXinNotifyResponse.setReturnCode("SUCCESS");
+            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
+                weiXinNotifyResponse.setReturnCode(PaymentBusinessConstant.SUCCESS_MESSAGE);
                 weiXinNotifyResponse.setReturnMsg("OK");
             } else {
                 weiXinNotifyResponse.setReturnCode("FAIL");
@@ -111,7 +109,7 @@ public class NotifyServiceImpl implements NotifyService {
 
         } else {
             // 支付宝返回数据
-            if (notify.getReturnCode().equalsIgnoreCase("SUCCESS")) {
+            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
             }
         }

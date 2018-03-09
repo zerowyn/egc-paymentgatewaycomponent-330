@@ -2,7 +2,7 @@
  * @Probject Name: scp-pay-gateway-app-service
  * @Path: com.eg.egsc.scp.paygateway.serviceNotifyService.java
  * @Create By fandong
- * @Create In 2018年2月11日 TODO
+ * @Create In 2018年2月11日 下午2:40:36
  */
 package com.eg.egsc.scp.paygateway.service;
 
