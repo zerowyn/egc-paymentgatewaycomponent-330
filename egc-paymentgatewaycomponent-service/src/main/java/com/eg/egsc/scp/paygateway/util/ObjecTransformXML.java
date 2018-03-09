@@ -1,6 +1,5 @@
 package com.eg.egsc.scp.paygateway.util;
 import com.eg.egsc.scp.paygateway.exception.PaymentGatewayException;
-import com.eg.egsc.scp.paygateway.service.impl.NotifyServiceImpl;
 import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +26,7 @@ public class ObjecTransformXML {
             xmlString = sw.toString();
 
         } catch (JAXBException e) {
-            logger.info("Object transform exception");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new PaymentGatewayException(ErrorCodeConstant.ABNORMAL_CONVERSION);
         }
 
