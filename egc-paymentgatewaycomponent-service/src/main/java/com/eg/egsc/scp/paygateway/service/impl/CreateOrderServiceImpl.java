@@ -104,6 +104,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setProductId(createOrderRequestForBackendDto.getProductId());
         createOrderRequestForWeiXin.setLimitPay(createOrderRequestForBackendDto.getLimitPay());
         createOrderRequestForWeiXin.setTradeType(createOrderRequestForBackendDto.getTradeType());
+        createOrderRequestForWeiXin.setSpbillCreateIp(createOrderRequestForBackendDto.getSpbillCreateIp());
         createOrderRequestForWeiXin.setSign(getSign(createOrderRequestForWeiXin));
         return createOrderRequestForWeiXin;
     }
@@ -144,6 +145,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp now = new Timestamp(System.currentTimeMillis());
         String timestampForAliPay = df.format(now);
+        if(!"APP".equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())){
+            productCode = "QUICK_WAP_WAY";
+            aliPayCreateOrderMethod = "alipay.trade.wap.pay";
+        }
         String bizContent = ""
                 + "{\"out_trade_no\":\"" + createOrderRequestForBackendDto.getOutTradeNo() + "\","
                 + "\"product_code\":\"" + productCode + "\","
@@ -210,7 +215,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                     createOrderResponseForBackendDto.setErrCodeDes(confirmSignNotPassMessage);
                     return createOrderResponseForBackendDto;
                 } else if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase((String) responseMap.get(PaymentBusinessConstant.RETURN_CODE))) {
-                    createOrderResponseForBackendDto.setErrCodeDes(responseMap.get(PaymentBusinessConstant.RETURN_CODE).toString());
+                    createOrderResponseForBackendDto.setErrCodeDes((String) responseMap.get("return_msg"));
                     return createOrderResponseForBackendDto;
                 }
                 String jsonStr = objectMapper.writeValueAsString(responseMap);

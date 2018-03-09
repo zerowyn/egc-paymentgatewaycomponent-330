@@ -108,7 +108,7 @@ public class CreateOrderRequestForWeiXin {
   /**
    * 交易起始时间
    */
-  @JsonProperty(value = "time_start\t")
+  @JsonProperty(value = "time_start")
   private String timeStart;
 
   /**
