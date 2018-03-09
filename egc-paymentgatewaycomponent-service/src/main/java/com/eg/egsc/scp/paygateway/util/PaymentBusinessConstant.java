@@ -104,4 +104,6 @@ public class PaymentBusinessConstant {
 
     public static final String CREATE_METHOD="create";
 
+    public static final String RETURN_CODE="return_code";
+
 }
