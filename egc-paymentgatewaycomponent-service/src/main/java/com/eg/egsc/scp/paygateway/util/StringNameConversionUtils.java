@@ -9,9 +9,9 @@ package com.eg.egsc.scp.paygateway.util;
  */
 public class StringNameConversionUtils {
 
-  public static String StringNameConversion(String source) {
+  public static String StringConversion(String source) {
     String[] split = source.split("_");
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     Integer count = 1;
     for (String str : split) {
       if (count == 1) {

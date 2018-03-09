@@ -2,10 +2,21 @@
  * @Probject Name: scp-pay-gateway-app-service
  * @Path: com.eg.egsc.scp.paygateway.service.implNotifyServiceImpl.java
  * @Create By fandong
- * @Create In 2018年2月11日 TODO
+ * @Create In 2018年2月11日 上午10:40:35
  */
 package com.eg.egsc.scp.paygateway.service.impl;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.eg.egsc.scp.paygateway.util.ConversionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.egc.paymentbackendsystem.client.PaymentResultInformClient;
@@ -18,14 +29,6 @@ import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
 import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringNameConversionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @Class Name NotifyServiceImpl
@@ -35,7 +38,7 @@ import java.util.Set;
 @Service
 public class NotifyServiceImpl implements NotifyService {
 
-    private static final Logger logger = LoggerFactory.getLogger(NotifyServiceImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(NotifyServiceImpl.class);
 
     @Autowired
     private PaymentResultInformClient paymentResultInformClientImpl;
@@ -53,7 +56,7 @@ public class NotifyServiceImpl implements NotifyService {
         Set<Map.Entry<String, Object>> entries = map.entrySet();
         Map<String, Object> newMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : entries) {
-            String s = StringNameConversionUtils.StringNameConversion(entry.getKey());
+            String s = StringNameConversionUtils.StringConversion(entry.getKey());
             newMap.put(s, entry.getValue());
         }
         return newMap;
@@ -74,7 +77,6 @@ public class NotifyServiceImpl implements NotifyService {
             flag = signatureServiceImpl.alipaySignatureAsyCheck(map);
             logger.info("The alipay inspection result is:{}", flag);
         }
-
         // 验签成功后转换字段
         Map<String, Object> newMap = this.stringNameConversion(map);
         ResultInformDto resultInformDto = null;
@@ -82,23 +84,23 @@ public class NotifyServiceImpl implements NotifyService {
             String json = JSONObject.toJSONString(newMap);
             json.replaceAll("\\{", "[");
             json.replaceAll("}", "]");
+            String conversion = ConversionUtils.conversion(json);
+            resultInformDto = JSONObject.parseObject(conversion, ResultInformDto.class);
+        }else {
 
-            resultInformDto = JSONObject.parseObject(json, ResultInformDto.class);
         }
         // 调用后台接口回传数据
         ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
-
         if (!(ObjectUtils.isEmpty(dto) && ObjectUtils.isEmpty(dto.getData()))) {
             logger.error("The received message is erro.");
         }
-
         ResultInformResponseDto notify = JSONObject.parseObject(JSONObject.toJSONString(dto.getData()), ResultInformResponseDto.class);
         String returnMessage = null;
         if (b) {
             // 微信返回数据
             WeiXinNotifyResponse weiXinNotifyResponse = new WeiXinNotifyResponse();
-            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
-                weiXinNotifyResponse.setReturnCode(PaymentBusinessConstant.SUCCESS_MESSAGE);
+            if (notify.getReturnCode().equalsIgnoreCase("SUCCESS")) {
+                weiXinNotifyResponse.setReturnCode("SUCCESS");
                 weiXinNotifyResponse.setReturnMsg("OK");
             } else {
                 weiXinNotifyResponse.setReturnCode("FAIL");
@@ -106,17 +108,14 @@ public class NotifyServiceImpl implements NotifyService {
             }
             // 组装返回第三方支付平台的数据
             returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse);
-
         } else {
             // 支付宝返回数据
-            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
+            if (notify.getReturnCode().equalsIgnoreCase("SUCCESS")) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
             }
         }
         return returnMessage;
     }
 }
-
-
 
 

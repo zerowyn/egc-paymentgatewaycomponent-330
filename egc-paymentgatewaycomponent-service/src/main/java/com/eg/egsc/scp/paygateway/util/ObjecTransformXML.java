@@ -13,6 +13,9 @@ public class ObjecTransformXML {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjecTransformXML.class);
 
+    private ObjecTransformXML() {
+    }
+
     public static String jaxbRequestObjectToXMLForWeiXin(WeiXinNotifyResponse weiXinNotifyResponse) {
         String xmlString = "";
         try {

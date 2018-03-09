@@ -86,10 +86,10 @@ public class NotifyApi extends BaseApiController {
         }
         logger.info("The input parameter is:{} ", JSONObject.toJSONString(map));
         //验签
-        if (!ObjectUtils.isEmpty(map)) {
-            return notifyServiceImpl.disposeMessage(map,false);
+        if (ObjectUtils.isEmpty(map)) {
+            return null;
         }
-        return null;
+        return notifyServiceImpl.disposeMessage(map,false);
     }
 }
 
