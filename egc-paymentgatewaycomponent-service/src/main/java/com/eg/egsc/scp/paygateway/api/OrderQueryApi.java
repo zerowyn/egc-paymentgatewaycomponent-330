@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.apiOrderQueryApi.java
  * @Create By caiqinli
  * @Create In 2018年2月6日 下午2:04:08
- * TODO
  */
 package com.eg.egsc.scp.paygateway.api;
 

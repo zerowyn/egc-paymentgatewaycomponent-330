@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.daoOrderQueryResponseForWeiXin.java
  * @Create By caiqinli
  * @Create In 2018年2月5日 下午5:15:55
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
