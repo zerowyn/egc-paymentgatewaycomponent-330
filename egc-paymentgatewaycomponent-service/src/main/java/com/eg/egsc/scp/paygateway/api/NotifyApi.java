@@ -80,7 +80,7 @@ public class NotifyApi extends BaseApiController {
         while (parameterNames.hasMoreElements()) {
             list.add(parameterNames.nextElement());
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         for (String str : list) {
             map.put(str, request.getParameter(str));
         }
