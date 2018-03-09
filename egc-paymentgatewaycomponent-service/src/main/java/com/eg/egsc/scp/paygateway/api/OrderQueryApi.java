@@ -59,7 +59,7 @@ public class OrderQueryApi  extends BaseApiController {
      try {       
        orderQueryResponseForBackendDto = orderQueryServiceImpl.orderQueryRequestFromBackendSystme(req.getData());       
        result.setMessage(PaymentBusinessConstant.SUCCESS_CODE_DESC);
-       result.setCode(PaymentBusinessConstant.SUCCESS_CODE);     
+       result.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);     
        result.setData(orderQueryResponseForBackendDto);
      } catch (Exception e) {
        logger.error(e.getMessage());
