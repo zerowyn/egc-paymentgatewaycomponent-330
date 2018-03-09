@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.utilPaymentBusinessConstant.java
  * @Create By caiqinli
  * @Create In 2018年2月7日 下午3:06:20
- * TODO
  */
 package com.eg.egsc.scp.paygateway.util;
 

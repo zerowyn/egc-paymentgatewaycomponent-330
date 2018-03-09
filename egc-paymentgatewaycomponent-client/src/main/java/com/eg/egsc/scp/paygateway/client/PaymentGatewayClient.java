@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.clientPaymentGatewayClient.java
  * @Create By caiqinli
  * @Create In 2018年3月5日 下午3:36:33
- * TODO
  */
 package com.eg.egsc.scp.paygateway.client;
 

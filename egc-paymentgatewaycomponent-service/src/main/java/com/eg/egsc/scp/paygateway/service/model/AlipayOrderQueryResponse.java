@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.service.modelAlipayTradeQueryResponse.java
  * @Create By caiqinli
  * @Create In 2018年2月26日 下午9:15:04
- * TODO
  */
 package com.eg.egsc.scp.paygateway.service.model;
 
