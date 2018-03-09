@@ -59,7 +59,6 @@ public class CreateOrderResponseForWeiXin {
    */
   private String sign;
 
-
   /**
    * 业务结果
    *
@@ -93,13 +92,6 @@ public class CreateOrderResponseForWeiXin {
    */
   @JsonProperty(value = "prepay_id")
   private String prepayId;
-
-  /**
-   * 支付跳转链接
-   * mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟。
-   * 当trade_type为MWEB时返回。
-   */
-  private String mwebUrl;
 
   /**
    * 错误代码描述
@@ -200,14 +192,6 @@ public class CreateOrderResponseForWeiXin {
 
   public void setPrepayId(String prepayId) {
     this.prepayId = prepayId;
-  }
-
-  public String getMwebUrl() {
-    return mwebUrl;
-  }
-
-  public void setMwebUrl(String mwebUrl) {
-    this.mwebUrl = mwebUrl;
   }
 
   public String getErrCodeDes() {

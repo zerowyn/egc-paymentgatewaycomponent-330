@@ -46,18 +46,18 @@ public class CreateOrderApiTest {
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
             dto.setPlatform(PaymentBusinessConstant.WEI_XIN);
             dto.setAppid("wx5332d47f724492fa");
-            dto.setMchId("1497973582");
+            dto.setTotalFee("1");
             dto.setBody("测试微信下单功能");
             dto.setTradeType("APP");
             dto.setOutTradeNo("2018030800000001");
-            dto.setTotalFee("1");
+            dto.setMchId("1497973582");
             req.setData(dto);
             Header header = new Header();
+            header.setBusinessId("tetfgyf");
             header.setCharset("utf-8");
+            header.setSourceSysId("fyrehh");
             header.setContentType("application/json");
-            header.setBusinessId("123232");
-            header.setSourceSysId("jfdlsfjljld");
-            header.setCreateTimestamp(465456465465L);
+            header.setCreateTimestamp(165456465465L);
             HashMap<String, Object> extMap = new HashMap<>();
             extMap.put("test","test01");
             header.setExtAttributes(extMap);
@@ -66,7 +66,7 @@ public class CreateOrderApiTest {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        logger.info("返回给缴费后台的实体类-->{}",order);
+        logger.info("微信返回给缴费后台的实体类-->{}",order);
     }
 
     /**
@@ -82,27 +82,25 @@ public class CreateOrderApiTest {
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
             dto.setPlatform(PaymentBusinessConstant.ALI_PAY);
             dto.setAppid("2018020102122242");
-            dto.setMchId("1497973582");
-            dto.setBody("测试支付宝下单功能");
-            dto.setTradeType("APP");
             dto.setOutTradeNo("2018022300007158");
-            dto.setTotalFee("0.00");
+            dto.setTotalFee("0.02");
             req.setData(dto);
+            dto.setBody("测试支付宝下单功能");
             Header header = new Header();
             header.setCharset("utf-8");
             header.setContentType("application/json");
-            header.setBusinessId("123232");
-            header.setSourceSysId("jfdlsfjljld");
-            header.setCreateTimestamp(465456465465L);
+            header.setSourceSysId("dfsd454545tew");
+            header.setCreateTimestamp(16545589745L);
+            header.setBusinessId("fsdfdsf54654");
             HashMap<String, Object> extMap = new HashMap<>();
-            extMap.put("test","test01");
+            extMap.put("test","test02");
             header.setExtAttributes(extMap);
             req.setHeader(header);
             order = createOrderApi.createOrder(req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        logger.info("返回给缴费后台的实体类-->{}",order);
+        logger.info("支付宝返回给缴费后台的实体类-->{}",order);
     }
 
 }

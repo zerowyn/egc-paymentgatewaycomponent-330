@@ -50,24 +50,18 @@ public class CreateOrderApi extends BaseController {
     @ApiOperation(value = "缴费后台创建订单信息")
     @RequestMapping(value = "/createorder", method = RequestMethod.POST)
     public ResponseDto createOrder(@RequestBody RequestDto<CreateOrderRequestForBackendDto> req) {
-
         ResponseDto result = new ResponseDto();
-        try {
             createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
             if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
             !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
-                logger.error(PaymentBusinessConstant.FAIL_MESSAGE);
-                result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
+                logger.error(createOrderResponseForBackendDto.getErrCodeDes());
+                result.setCode("00009");
+                result.setMessage(createOrderResponseForBackendDto.getErrCodeDes());
             } else {
                 result.setCode("00000");
                 result.setMessage("00000:数据返回正常");
             }
-            result.setData(createOrderResponseForBackendDto);
-        } catch (Exception e) {
-            result.setCode("00009");
-            logger.error(e.getMessage());
-            result.setMessage(PaymentBusinessConstant.FAIL_MESSAGE);
-        }
+        result.setData(createOrderResponseForBackendDto);
         return result;
     }
 }
