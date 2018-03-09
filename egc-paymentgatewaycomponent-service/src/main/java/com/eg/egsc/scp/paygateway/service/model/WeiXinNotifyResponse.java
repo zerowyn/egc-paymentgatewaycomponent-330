@@ -8,22 +8,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class WeiXinNotifyResponse {
 
-    private String return_code;
-    private String return_msg;
+    private String returnCode;
+    private String returnMsg;
 
-    public String getReturn_code() {
-        return return_code;
+    public String getReturnCode() {
+        return returnCode;
     }
 
-    public void setReturn_code(String return_code) {
-        this.return_code = return_code;
+    public void setReturnCode(String returnCode) {
+        this.returnCode = returnCode;
     }
 
-    public String getReturn_msg() {
-        return return_msg;
+    public String getReturnMsg() {
+        return returnMsg;
     }
 
-    public void setReturn_msg(String return_msg) {
-        this.return_msg = return_msg;
+    public void setReturnMsg(String returnMsg) {
+        this.returnMsg = returnMsg;
     }
 }

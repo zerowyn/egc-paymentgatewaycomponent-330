@@ -2,7 +2,7 @@
  * @Probject Name: scp-pay-gateway-app-service
  * @Path: com.eg.egsc.scp.paygateway.NotifyApi.java
  * @Create By fandong
- * @Create In 2018年2月25日 TODO
+ * @Create In 2018年2月25日 上午10:30:08
  */
 package com.eg.egsc.scp.paygateway.api;
 
@@ -55,8 +55,8 @@ public class NotifyApi extends BaseApiController {
         WeiXinNotifyResponse responseData = new WeiXinNotifyResponse();
         if (StringUtils.isEmpty(requestData)) {
             logger.warn("The request parameter is empty.");
-            responseData.setReturn_msg("The request parameter is empty.");
-            responseData.setReturn_code(PaymentBusinessConstant.RETURN_CODE_ERROR);
+            responseData.setReturnMsg("The request parameter is empty.");
+            responseData.setReturnCode(PaymentBusinessConstant.RETURN_CODE_ERROR);
             return ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(responseData);
         }
         // 将request xml字符串转为map

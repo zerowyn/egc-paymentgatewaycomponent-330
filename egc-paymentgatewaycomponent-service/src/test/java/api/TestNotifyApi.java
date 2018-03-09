@@ -1,6 +1,5 @@
 package api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
 import com.eg.egsc.scp.paygateway.api.NotifyApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,9 +15,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.HashMap;
-import java.util.Map;
 /**
  * @Probject Name: egc-paymentgatewaycomponent-service
  * @Path: TestNotifyApi.java
@@ -39,8 +35,6 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
     private NotifyApi notifyApi;
 
     @Test
-//    @Transactional
-//    @Rollback(false)
     public void testWeiXin() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String dto = objectMapper.writeValueAsString(this.getString());

@@ -15,6 +15,7 @@ import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.scp.paygateway.service.NotifyService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
+import com.eg.egsc.scp.paygateway.util.CollectionUtil;
 import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringNameConversionUtils;
@@ -36,7 +37,7 @@ import java.util.Set;
 @Service
 public class NotifyServiceImpl implements NotifyService {
 
-    private final static Logger logger = LoggerFactory.getLogger(NotifyServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(NotifyServiceImpl.class);
 
     @Autowired
     private PaymentResultInformClient paymentResultInformClientImpl;
@@ -83,6 +84,7 @@ public class NotifyServiceImpl implements NotifyService {
             String json = JSONObject.toJSONString(newMap);
             json.replaceAll("\\{", "[");
             json.replaceAll("}", "]");
+
             resultInformDto = JSONObject.parseObject(json, ResultInformDto.class);
         }
         // 调用后台接口回传数据
@@ -98,11 +100,11 @@ public class NotifyServiceImpl implements NotifyService {
             // 微信返回数据
             WeiXinNotifyResponse weiXinNotifyResponse = new WeiXinNotifyResponse();
             if (notify.getReturnCode().equalsIgnoreCase("SUCCESS")) {
-                weiXinNotifyResponse.setReturn_code("SUCCESS");
-                weiXinNotifyResponse.setReturn_msg("OK");
+                weiXinNotifyResponse.setReturnCode("SUCCESS");
+                weiXinNotifyResponse.setReturnMsg("OK");
             } else {
-                weiXinNotifyResponse.setReturn_code("FAIL");
-                weiXinNotifyResponse.setReturn_msg("签名失败");
+                weiXinNotifyResponse.setReturnCode("FAIL");
+                weiXinNotifyResponse.setReturnMsg("签名失败");
             }
             // 组装返回第三方支付平台的数据
             returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse);
