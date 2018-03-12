@@ -29,8 +29,8 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
   @Autowired
   private OrderQueryServiceImpl orderQueryService;
   
-  private static final String mchId = "1497973582";
-  private static final String tempParameter = "string";
+  private static final String MCHID = "1497973582";
+  private static final String TEMP_PARAMETER = "string";
   
   
   
@@ -39,7 +39,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     
     OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = new OrderQueryRequestForBackendDto();
     orderQueryRequestForBackendDto.setAppId("wx5332d47f724492fa");    
-    orderQueryRequestForBackendDto.setMchId(mchId);
+    orderQueryRequestForBackendDto.setMchId(MCHID);
     orderQueryRequestForBackendDto.setOutTradeNo("44444444444441444");
     orderQueryRequestForBackendDto.setPlatform("WEIXIN");
     
@@ -57,11 +57,9 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     
     OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = new OrderQueryRequestForBackendDto();
     orderQueryRequestForBackendDto.setAppId("wx5332d47f724492fa");    
-    orderQueryRequestForBackendDto.setMchId(mchId);
+    orderQueryRequestForBackendDto.setMchId(MCHID);
     orderQueryRequestForBackendDto.setOutTradeNo("44444444444441488");
     orderQueryRequestForBackendDto.setPlatform("WEIXIN");
-    //orderQueryRequestForBackendDto.setTransaction_id(transaction_id);
-    //orderQueryRequestForBackendDto.setBusinessId(businessId);    
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
         orderQueryService.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
@@ -77,13 +75,13 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     
     OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = new OrderQueryRequestForBackendDto();
     orderQueryRequestForBackendDto.setAppId("2018020102122242");    
-    orderQueryRequestForBackendDto.setMchId(mchId);
+    orderQueryRequestForBackendDto.setMchId(MCHID);
     orderQueryRequestForBackendDto.setOutTradeNo("2018022300007149");
     orderQueryRequestForBackendDto.setPlatform("ALIPAY");
     orderQueryRequestForBackendDto.setBusinessId("businessId");
     orderQueryRequestForBackendDto.setExtAttributes(new HashMap());
-    orderQueryRequestForBackendDto.setSourceSysId(tempParameter);
-    orderQueryRequestForBackendDto.setTargetSysId(tempParameter);
+    orderQueryRequestForBackendDto.setSourceSysId(TEMP_PARAMETER);
+    orderQueryRequestForBackendDto.setTargetSysId(TEMP_PARAMETER);
     orderQueryRequestForBackendDto.setTransactionId("");
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
@@ -98,13 +96,13 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     
     OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = new OrderQueryRequestForBackendDto();
     orderQueryRequestForBackendDto.setAppId("2018020102122242");    
-    orderQueryRequestForBackendDto.setMchId(mchId);
+    orderQueryRequestForBackendDto.setMchId(MCHID);
     orderQueryRequestForBackendDto.setOutTradeNo("2018022300007150");
     orderQueryRequestForBackendDto.setPlatform("ALIPAY");
     orderQueryRequestForBackendDto.setBusinessId("businessId");
     orderQueryRequestForBackendDto.setExtAttributes(new HashMap());
-    orderQueryRequestForBackendDto.setSourceSysId(tempParameter);
-    orderQueryRequestForBackendDto.setTargetSysId(tempParameter);
+    orderQueryRequestForBackendDto.setSourceSysId(TEMP_PARAMETER);
+    orderQueryRequestForBackendDto.setTargetSysId(TEMP_PARAMETER);
     orderQueryRequestForBackendDto.setTransactionId("");
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
