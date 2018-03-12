@@ -460,27 +460,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         
   }
   
-  
-  public static String jaxbRequestObjectToXMLForWeiXin(OrderQueryRequestForWeiXin orderQueryRequestForWeiXin){      
-    String xmlString = "";      
-    try{        
-      JAXBContext context = JAXBContext.newInstance(OrderQueryRequestForWeiXin.class);
-      Marshaller m = context.createMarshaller();
-
-      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); 
-
-      StringWriter sw = new StringWriter();
-      m.marshal(orderQueryRequestForWeiXin, sw);
-      xmlString = sw.toString();
-
-    }catch(JAXBException e){
-      logger.error("context_JAXBException: ", e);
-    }
-
-    return xmlString;
-      
-  }
-  
    
   private String getReturnCode(String codeFromAlipay){
     String result = PaymentBusinessConstant.RETURN_CODE_ERROR;
