@@ -8,7 +8,6 @@ package com.eg.egsc.scp.paygateway.service.impl;
 
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -17,11 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
