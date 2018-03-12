@@ -26,12 +26,9 @@ import java.util.HashMap;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
-public class CreateOrderApiTest {
+public class CreateOrderApiTest extends BaseApiTest{
 
     private static final Logger logger = LoggerFactory.getLogger(CreateOrderApiTest.class);
-
-    @Autowired
-    private CreateOrderApi createOrderApi;
 
     /**
      * 微信下单功能测试
@@ -40,7 +37,6 @@ public class CreateOrderApiTest {
      */
     @Test
     public void createOrderForWeiXin(){
-        ResponseDto order = null;
         try {
             RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
@@ -62,11 +58,10 @@ public class CreateOrderApiTest {
             extMap.put("test","test01");
             header.setExtAttributes(extMap);
             req.setHeader(header);
-            order = createOrderApi.createOrder(req);
+            getHead("/pay/createorder",req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        logger.info("微信返回给缴费后台的实体类-->{}",order);
     }
 
     /**
@@ -76,7 +71,6 @@ public class CreateOrderApiTest {
      */
     @Test
     public void createOrderForAliPay(){
-        ResponseDto order = null;
         try {
             RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
@@ -96,11 +90,10 @@ public class CreateOrderApiTest {
             extMap.put("test","test02");
             header.setExtAttributes(extMap);
             req.setHeader(header);
-            order = createOrderApi.createOrder(req);
+            getHead("/pay/createorder",req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        logger.info("支付宝返回给缴费后台的实体类-->{}",order);
     }
 
 }

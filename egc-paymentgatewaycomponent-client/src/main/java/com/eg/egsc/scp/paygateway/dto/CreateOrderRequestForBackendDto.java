@@ -58,13 +58,6 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    */
   private String attach;
 
-  /**
-   * 微信统一下单接口的消息格式-缴费后台内部订单号，
-   * 当没提供transaction_id时需要传这个。
-   * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
-   *
-   */
-  private String outTradeNo;
 
   /**
    * 微信统一下单接口的消息格式-微信的总金额
@@ -89,6 +82,14 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    *
    */
   private String timeStart;
+
+  /**
+   * 微信统一下单接口的消息格式-缴费后台内部订单号，
+   * 当没提供transaction_id时需要传这个。
+   * 要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。
+   *
+   */
+  private String outTradeNo;
 
   /**
    * 微信统一下单接口的消息格式-微信的交易结束时间
@@ -172,6 +173,18 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.appid = appid;
   }
 
+  public String getTotalFee() {
+    return totalFee;
+  }
+
+  public void setProductId(String productId) {
+    this.productId = productId;
+  }
+
+  public void setTotalFee(String totalFee) {
+    this.totalFee = totalFee;
+  }
+
   public String getAttach() {
     return attach;
   }
@@ -188,28 +201,12 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.mchId = mchId;
   }
 
-  public String getOutTradeNo() {
-    return outTradeNo;
-  }
-
-  public void setOutTradeNo(String outTradeNo) {
-    this.outTradeNo = outTradeNo;
-  }
-
   public String getFeeType() {
     return feeType;
   }
 
   public void setFeeType(String feeType) {
     this.feeType = feeType;
-  }
-
-  public String getTotalFee() {
-    return totalFee;
-  }
-
-  public void setTotalFee(String totalFee) {
-    this.totalFee = totalFee;
   }
 
   public String getSpbillCreateIp() {
@@ -220,16 +217,20 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.spbillCreateIp = spbillCreateIp;
   }
 
-  public String getTimeStart() {
-    return timeStart;
-  }
-
-  public void setTimeStart(String timeStart) {
-    this.timeStart = timeStart;
-  }
-
   public String getTimeExpire() {
     return timeExpire;
+  }
+
+  public String getProductId() {
+    return productId;
+  }
+
+  public String getOutTradeNo() {
+    return outTradeNo;
+  }
+
+  public void setOutTradeNo(String outTradeNo) {
+    this.outTradeNo = outTradeNo;
   }
 
   public void setTimeExpire(String timeExpire) {
@@ -244,18 +245,6 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
     this.tradeType = tradeType;
   }
 
-  public String getProductId() {
-    return productId;
-  }
-
-  public void setProductId(String productId) {
-    this.productId = productId;
-  }
-
-  public String getLimitPay() {
-    return limitPay;
-  }
-
   public void setLimitPay(String limitPay) {
     this.limitPay = limitPay;
   }
@@ -266,5 +255,17 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
 
   public void setOpenId(String openId) {
     this.openId = openId;
+  }
+
+  public String getTimeStart() {
+    return timeStart;
+  }
+
+  public void setTimeStart(String timeStart) {
+    this.timeStart = timeStart;
+  }
+
+  public String getLimitPay() {
+    return limitPay;
   }
 }
