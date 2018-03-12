@@ -5,18 +5,22 @@
  * @Create In 2018年3月1日 下午3:17:18
  * TODO
  */
-package com.eg.egsc.scp.paygateway.service;
+package com.eg.egsc.scp.paygateway.service.impl;
 
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import com.eg.egsc.config.AbstractUnitTestSupport;
+import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.OrderQueryResponseForBackendDto;
+import com.eg.egsc.scp.paygateway.service.OrderQueryService;
 import com.eg.egsc.scp.paygateway.service.impl.OrderQueryServiceImpl;
 
 /**
@@ -24,10 +28,12 @@ import com.eg.egsc.scp.paygateway.service.impl.OrderQueryServiceImpl;
  * @Author caiqinli
  * @Create In 2018年3月1日
  */
-public class TestOrderQueryService extends AbstractUnitTestSupport {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
+public class OrderQueryServiceImplTest {
   
   @Autowired
-  private OrderQueryServiceImpl orderQueryService;
+  private OrderQueryService orderQueryServiceImpl;
   
   private static final String MCHID = "1497973582";
   private static final String TEMP_PARAMETER = "string";
@@ -35,7 +41,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
   
   
   @Test
-  public void queryOrderForWeiXinOrderExisted() {
+  public void queryOrderForWeiXinOrderExisted() {   
     
     OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = new OrderQueryRequestForBackendDto();
     orderQueryRequestForBackendDto.setAppId("wx5332d47f724492fa");    
@@ -43,8 +49,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     orderQueryRequestForBackendDto.setOutTradeNo("44444444444441444");
     orderQueryRequestForBackendDto.setPlatform("WEIXIN");
     
-    OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
-        orderQueryService.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
+    OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  =   orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
     
     assertEquals("4200000053201802100302371522",orderQueryResponseForBackendDto.getTransactionId());
     
@@ -62,7 +67,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     orderQueryRequestForBackendDto.setPlatform("WEIXIN");
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
-        orderQueryService.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
+        orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
     
     assertNotEquals("44444444444441488",orderQueryResponseForBackendDto.getOutTradeNo());
     
@@ -85,7 +90,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     orderQueryRequestForBackendDto.setTransactionId("");
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
-        orderQueryService.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
+        orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
     
     assertNotEquals("2018022821001004680594482848",orderQueryResponseForBackendDto.getOutTradeNo());    
     
@@ -106,7 +111,7 @@ public class TestOrderQueryService extends AbstractUnitTestSupport {
     orderQueryRequestForBackendDto.setTransactionId("");
     
     OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  = 
-        orderQueryService.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
+        orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
     
     assertEquals("2018022821001004680594482848",orderQueryResponseForBackendDto.getTransactionId());    
   }
