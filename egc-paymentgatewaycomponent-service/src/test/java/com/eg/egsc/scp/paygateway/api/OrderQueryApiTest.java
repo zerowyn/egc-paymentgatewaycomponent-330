@@ -31,7 +31,7 @@ import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
-public class TestOrderQueryApi  extends AbstractUnitTestSupport {
+public class OrderQueryApiTest  extends AbstractUnitTestSupport {
   
   @Autowired
   private OrderQueryApi orderQueryApi;
