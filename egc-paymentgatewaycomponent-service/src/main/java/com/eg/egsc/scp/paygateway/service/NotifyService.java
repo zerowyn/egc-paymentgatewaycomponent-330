@@ -19,6 +19,7 @@ import java.util.Map;
 public interface NotifyService {
 
     /**
+     * 缴费结果通知处理消息
      * @param map
      * @return
      */

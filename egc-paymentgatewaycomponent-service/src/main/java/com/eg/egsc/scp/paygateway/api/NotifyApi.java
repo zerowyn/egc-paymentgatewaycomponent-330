@@ -46,8 +46,9 @@ public class NotifyApi extends BaseApiController {
     protected final Logger logger = LoggerFactory.getLogger(NotifyApi.class);
 
     /**
-     * @param requestData
-     * @return
+     * 支付网关微信通知结果
+     * @param requestData 接收微信传过来的数据
+     * @return  返回字符串
      */
     @ApiOperation(value = "缴费后台通知缴费结果")
     @RequestMapping(value = "/weixinNotifyResult", method = RequestMethod.POST)
@@ -68,8 +69,9 @@ public class NotifyApi extends BaseApiController {
     }
 
     /**
-     * @param request
-     * @return
+     * 支付网关支付宝通知结果
+     * @param request 接收支付宝传过来的数据
+     * @return String返回字符串
      */
     @ApiOperation(value = "缴费后台通知缴费结果")
     @RequestMapping(value = "/alipayNotifyResult", method = RequestMethod.GET)

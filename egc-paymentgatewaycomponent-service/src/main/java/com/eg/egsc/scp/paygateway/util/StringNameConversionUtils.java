@@ -8,6 +8,8 @@ package com.eg.egsc.scp.paygateway.util;
  * @since 2018年3月8日
  */
 public class StringNameConversionUtils {
+  private StringNameConversionUtils() {
+  }
 
   public static String StringConversion(String source) {
     String[] split = source.split("_");
