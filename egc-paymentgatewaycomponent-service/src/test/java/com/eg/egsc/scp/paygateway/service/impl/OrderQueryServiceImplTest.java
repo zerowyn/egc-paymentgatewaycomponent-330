@@ -39,6 +39,19 @@ public class OrderQueryServiceImplTest {
   private static final String TEMP_PARAMETER = "string";
   
   
+  @Test
+  public void queryOrderRequestDtoIsNull() {   
+    
+    OrderQueryRequestForBackendDto orderQueryRequestForBackendDto = null;    
+    
+    OrderQueryResponseForBackendDto  orderQueryResponseForBackendDto  =   
+        orderQueryServiceImpl.orderQueryRequestFromBackendSystme(orderQueryRequestForBackendDto);
+    
+    assertEquals("调用出现异常，因为请求方发送过来的数据是空的",orderQueryResponseForBackendDto.getErrCodeDes());
+    
+    
+  }
+  
   
   @Test
   public void queryOrderForWeiXinOrderExisted() {   
