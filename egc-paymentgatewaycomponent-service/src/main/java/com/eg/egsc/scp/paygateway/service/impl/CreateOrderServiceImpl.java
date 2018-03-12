@@ -176,7 +176,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             createOrderResponseForBackendDto.setResultCode(PaymentBusinessConstant.SUCCESS_MESSAGE);
             createOrderResponseForBackendDto.setOrderStr(alipayTradeAppPayResponse.getBody());
         } else {
-            createOrderResponseForBackendDto.setReturnCode("FIAL");
+            createOrderResponseForBackendDto.setReturnCode("FAIL");
             createOrderResponseForBackendDto.setReturnMsg("支付宝下单请求失败！");
         }
         return createOrderResponseForBackendDto;

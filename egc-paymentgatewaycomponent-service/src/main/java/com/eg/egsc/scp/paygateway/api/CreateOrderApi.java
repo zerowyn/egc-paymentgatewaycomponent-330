@@ -55,7 +55,7 @@ public class CreateOrderApi extends BaseController {
             if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
             !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
                 logger.error(createOrderResponseForBackendDto.getErrCodeDes());
-                result.setCode("00009");
+                result.setCode("00099");
                 result.setMessage(createOrderResponseForBackendDto.getErrCodeDes());
             } else {
                 result.setCode("00000");
