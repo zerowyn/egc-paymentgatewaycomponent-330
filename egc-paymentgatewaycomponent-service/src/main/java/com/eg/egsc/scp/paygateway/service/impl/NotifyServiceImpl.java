@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
+import com.eg.egsc.scp.paygateway.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +23,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.eg.egsc.egc.paymentbackendsystem.client.PaymentResultInformClient;
 import com.eg.egsc.egc.paymentbackendsystem.dto.ResultInformDto;
 import com.eg.egsc.egc.paymentbackendsystem.dto.ResultInformResponseDto;
-import com.eg.egsc.egc.paymentbackendsystem.dto.utils.ConversionUtils;
 import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.scp.paygateway.dto.AlipayResultDto;
 import com.eg.egsc.scp.paygateway.service.NotifyService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
-import com.eg.egsc.scp.paygateway.util.DtoConversionUtils;
-import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
-import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
-import com.eg.egsc.scp.paygateway.util.StringNameConversionUtils;
 
 /**
  * @Class Name NotifyServiceImpl
@@ -84,22 +81,18 @@ public class NotifyServiceImpl implements NotifyService {
     ResultInformDto resultInformDto = null;
 
     if (flag) {
-      String json = JSONObject.toJSONString(newMap);
-      json.replaceAll("\\{", "[");
-      json.replaceAll("}", "]");
+      String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
       String conversion = ConversionUtils.conversion(json);
+      //json转换实体类
       resultInformDto = JSONObject.parseObject(conversion, ResultInformDto.class);
     } else {
-      String json = JSONObject.toJSONString(newMap);
-      json.replaceAll("\\{", "[");
-      json.replaceAll("}", "]");
+      String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
       String conversion = ConversionUtils.conversion(json);
       AlipayResultDto alipayResultDto = JSONObject.parseObject(conversion, AlipayResultDto.class);
-      resultInformDto= DtoConversionUtils.conversion(alipayResultDto);
+      resultInformDto = DtoConversionUtils.conversion(alipayResultDto);
     }
     // 调用后台接口回传数据
     ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
-
     if (!(ObjectUtils.isEmpty(dto) && ObjectUtils.isEmpty(dto.getData()))) {
       logger.error("The received message is erro.");
     }

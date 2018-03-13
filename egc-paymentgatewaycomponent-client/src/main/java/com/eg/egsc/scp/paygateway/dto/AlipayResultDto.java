@@ -3,41 +3,42 @@ package com.eg.egsc.scp.paygateway.dto;
 import java.util.Date;
 
 public class AlipayResultDto {
- private Date notifyTime               ;   //Date  通知时间
- private String notifyType               ;   //String(64)  通知类型
- private String notifyId                 ;   //String(128)  通知校验ID
- private String appId                    ;   //String(32)  支付宝分配给开发者的应用Id
- private String charset                   ;   //String(10)  编码格式
- private String version                   ;   //String(3)  接口版本
- private String signType                 ;   //String(10)  签名类型
- private String sign                      ;   //String(256)  签名
- private String tradeNo                  ;   //String(64)  支付宝交易号
- private String outTradeNo              ;   //String(64)  商户订单号
- private String outBizNo                ;   //String(64)  商户业务号
- private String buyerId                  ;   //String(16)  买家支付宝用户号
- private String buyerLogonId            ;   //String(100)  买家支付宝账号
- private String sellerId                 ;   //String(30)  卖家支付宝用户号
- private String sellerEmail              ;   //String(100)  卖家支付宝账号
- private String tradeStatus              ;   //String(32)  交易状态
- private Double totalAmount              ;   //Number(9,2)  订单金额
- private Double receiptAmount            ;   //Number(9,2)  实收金额
- private Double invoiceAmount            ;   //Number(9,2)  开票金额
- private Double buyerPayAmount          ;   //Number(9,2)  付款金额
- private Double pointAmount              ;   //Number(9,2)  集分宝金额
- private Double refundFee                ;   //Number(9,2)  总退款金额
- private String subject                   ;   //String(256)  订单标题
- private String body                      ;   //String(400)  商品描述
- private Date gmtCreate                ;   //Date  交易创建时间
- private Date gmtPayment               ;   //Date  交易付款时间
- private Date gmtRefund                ;   //Date  交易退款时间
- private Date gmtClose                 ;   //Date  交易结束时间
- private String fundBillList            ;   //String(512)  支付金额信息
- private String fundChannel               ;   //String  支付渠道
- private String amount                    ;   //String  支付金额
- private String sumaMount               ;   //  支付金额合计
- private String countFundBillList    ;   //  fund_bill_list实例合计
- private String passbackParams           ;   //String(512)  回传参数
- private String voucherDetailList;      ;   //String 优惠券信息
+    private Date notifyTime;   //Date  通知时间
+    private String notifyType;   //String(64)  通知类型
+    private String notifyId;   //String(128)  通知校验ID
+    private String appId;   //String(32)  支付宝分配给开发者的应用Id
+    private String charset;   //String(10)  编码格式
+    private String version;   //String(3)  接口版本
+    private String signType;   //String(10)  签名类型
+    private String sign;   //String(256)  签名
+    private String tradeNo;   //String(64)  支付宝交易号
+    private String outTradeNo;   //String(64)  商户订单号
+    private String outBizNo;   //String(64)  商户业务号
+    private String buyerId;   //String(16)  买家支付宝用户号
+    private String buyerLogonId;   //String(100)  买家支付宝账号
+    private String sellerId;   //String(30)  卖家支付宝用户号
+    private String sellerEmail;   //String(100)  卖家支付宝账号
+    private String tradeStatus;   //String(32)  交易状态
+    private Double totalAmount;   //Number(9,2)  订单金额
+    private Double receiptAmount;   //Number(9,2)  实收金额
+    private Double invoiceAmount;   //Number(9,2)  开票金额
+    private Double buyerPayAmount;   //Number(9,2)  付款金额
+    private Double pointAmount;   //Number(9,2)  集分宝金额
+    private Double refundFee;   //Number(9,2)  总退款金额
+    private String subject;   //String(256)  订单标题
+    private String body;   //String(400)  商品描述
+    private Date gmtCreate;   //Date  交易创建时间
+    private Date gmtPayment;   //Date  交易付款时间
+    private Date gmtRefund;   //Date  交易退款时间
+    private Date gmtClose;   //Date  交易结束时间
+    private String fundBillList;   //String(512)  支付金额信息
+    private String fundChannel;   //String  支付渠道
+    private String amount;   //String  支付金额
+    private String sumaMount;   //  支付金额合计
+    private String countFundBillList;   //  fund_bill_list实例合计
+    private String passbackParams;   //String(512)  回传参数
+    private String voucherDetailList;
+    ;   //String 优惠券信息
 
 
     public Date getNotifyTime() {

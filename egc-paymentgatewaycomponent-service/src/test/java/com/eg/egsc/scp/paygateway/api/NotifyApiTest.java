@@ -1,7 +1,10 @@
-package api;
+package com.eg.egsc.scp.paygateway.api;
 
+import com.eg.egsc.config.AbstractUnitTestSupport;
+import com.eg.egsc.framework.client.dto.Header;
+import com.eg.egsc.framework.client.dto.RequestDto;
 import com.eg.egsc.scp.paygateway.PaymentGatewayServiceApplication;
-import com.eg.egsc.scp.paygateway.api.NotifyApi;
+import com.eg.egsc.scp.paygateway.dto.PaymentResultDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +18,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.HashMap;
 /**
  * @Probject Name: egc-paymentgatewaycomponent-service
  * @Path: TestNotifyApi.java
@@ -29,7 +34,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
-public class TestNotifyApi extends AbstractUnitTestSupport {
+public class NotifyApiTest extends AbstractUnitTestSupport {
 
     @Autowired
     private NotifyApi notifyApi;
@@ -37,8 +42,24 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
     @Test
     public void testWeiXin() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        String dto = objectMapper.writeValueAsString(this.getString());
-        RequestBuilder request = MockMvcRequestBuilders.post("/pay/weixinNotifyResult")
+        PaymentResultDto paymentResultDto = new PaymentResultDto();
+        paymentResultDto.setInformStr(this.getString());
+        paymentResultDto.setPlatfrom("WEIXIN");
+        RequestDto requestDto = new RequestDto();
+        requestDto.setData(paymentResultDto);
+
+        Header header = new Header();
+        header.setBusinessId("string");
+        header.setCharset("utf-8");
+        header.setSourceSysId("fyrehh");
+        header.setContentType("application/json");
+
+        HashMap<String, Object> extMap = new HashMap<>();
+        extMap.put("test","test01");
+        header.setExtAttributes(extMap);
+        requestDto.setHeader(header);
+        String dto = objectMapper.writeValueAsString(requestDto);
+        RequestBuilder request = MockMvcRequestBuilders.post("/pay/notifyResult")
                 .contentType(MediaType.APPLICATION_JSON).content(dto.getBytes());
         MvcResult mvcResult = mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
@@ -65,9 +86,28 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
 
     @Test
     public void testAlipay() throws Exception {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String dto = objectMapper.writeValueAsString(this.alipayString());
+
         ObjectMapper objectMapper = new ObjectMapper();
-        String dto = objectMapper.writeValueAsString(this.alipayString());
-        RequestBuilder request = MockMvcRequestBuilders.get("/pay/alipayNotifyResult")
+        PaymentResultDto paymentResultDto = new PaymentResultDto();
+        paymentResultDto.setInformStr(this.alipayString());
+      paymentResultDto.setPlatfrom("alipay");
+        RequestDto requestDto = new RequestDto();
+        requestDto.setData(paymentResultDto);
+
+        Header header = new Header();
+        header.setBusinessId("string");
+        header.setCharset("utf-8");
+        header.setSourceSysId("fyrehh");
+        header.setContentType("application/json");
+
+        HashMap<String, Object> extMap = new HashMap<>();
+        extMap.put("test","test01");
+        header.setExtAttributes(extMap);
+        requestDto.setHeader(header);
+        String dto = objectMapper.writeValueAsString(requestDto);
+        RequestBuilder request = MockMvcRequestBuilders.post("/pay/notifyResult")
                 .contentType(MediaType.APPLICATION_JSON).content(dto.getBytes());
         MvcResult mvcResult = mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
@@ -77,7 +117,7 @@ public class TestNotifyApi extends AbstractUnitTestSupport {
     }
 
     public String alipayString(){
-        return "?app_id=2018020102122242&charset=utf-8&notify_id=ac05099524730693a8b330c5ecf72da9786&notify_time=2016-07-19 14:10:49&notify_type=trade_status_sync&out_trade_no=2018022300007150&trade_no=2013112011001004330000121536&version=1.0&sign=pFDrP4R21/DSD2z1Dn3j4PTRg2ZhHW491ynPagH22wTpH658wZ2D9/izUyOrBMtbTXMhadzcwSIiWjbaG4lydSoGljhM9MeYczcD454CuVZi83P9DhrFhM1xn3XtRIlGq4UNkA4ckIBQnzoiuWZPzWFIWIvoPe6nyXutU139wajYTkx+IamzPJZZivaWoWysT4tZiny3eQbdjuVGr3RuIe9GBEVlDRhPJJLJOvrSSHd0BqCvAuBv1tGxhH/ZseguV5JOHGCBWgUJw+oWf9+kJQBNC2uzUzTkOXW1O8xUyANPOKXoBJfWt1PFmelBDl3yNaZK0KLRzNdgk2OXnAt0Bg==";
+        return "https://api.egsc.com/receive_notify.htm?app_id=2018020102122242&charset=utf-8&notify_id=ac05099524730693a8b330c5ecf72da9786&notify_time=2016-07-19 14:10:49&notify_type=trade_status_sync&out_trade_no=2018022300007150&trade_no=2013112011001004330000121536&version=1.0&sign=pFDrP4R21/DSD2z1Dn3j4PTRg2ZhHW491ynPagH22wTpH658wZ2D9/izUyOrBMtbTXMhadzcwSIiWjbaG4lydSoGljhM9MeYczcD454CuVZi83P9DhrFhM1xn3XtRIlGq4UNkA4ckIBQnzoiuWZPzWFIWIvoPe6nyXutU139wajYTkx+IamzPJZZivaWoWysT4tZiny3eQbdjuVGr3RuIe9GBEVlDRhPJJLJOvrSSHd0BqCvAuBv1tGxhH/ZseguV5JOHGCBWgUJw+oWf9+kJQBNC2uzUzTkOXW1O8xUyANPOKXoBJfWt1PFmelBDl3yNaZK0KLRzNdgk2OXnAt0Bg==";
     }
 
 }

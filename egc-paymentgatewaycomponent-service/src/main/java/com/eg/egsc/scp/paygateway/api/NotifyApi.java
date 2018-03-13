@@ -6,11 +6,12 @@
  */
 package com.eg.egsc.scp.paygateway.api;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.eg.egsc.framework.service.base.api.BaseApiController;
-import com.eg.egsc.scp.paygateway.service.model.WeiXinNotifyResponse;
-import com.eg.egsc.scp.paygateway.util.ObjecTransformXML;
-import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.eg.egsc.framework.client.dto.RequestDto;
+import com.eg.egsc.framework.client.dto.ResponseDto;
+import com.eg.egsc.framework.service.base.api.BaseApiController;
+import com.eg.egsc.scp.paygateway.dto.PaymentResultDto;
 import com.eg.egsc.scp.paygateway.service.NotifyService;
+import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * @Class Name NotifyApi
@@ -46,53 +52,50 @@ public class NotifyApi extends BaseApiController {
     protected final Logger logger = LoggerFactory.getLogger(NotifyApi.class);
 
     /**
-     * 支付网关微信通知结果
-     * @param requestData 接收微信传过来的数据
-     * @return  返回字符串
+     * @param requestDto
+     * @return ResponseDto
+     * @Methods Name notifyResult
+     * @Create In 2018年3月12日 By fandong
      */
     @ApiOperation(value = "缴费后台通知缴费结果")
-    @RequestMapping(value = "/weixinNotifyResult", method = RequestMethod.POST)
-    public String weixinNotifyResult(@RequestBody String requestData) {
-        WeiXinNotifyResponse responseData = new WeiXinNotifyResponse();
-        if (StringUtils.isEmpty(requestData)) {
-            logger.warn("The request parameter is empty.");
-            responseData.setReturnMsg("The request parameter is empty.");
-            responseData.setReturnCode(PaymentBusinessConstant.RETURN_CODE_ERROR);
-            return ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(responseData);
+    @RequestMapping(value = "/notifyResult", method = RequestMethod.POST)
+    public ResponseDto notifyResult(@RequestBody RequestDto<PaymentResultDto> requestDto) {
+        ResponseDto responseDto = new ResponseDto();
+        if (ObjectUtils.isEmpty(requestDto) || null == requestDto.getData()) {
+            logger.info("The requestDto that begins to receive is empty.");
+            responseDto.setMessage("The parameter is empty.");
+            responseDto.setData(null);
+            responseDto.setCode("00099");
+            logger.info("The requestDto at the end is empty.");
+            return responseDto;
         }
-        // 将request xml字符串转为map
-        Map<String, Object> map = StringUtils.transferXMLtoMap(requestData);
-        if (!ObjectUtils.isEmpty(map)) {
-            requestData = notifyServiceImpl.disposeMessage(map,true);
+        PaymentResultDto resultDto = requestDto.getData();
+        String informStr = resultDto.getInformStr();
+        Map<String, Object> map = new HashMap<>();
+        if (resultDto.getPlatfrom().equalsIgnoreCase(PaymentBusinessConstant.WEI_XIN)) {
+            logger.info("It started out as WeChat payment platform.");
+            map = StringUtils.transferXMLtoMap(informStr);
+            String disposeMessage = notifyServiceImpl.disposeMessage(map, true);
+            responseDto.setMessage("WeChat information is empty.");
+            responseDto.setData(disposeMessage);
+            responseDto.setCode("00099");
+            logger.info("At the end of it is the alipay payment platform.");
+            return responseDto;
         }
-        return requestData;
+        Map<String, Object> map2 = new HashMap<>();
+        int indexOf = informStr.indexOf("?");
+        Arrays.asList(informStr.substring(indexOf+1).split("&")).forEach(str -> {
+            String[] split2 = str.split("=");
+            map2.put(split2[0], split2[1]);
+        });
+
+        String disposeMessage = notifyServiceImpl.disposeMessage(map2, false);
+        responseDto.setMessage("Alipay information is empty.");
+        responseDto.setData(disposeMessage);
+        responseDto.setCode("00000");
+        return responseDto;
     }
 
-    /**
-     * 支付网关支付宝通知结果
-     * @param request 接收支付宝传过来的数据
-     * @return String返回字符串
-     */
-    @ApiOperation(value = "缴费后台通知缴费结果")
-    @RequestMapping(value = "/alipayNotifyResult", method = RequestMethod.GET)
-    public String alipayNotifyResult(HttpServletRequest request) {
-        logger.info("Start processing the request parameters.");
-        Enumeration<String> parameterNames = request.getParameterNames();
-        List<String> list = new ArrayList<>();
-        while (parameterNames.hasMoreElements()) {
-            list.add(parameterNames.nextElement());
-        }
-        Map<String, Object> map = new HashMap<>();
-        for (String str : list) {
-            map.put(str, request.getParameter(str));
-        }
-        logger.info("The input parameter is:{} ", JSONObject.toJSONString(map));
-        //验签
-        if (ObjectUtils.isEmpty(map)) {
-            return null;
-        }
-        return notifyServiceImpl.disposeMessage(map,false);
-    }
 }
 
 
