@@ -93,6 +93,7 @@ public class NotifyServiceImpl implements NotifyService {
     }
     // 调用后台接口回传数据
     ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
+
     if (!(ObjectUtils.isEmpty(dto) && ObjectUtils.isEmpty(dto.getData()))) {
       logger.error("The received message is erro.");
     }
