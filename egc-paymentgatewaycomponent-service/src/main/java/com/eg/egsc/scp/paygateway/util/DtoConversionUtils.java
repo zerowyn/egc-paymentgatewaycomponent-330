@@ -3,7 +3,6 @@
  * @Path: com.eg.egsc.scp.paygateway.utilDtoConversionUtils.java
  * @Create By fandong
  * @Create In 2018年3月12日 上午10:15:11
- * TODO
  */
 package com.eg.egsc.scp.paygateway.util;
 
@@ -16,6 +15,9 @@ import com.eg.egsc.scp.paygateway.dto.AlipayResultDto;
  * @Create In 2018年3月12日
  */
 public class DtoConversionUtils {
+    private DtoConversionUtils() {
+
+    }
 
     /**
      * @param alipayResultDto

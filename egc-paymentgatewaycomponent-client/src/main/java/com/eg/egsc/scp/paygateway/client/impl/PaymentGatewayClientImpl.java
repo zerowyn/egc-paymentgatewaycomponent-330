@@ -6,6 +6,7 @@
  */
 package com.eg.egsc.scp.paygateway.client.impl;
 
+import com.eg.egsc.scp.paygateway.dto.PaymentResultDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -22,34 +23,41 @@ import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
  * @Author caiqinli
  * @Create In 2018年3月5日
  */
-@Component 
+@Component
 @Scope("prototype")
 public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGatewayClient {
-  
+
   public PaymentGatewayClientImpl(){
-    super();    
-    
+    super();
+
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.eg.egsc.framework.client.core.BaseApiClient#getContextPath()
    */
   @Override
   protected String getContextPath() {
-    
+
     return "/egc-paymentgatewaycomponent";
   }
-  
-  
-  public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto) throws CommonException{
-    
-    return post("/api/pay/orderquery", orderQueryRequestForBackendDto);    
+
+
+  public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto)
+      throws CommonException {
+    return post("/api/pay/orderquery", orderQueryRequestForBackendDto);
   }
 
   @Override
-  public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException {
-    
-    return post("/pay/createorder", createOrderRequestForBackendDto);    
+  public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto)
+      throws CommonException {
+    return post("/pay/createorder", createOrderRequestForBackendDto);
+  }
+
+  @Override
+  public ResponseDto notifyResult(PaymentResultDto requestDto) {
+    return post("/pay/notifyResult", requestDto);
   }
 
 

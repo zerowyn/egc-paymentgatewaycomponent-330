@@ -37,9 +37,7 @@ public class AlipayResultDto {
     private String sumaMount;   //  支付金额合计
     private String countFundBillList;   //  fund_bill_list实例合计
     private String passbackParams;   //String(512)  回传参数
-    private String voucherDetailList;
-    ;   //String 优惠券信息
-
+    private String voucherDetailList;  //String 优惠券信息
 
     public Date getNotifyTime() {
         return notifyTime;
