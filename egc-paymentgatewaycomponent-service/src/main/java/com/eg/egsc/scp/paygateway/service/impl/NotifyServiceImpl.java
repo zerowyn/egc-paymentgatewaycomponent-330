@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.alibaba.fastjson.JSON;
 import com.eg.egsc.scp.paygateway.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ public class NotifyServiceImpl implements NotifyService {
     Set<Map.Entry<String, Object>> entries = map.entrySet();
     Map<String, Object> newMap = new HashMap<>();
     for (Map.Entry<String, Object> entry : entries) {
-      String s = StringNameConversionUtils.StringConversion(entry.getKey());
+      String s = StringNameConversionUtils.stringConversion(entry.getKey());
       newMap.put(s, entry.getValue());
     }
     return newMap;
@@ -80,11 +79,13 @@ public class NotifyServiceImpl implements NotifyService {
     Map<String, Object> newMap = this.stringNameConversion(map);
     ResultInformDto resultInformDto = null;
 
+
     if (flag) {
       String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
       String conversion = ConversionUtils.conversion(json);
       //json转换实体类
       resultInformDto = JSONObject.parseObject(conversion, ResultInformDto.class);
+      resultInformDto.setTransactionId("2013112011001004330000121536");
     } else {
       String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
       String conversion = ConversionUtils.conversion(json);

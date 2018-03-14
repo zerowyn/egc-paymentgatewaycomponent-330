@@ -40,11 +40,11 @@ public enum PaymentStateConversionEU {
         return null;
     }
 
-    public void setName(String name) {
+     void setName(String name) {
         this.name = name;
     }
 
-    public void setValue(String value) {
+     void setValue(String value) {
         this.value = value;
     }
 

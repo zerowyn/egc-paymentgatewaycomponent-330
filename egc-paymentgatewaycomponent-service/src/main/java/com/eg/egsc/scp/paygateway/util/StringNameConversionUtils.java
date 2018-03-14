@@ -11,7 +11,7 @@ public class StringNameConversionUtils {
   private StringNameConversionUtils() {
   }
 
-  public static String StringConversion(String source) {
+  public static String stringConversion(String source) {
     String[] split = source.split("_");
     StringBuilder sb = new StringBuilder();
     Integer count = 1;

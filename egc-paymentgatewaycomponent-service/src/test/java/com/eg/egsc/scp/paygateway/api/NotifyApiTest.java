@@ -77,7 +77,7 @@ public class NotifyApiTest extends AbstractUnitTestSupport {
   public String getString() {
     return "<xml>\r\n" + "<return_code><![CDATA[SUCCESS]]></return_code>\r\n"
         + "  <appid><![CDATA[wx5332d47f724492fa]]></appid>\r\n"
-        + "  <mch_id><![CDATA[1234567890]]></mch_id>\r\n"
+        + "  <mch_id><![CDATA[1497973582]]></mch_id>\r\n"
         + "   <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>\r\n"
         + "  <sign><![CDATA[C276B6A85A3FE93B52A36D1D433BA163]]></sign>\r\n"
         + "  <result_code><![CDATA[SUCCESS]]></result_code>\r\n"
