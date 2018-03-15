@@ -20,9 +20,10 @@ public interface NotifyService {
 
     /**
      * 缴费结果通知处理消息
+     *
      * @param map
      * @return
      */
-    public String disposeMessage(Map<String, Object> map,Boolean flag);
+    String disposeMessage(Map<String, Object> map, Boolean flag);
 
 }

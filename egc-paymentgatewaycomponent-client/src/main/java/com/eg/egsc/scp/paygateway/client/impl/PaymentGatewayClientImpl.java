@@ -27,39 +27,32 @@ import com.eg.egsc.scp.paygateway.dto.OrderQueryRequestForBackendDto;
 @Scope("prototype")
 public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGatewayClient {
 
-  public PaymentGatewayClientImpl(){
-    super();
+    public PaymentGatewayClientImpl() {
+        super();
 
-  }
+    }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.eg.egsc.framework.client.core.BaseApiClient#getContextPath()
-   */
-  @Override
-  protected String getContextPath() {
+    @Override
+    protected String getContextPath() {
+        return "/egc-paymentgatewaycomponent";
+    }
 
-    return "/egc-paymentgatewaycomponent";
-  }
+    public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto)
+            throws CommonException {
+        return post("/api/pay/orderquery", orderQueryRequestForBackendDto);
+    }
 
+    @Override
+    public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto)
+            throws CommonException {
+        return post("/pay/createorder", createOrderRequestForBackendDto);
+    }
 
-  public ResponseDto orderQuery(OrderQueryRequestForBackendDto orderQueryRequestForBackendDto)
-      throws CommonException {
-    return post("/api/pay/orderquery", orderQueryRequestForBackendDto);
-  }
-
-  @Override
-  public ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto)
-      throws CommonException {
-    return post("/pay/createorder", createOrderRequestForBackendDto);
-  }
-
-  @Override
-  public ResponseDto notifyResult(PaymentResultDto requestDto)
-          throws CommonException{
-    return post("/pay/notifyResult", requestDto);
-  }
+    @Override
+    public ResponseDto notifyResult(PaymentResultDto requestDto)
+            throws CommonException {
+        return post("/pay/notifyResult", requestDto);
+    }
 
 
 }
