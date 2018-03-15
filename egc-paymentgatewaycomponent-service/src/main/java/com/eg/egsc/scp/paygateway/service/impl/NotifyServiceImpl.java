@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
 import com.eg.egsc.scp.paygateway.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,8 +90,8 @@ public class NotifyServiceImpl implements NotifyService {
     } else {
       String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
       String conversion = ConversionUtils.conversion(json);
-      AlipayResultDto alipayResultDto = JSONObject.parseObject(conversion, AlipayResultDto.class);
-      resultInformDto = DtoConversionUtils.conversion(alipayResultDto);
+      AlipayResultDto jsonObject = JSON.parseObject(conversion + "}", AlipayResultDto.class);
+      resultInformDto = DtoConversionUtils.conversion(jsonObject);
     }
     // 调用后台接口回传数据
     ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
@@ -104,12 +105,12 @@ public class NotifyServiceImpl implements NotifyService {
     if (b) {
       // 微信返回数据
       WeiXinNotifyResponse weiXinNotifyResponse = new WeiXinNotifyResponse();
-      if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
+      if (notify.getReturnCode().equalsIgnoreCase("00000")) {
         weiXinNotifyResponse.setReturnCode(PaymentBusinessConstant.SUCCESS_MESSAGE);
         weiXinNotifyResponse.setReturnMsg("OK");
       } else {
         weiXinNotifyResponse.setReturnCode("FAIL");
-        weiXinNotifyResponse.setReturnMsg("签名失败");
+        weiXinNotifyResponse.setReturnMsg("保存信息失败");
       }
       // 组装返回第三方支付平台的数据
       returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse);

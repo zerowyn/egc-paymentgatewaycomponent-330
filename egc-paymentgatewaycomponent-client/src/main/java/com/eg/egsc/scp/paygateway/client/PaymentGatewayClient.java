@@ -30,6 +30,12 @@ public interface PaymentGatewayClient {
      */
     ResponseDto createOrder(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) throws CommonException;
 
-    ResponseDto notifyResult(PaymentResultDto requestDto);
+    /**
+     *
+     * @param requestDto
+     * @return ResponseDto
+     * @throws CommonException 异常信息
+     */
+    ResponseDto notifyResult(PaymentResultDto requestDto) throws CommonException;
   
 }

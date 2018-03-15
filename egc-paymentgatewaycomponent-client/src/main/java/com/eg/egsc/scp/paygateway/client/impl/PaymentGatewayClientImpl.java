@@ -56,7 +56,8 @@ public class PaymentGatewayClientImpl extends BaseApiClient implements PaymentGa
   }
 
   @Override
-  public ResponseDto notifyResult(PaymentResultDto requestDto) {
+  public ResponseDto notifyResult(PaymentResultDto requestDto)
+          throws CommonException{
     return post("/pay/notifyResult", requestDto);
   }
 

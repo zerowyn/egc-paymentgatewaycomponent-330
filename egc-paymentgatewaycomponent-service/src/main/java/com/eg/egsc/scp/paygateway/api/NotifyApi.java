@@ -74,9 +74,9 @@ public class NotifyApi extends BaseApiController {
             logger.info("It started out as WeChat payment platform.");
             map = StringUtils.transferXMLtoMap(informStr);
             String disposeMessage = notifyServiceImpl.disposeMessage(map, true);
-            responseDto.setMessage("WeChat information is empty.");
+            responseDto.setMessage("SUCCESS");
             responseDto.setData(disposeMessage);
-            responseDto.setCode("00099");
+            responseDto.setCode("00000");
             logger.info("At the end of it is the alipay payment platform.");
             return responseDto;
         }
@@ -88,7 +88,7 @@ public class NotifyApi extends BaseApiController {
         });
 
         String disposeMessage = notifyServiceImpl.disposeMessage(map2, false);
-        responseDto.setMessage("Alipay information is empty.");
+        responseDto.setMessage("SUCCESS");
         responseDto.setData(disposeMessage);
         responseDto.setCode("00000");
         return responseDto;

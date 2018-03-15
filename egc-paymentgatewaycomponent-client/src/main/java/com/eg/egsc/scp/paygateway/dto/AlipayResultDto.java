@@ -19,12 +19,12 @@ public class AlipayResultDto {
     private String sellerId;   //String(30)  卖家支付宝用户号
     private String sellerEmail;   //String(100)  卖家支付宝账号
     private String tradeStatus;   //String(32)  交易状态
-    private Double totalAmount;   //Number(9,2)  订单金额
-    private Double receiptAmount;   //Number(9,2)  实收金额
-    private Double invoiceAmount;   //Number(9,2)  开票金额
-    private Double buyerPayAmount;   //Number(9,2)  付款金额
-    private Double pointAmount;   //Number(9,2)  集分宝金额
-    private Double refundFee;   //Number(9,2)  总退款金额
+    private double totalAmount;   //Number(9,2)  订单金额
+    private double receiptAmount;   //Number(9,2)  实收金额
+    private double invoiceAmount;   //Number(9,2)  开票金额
+    private double buyerPayAmount;   //Number(9,2)  付款金额
+    private double pointAmount;   //Number(9,2)  集分宝金额
+    private double refundFee;   //Number(9,2)  总退款金额
     private String subject;   //String(256)  订单标题
     private String body;   //String(400)  商品描述
     private Date gmtCreate;   //Date  交易创建时间

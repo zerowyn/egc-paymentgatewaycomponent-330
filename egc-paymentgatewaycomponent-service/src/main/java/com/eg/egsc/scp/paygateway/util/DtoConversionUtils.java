@@ -34,9 +34,11 @@ public class DtoConversionUtils {
         resultInformDto.setOutTradeNo(alipayResultDto.getOutTradeNo());
         resultInformDto.setMchId(alipayResultDto.getSellerId());
         resultInformDto.setResultCode(PaymentStateConversionEU.getValue(alipayResultDto.getTradeStatus()));
-        resultInformDto.setTotalFee(Integer.parseInt(String.valueOf(alipayResultDto.getTotalAmount())));
-        resultInformDto.setCashFee(Integer.parseInt(String.valueOf(alipayResultDto.getBuyerPayAmount())));
-        resultInformDto.setTimeEnd((alipayResultDto.getGmtPayment()).toString());
+        resultInformDto.setTotalFee((int) (alipayResultDto.getTotalAmount()*100));
+        resultInformDto.setCashFee((int)(alipayResultDto.getBuyerPayAmount()*100));
+        if (null!=alipayResultDto.getGmtPayment()&&!"".equals(alipayResultDto.getGmtPayment())){
+            resultInformDto.setTimeEnd(alipayResultDto.getGmtPayment().toString());
+        }
         resultInformDto.setCouponListJsonString(alipayResultDto.getFundChannel());
         resultInformDto.setAttach(alipayResultDto.getPassbackParams());
         return resultInformDto;
