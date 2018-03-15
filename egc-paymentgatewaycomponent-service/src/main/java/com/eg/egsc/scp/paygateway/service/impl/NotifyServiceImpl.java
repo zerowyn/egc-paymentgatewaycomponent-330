@@ -87,7 +87,7 @@ public class NotifyServiceImpl implements NotifyService {
             String conversion = ConversionUtils.conversion(json);
             //json转换实体类
             resultInformDto = JSONObject.parseObject(conversion, ResultInformDto.class);
-            //resultInformDto.setTransactionId("2013112011001004330000121536");
+            resultInformDto.setTransactionId("2013112011001004330000121536");
         } else {
             String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
             String conversion = ConversionUtils.conversion(json);

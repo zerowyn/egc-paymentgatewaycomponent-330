@@ -87,7 +87,7 @@ public class NotifyApiTest extends AbstractUnitTestSupport {
             "<cash_fee>1</cash_fee>\n" +
             "<out_trade_no><![CDATA[alipayd794aa46e89cb775c3b3ba7f2c]]></out_trade_no>\n" +
             "<time_end><![CDATA[20140903131540]]></time_end>\n" +
-            "<transaction_id><![2013112011001004330000121536]]></transaction_id>\n"+
+
             "</xml>";
   }
 
