@@ -24,12 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +59,7 @@ public class NotifyApi extends BaseApiController {
         if (ObjectUtils.isEmpty(requestDto) || ObjectUtils.isEmpty(requestDto.getData()) || requestDto.getData().getInformStr() == null) {
             responseDto.setMessage("The parameter is empty.");
             responseDto.setData(new Object());
-            responseDto.setCode("00000");
+            responseDto.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);
             logger.error("The parameter is empty.");
             return responseDto;
         }
@@ -73,9 +68,9 @@ public class NotifyApi extends BaseApiController {
         if (requestDto.getData().getPlatfrom().equalsIgnoreCase(PaymentBusinessConstant.WEI_XIN)) {
             String informStr = (String) requestDto.getData().getInformStr();
             disposeMessage = notifyServiceImpl.disposeMessage(StringUtils.transferXMLtoMap(informStr), true);
-            responseDto.setMessage("SUCCESS");
+            responseDto.setMessage(PaymentBusinessConstant.SUCCESS_MESSAGE);
             responseDto.setData(disposeMessage);
-            responseDto.setCode("00000");
+            responseDto.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);
             logger.info("End WeChat payment notification processing");
             return responseDto;
         }
@@ -89,9 +84,9 @@ public class NotifyApi extends BaseApiController {
         }
 
         disposeMessage = notifyServiceImpl.disposeMessage(map, false);
-        responseDto.setMessage("SUCCESS");
+        responseDto.setMessage(PaymentBusinessConstant.SUCCESS_MESSAGE);
         responseDto.setData(disposeMessage);
-        responseDto.setCode("00000");
+        responseDto.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);
         logger.info("End AliPay payment notification processing");
         return responseDto;
     }
