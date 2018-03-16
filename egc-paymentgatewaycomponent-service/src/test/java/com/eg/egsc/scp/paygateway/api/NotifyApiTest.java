@@ -123,8 +123,6 @@ public class NotifyApiTest extends AbstractUnitTestSupport {
         map.put("version", "1.0");
         map.put("sign", "oKuh73ymSAEbNWZyJnE4dewJwKnVSO+ouQL+PFAfZmpNOqoMGqM7CKeBT5ihPi9oV/tgxy2oxcE4TVx811b4YqTEpQablsma0M9+PNjWMWpfBe+4Uf5NvUUUJwB1GZAzhXc9rKWTInF6VwMAERqTZLawdjjXis32flWwrgQLyLQvxFpAvEN5CDnv9YBwq8UKYSVGVuc8W+peLRiKR96m60zdzwOPzU4wSpoy3nxYQCezvlHfJPdtDVXhs7nAKhIzARNwDE0f4zXrPASJ6eFA9H17AfOeAqAYlYyCB4AOQfVbk8O1leOTFABBDpOTTfq03zrJ3ytP+Rg/gYyeJ9nutA==");
 
-
-//    return "=&charset=utf-8&notify_id=ac05099524730693a8b330c5ecf72da9786&notify_time=2016-07-19 14:10:49&notify_type=trade_status_sync&out_trade_no=alipayd794aa46e89cb775c3b3ba7f2c&trade_no=2013112011001004330000121536&version=1.0&sign=oKuh73ymSAEbNWZyJnE4dewJwKnVSO+ouQL+PFAfZmpNOqoMGqM7CKeBT5ihPi9oV/tgxy2oxcE4TVx811b4YqTEpQablsma0M9+PNjWMWpfBe+4Uf5NvUUUJwB1GZAzhXc9rKWTInF6VwMAERqTZLawdjjXis32flWwrgQLyLQvxFpAvEN5CDnv9YBwq8UKYSVGVuc8W+peLRiKR96m60zdzwOPzU4wSpoy3nxYQCezvlHfJPdtDVXhs7nAKhIzARNwDE0f4zXrPASJ6eFA9H17AfOeAqAYlYyCB4AOQfVbk8O1leOTFABBDpOTTfq03zrJ3ytP+Rg/gYyeJ9nutA==";
         return map;
 
     }
