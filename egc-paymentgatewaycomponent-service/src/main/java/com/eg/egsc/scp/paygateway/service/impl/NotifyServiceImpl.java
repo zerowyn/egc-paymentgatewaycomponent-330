@@ -105,7 +105,7 @@ public class NotifyServiceImpl implements NotifyService {
         if (sign) {
             // 微信返回数据
             WeiXinNotifyResponse weiXinNotifyResponse = new WeiXinNotifyResponse();
-            if (notify.getReturnCode().equalsIgnoreCase("00000")) {
+            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 weiXinNotifyResponse.setReturnCode(PaymentBusinessConstant.SUCCESS_MESSAGE);
                 weiXinNotifyResponse.setReturnMsg("OK");
             } else {
@@ -116,7 +116,7 @@ public class NotifyServiceImpl implements NotifyService {
             returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse);
         } else {
             // 支付宝返回数据
-            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.SUCCESS_MESSAGE)) {
+            if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
             }
         }

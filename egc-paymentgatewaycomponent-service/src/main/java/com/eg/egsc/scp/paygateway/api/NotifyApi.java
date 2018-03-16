@@ -25,9 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Class Name NotifyApi
@@ -55,18 +59,19 @@ public class NotifyApi extends BaseApiController {
      */
     @ApiOperation(value = "缴费后台通知缴费结果")
     @RequestMapping(value = "/notifyResult", method = RequestMethod.POST)
-    public ResponseDto notifyResult(@RequestBody RequestDto<PaymentResultDto> requestDto) {
+    public ResponseDto notifyResult(@RequestBody RequestDto<PaymentResultDto> requestDto) throws UnsupportedEncodingException {
         ResponseDto responseDto = new ResponseDto();
-        if (ObjectUtils.isEmpty(requestDto) || ObjectUtils.isEmpty(requestDto.getData()) || requestDto.getData().getInformStr().isEmpty()) {
+        if (ObjectUtils.isEmpty(requestDto) || ObjectUtils.isEmpty(requestDto.getData()) || requestDto.getData().getInformStr() == null) {
             responseDto.setMessage("The parameter is empty.");
             responseDto.setData(new Object());
             responseDto.setCode("00000");
             logger.error("The parameter is empty.");
             return responseDto;
         }
-        String informStr = requestDto.getData().getInformStr();
+
         String disposeMessage;
         if (requestDto.getData().getPlatfrom().equalsIgnoreCase(PaymentBusinessConstant.WEI_XIN)) {
+            String informStr = (String) requestDto.getData().getInformStr();
             disposeMessage = notifyServiceImpl.disposeMessage(StringUtils.transferXMLtoMap(informStr), true);
             responseDto.setMessage("SUCCESS");
             responseDto.setData(disposeMessage);
@@ -74,8 +79,15 @@ public class NotifyApi extends BaseApiController {
             logger.info("End WeChat payment notification processing");
             return responseDto;
         }
-        Map<String, Object> map = new HashMap<>();
-        Arrays.asList(informStr.substring(informStr.indexOf('?') + 1).split("&")).forEach(str -> map.put(str.split("=")[0], str.split("=")[1]));
+        Map<String, Object> map = (Map) requestDto.getData().getInformStr();
+
+        //循环map解码
+        Set<String> set=map.keySet();
+        for(String key:set)
+        {
+            java.net.URLDecoder.decode((String) map.get(key),"utf-8");
+        }
+
         disposeMessage = notifyServiceImpl.disposeMessage(map, false);
         responseDto.setMessage("SUCCESS");
         responseDto.setData(disposeMessage);

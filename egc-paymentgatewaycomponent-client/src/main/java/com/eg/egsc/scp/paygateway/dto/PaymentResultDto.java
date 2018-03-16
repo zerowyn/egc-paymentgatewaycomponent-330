@@ -7,14 +7,14 @@ public class PaymentResultDto extends BaseBusinessDto {
    * @Field long serialVersionUID 
    */
   private static final long serialVersionUID = 1L;
-  private String informStr;// 封装请求参数
+  private Object informStr;// 封装请求参数
   private String platfrom;
 
-  public String getInformStr() {
+  public Object getInformStr() {
     return informStr;
   }
 
-  public void setInformStr(String informStr) {
+  public void setInformStr(Object informStr) {
     this.informStr = informStr;
   }
 
