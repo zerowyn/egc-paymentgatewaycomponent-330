@@ -18,13 +18,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,9 +39,6 @@ public class NotifyApi extends BaseApiController {
     @Autowired
     NotifyService notifyServiceImpl;
 
-    @Value("${xml.customized.header}")
-    private String xmlCustomizedHeader;
-
     protected final Logger logger = LoggerFactory.getLogger(NotifyApi.class);
 
     /**
@@ -54,7 +49,7 @@ public class NotifyApi extends BaseApiController {
      */
     @ApiOperation(value = "缴费后台通知缴费结果")
     @RequestMapping(value = "/notifyResult", method = RequestMethod.POST)
-    public ResponseDto notifyResult(@RequestBody RequestDto<PaymentResultDto> requestDto) throws UnsupportedEncodingException {
+    public ResponseDto notifyResult(@RequestBody RequestDto<PaymentResultDto> requestDto) throws Exception {
         ResponseDto responseDto = new ResponseDto();
         if (ObjectUtils.isEmpty(requestDto) || ObjectUtils.isEmpty(requestDto.getData()) || requestDto.getData().getInformStr() == null) {
             responseDto.setMessage("The parameter is empty.");
