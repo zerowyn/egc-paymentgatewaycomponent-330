@@ -10,6 +10,7 @@ package com.eg.egsc.scp.paygateway.service;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
+import com.eg.egsc.scp.paygateway.dto.RequestForGetOpenIdDto;
 import com.eg.egsc.scp.paygateway.service.model.*;
 
 /**
@@ -19,6 +20,13 @@ import com.eg.egsc.scp.paygateway.service.model.*;
  * @Create In 2018年2月25日
  */
 public interface CreateOrderService {
+
+    /**
+     *
+     * @param requestForGetOpenIdDto
+     * @return OpenId 微信用户唯一标示
+     */
+    public String getOpenId(RequestForGetOpenIdDto requestForGetOpenIdDto);
 
     /**
      * 接收缴费后台请求，转换为数据格式
