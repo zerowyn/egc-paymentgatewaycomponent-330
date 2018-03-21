@@ -105,4 +105,6 @@ public class PaymentBusinessConstant {
 
     public static final String RETURN_CODE="return_code";
 
+    public static final String TRADE_TYPE_APP="APP";
+
 }
