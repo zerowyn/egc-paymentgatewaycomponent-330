@@ -11,10 +11,8 @@ import com.eg.egsc.framework.client.dto.ResponseDto;
 import com.eg.egsc.framework.service.base.BaseController;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.RequestForGetOpenIdDto;
 import com.eg.egsc.scp.paygateway.service.CreateOrderService;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
-import com.eg.egsc.scp.paygateway.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -43,24 +41,6 @@ public class CreateOrderApi extends BaseController {
 
     protected final Logger logger = LoggerFactory.getLogger(CreateOrderApi.class);
 
-    @ApiOperation(value = "支付网关获取OPENID")
-    @RequestMapping(value = "/get/openid",method = RequestMethod.POST)
-    public ResponseDto getOpenId(@RequestBody RequestDto<RequestForGetOpenIdDto> req){
-        ResponseDto responseDto = new ResponseDto();
-        RequestForGetOpenIdDto data = req.getData();
-        String openId = createOrderServiceImpl.getOpenId(data);
-        if(StringUtils.isEmpty(openId)){
-            responseDto.setData(openId);
-            responseDto.setCode("00099");
-            responseDto.setMessage("获取openId失败！");
-        }else{
-            responseDto.setData(openId);
-            responseDto.setCode("00000");
-            responseDto.setMessage("数据返回正常！");
-        }
-        return responseDto;
-    }
-
     /**
      * 缴费后台创建支付订单
      *
@@ -71,19 +51,17 @@ public class CreateOrderApi extends BaseController {
     @RequestMapping(value = "/createorder", method = RequestMethod.POST)
     public ResponseDto createOrder(@RequestBody RequestDto<CreateOrderRequestForBackendDto> req) {
         ResponseDto result = new ResponseDto();
-            createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
-            if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
-            !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
-                logger.error(createOrderResponseForBackendDto.getErrCodeDes());
-                result.setCode("00099");
-                result.setMessage(createOrderResponseForBackendDto.getErrCodeDes());
-            } else {
-                result.setCode("00000");
-                result.setMessage("00000:数据返回正常");
-            }
+        createOrderResponseForBackendDto = createOrderServiceImpl.createOrderRequestFromBackendSystme(req.getData());
+        if (!PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getReturnCode()) ||
+                !PaymentBusinessConstant.SUCCESS_MESSAGE.equalsIgnoreCase(createOrderResponseForBackendDto.getResultCode())) {
+            logger.error(createOrderResponseForBackendDto.getErrCodeDes());
+            result.setCode("00099");
+            result.setMessage(createOrderResponseForBackendDto.getErrCodeDes());
+        } else {
+            result.setCode("00000");
+            result.setMessage("00000:数据返回正常");
+        }
         result.setData(createOrderResponseForBackendDto);
         return result;
     }
 }
-
-

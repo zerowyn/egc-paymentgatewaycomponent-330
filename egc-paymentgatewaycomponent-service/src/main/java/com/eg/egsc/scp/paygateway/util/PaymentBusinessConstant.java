@@ -107,4 +107,6 @@ public class PaymentBusinessConstant {
 
     public static final String TRADE_TYPE_APP="APP";
 
+    public static final String GET_OPENID_URL="https://api.weixin.qq.com/sns/oauth2/access_token";
+
 }

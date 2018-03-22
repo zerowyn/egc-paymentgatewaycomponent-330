@@ -22,13 +22,6 @@ import com.eg.egsc.scp.paygateway.service.model.*;
 public interface CreateOrderService {
 
     /**
-     *
-     * @param requestForGetOpenIdDto
-     * @return OpenId 微信用户唯一标示
-     */
-    public String getOpenId(RequestForGetOpenIdDto requestForGetOpenIdDto);
-
-    /**
      * 接收缴费后台请求，转换为数据格式
      * @param createOrderRequestForBackendDto 缴费后台提交的请求数据对象
      * @return CreateOrderRequestForWeiXin 返回给微信的请求数据对象

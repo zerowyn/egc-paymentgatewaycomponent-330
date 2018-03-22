@@ -13,7 +13,6 @@ import com.alipay.api.request.*;
 import com.alipay.api.response.*;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.RequestForGetOpenIdDto;
 import com.eg.egsc.scp.paygateway.exception.PaymentGatewayException;
 import com.eg.egsc.scp.paygateway.service.ConfigsService;
 import com.eg.egsc.scp.paygateway.service.CreateOrderService;
@@ -21,6 +20,7 @@ import com.eg.egsc.scp.paygateway.service.DefValSettingsService;
 import com.eg.egsc.scp.paygateway.service.SignatureService;
 import com.eg.egsc.scp.paygateway.service.model.*;
 import com.eg.egsc.scp.paygateway.util.ErrorCodeConstant;
+import com.eg.egsc.scp.paygateway.util.HttpGetUtil;
 import com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant;
 import com.eg.egsc.scp.paygateway.util.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,18 +84,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private String aliPayNotifyUrl;
     private String weiXinNotifyUrl;
     private String weiXinDeviceInfo;
-
-
-    @Override
-    public String getOpenId(RequestForGetOpenIdDto requestForGetOpenIdDto) {
-        StringBuilder sb = new StringBuilder();
-        String code = requestForGetOpenIdDto.getCode();
-        sb.append("?appid=").append(requestForGetOpenIdDto.getAppid()).append("&secret")
-                .append(requestForGetOpenIdDto.getSecret()).append(code).append("&code").append("&grant_type=authorization_code");
-        ResponseEntity<ResponseForGetOpenId> stringResponseEntity = callThirdPartyCreateOrderApi(sb.toString());
-        ResponseForGetOpenId responseForGetOpenId = stringResponseEntity.getBody();
-        return responseForGetOpenId.getOpenid();
-    }
+    private String weiXinJsapiAppId;
+    private String weiXinSecret;
+    private String weiXinJsapiMchId;
 
     @Override
     public CreateOrderRequestForWeiXin transferBackendMessageForWeiXin(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
@@ -118,7 +109,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setLimitPay(createOrderRequestForBackendDto.getLimitPay());
         createOrderRequestForWeiXin.setTradeType(createOrderRequestForBackendDto.getTradeType());
         createOrderRequestForWeiXin.setSpbillCreateIp(createOrderRequestForBackendDto.getSpbillCreateIp());
-        createOrderRequestForWeiXin.setOpenid(createOrderRequestForBackendDto.getOpenId());
+        if(!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())){
+            //只有公众号才传入openid
+            createOrderRequestForWeiXin.setOpenid( callThirdPartyCreateOrderApi(createOrderRequestForBackendDto));
+            createOrderRequestForWeiXin.setAppid(weiXinJsapiAppId);
+            createOrderRequestForWeiXin.setMchId(weiXinJsapiMchId);
+        }
         createOrderRequestForWeiXin.setSign(getSign(createOrderRequestForWeiXin));
         return createOrderRequestForWeiXin;
     }
@@ -281,11 +277,15 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     }
 
-    private ResponseEntity<ResponseForGetOpenId> callThirdPartyCreateOrderApi(String requestString) {
-        RestTemplate rt = new RestTemplate();
-        rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        String thirdPartyUri = " https://api.weixin.qq.com/sns/oauth2/access_token" + requestString;
-        return  rt.getForEntity(thirdPartyUri, ResponseForGetOpenId.class);
+    private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
+        Map params = new HashMap<>();
+        params.put("APPID",weiXinJsapiAppId);
+        params.put("SECRET",weiXinSecret);
+        params.put("CODE",createOrderRequestForBackendDto.getCode());
+        params.put("grant_type","authorization_code");
+        String result = HttpGetUtil.httpRequestToString(PaymentBusinessConstant.GET_OPENID_URL, params);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        return jsonObject.get("openid").toString();
     }
 
     private String getSign(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
@@ -368,5 +368,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         aliPayNotifyUrl = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.ALI_PAY, PaymentBusinessConstant.CREATE_METHOD, "notify_url");
         weiXinNotifyUrl = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.WEI_XIN, PaymentBusinessConstant.CREATE_METHOD, "notify_url");
         weiXinDeviceInfo = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.WEI_XIN, PaymentBusinessConstant.CREATE_METHOD, "device_info");
+        weiXinJsapiAppId = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.WEI_XIN, PaymentBusinessConstant.CREATE_METHOD, "jsapi_appid");
+        weiXinSecret = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.WEI_XIN, PaymentBusinessConstant.CREATE_METHOD, "secret");
+        weiXinJsapiMchId = defValSettingsServiceImpl.getDefValSettingsValueByExample(PaymentBusinessConstant.WEI_XIN, PaymentBusinessConstant.CREATE_METHOD, "jsapi_mch_id");
     }
 }
