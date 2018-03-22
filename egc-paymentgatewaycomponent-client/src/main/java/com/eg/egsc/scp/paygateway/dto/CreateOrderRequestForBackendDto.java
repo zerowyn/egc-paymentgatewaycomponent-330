@@ -125,6 +125,17 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
    */
   private String openId;
 
+  /**
+   * 获取微信openid需要的code
+   * @return
+   */
+  private String code;
+
+  /**
+   * 公众号的唯一标识
+   */
+  private String appidOfPublic;
+
   public static long getSerialVersionUID() {
     return serialVersionUID;
   }
@@ -268,4 +279,21 @@ public class CreateOrderRequestForBackendDto extends BaseBusinessDto {
   public String getLimitPay() {
     return limitPay;
   }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public String getAppidOfPublic() {
+    return appidOfPublic;
+  }
+
+  public void setAppidOfPublic(String appidOfPublic) {
+    this.appidOfPublic = appidOfPublic;
+  }
+
 }
