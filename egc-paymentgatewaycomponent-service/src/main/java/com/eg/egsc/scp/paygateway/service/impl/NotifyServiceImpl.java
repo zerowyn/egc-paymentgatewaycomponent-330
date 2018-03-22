@@ -16,6 +16,7 @@ import com.eg.egsc.scp.paygateway.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -44,6 +45,9 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Autowired
     private SignatureService signatureServiceImpl;
+
+    @Value("${xml.customized.header}")
+    private String header;
 
     /**
      * 字符串转换
@@ -87,11 +91,13 @@ public class NotifyServiceImpl implements NotifyService {
             String conversion = ConversionUtils.conversion(json);
             //json转换实体类
             resultInformDto = JSONObject.parseObject(conversion, ResultInformDto.class);
+            resultInformDto.setPlatform(PaymentBusinessConstant.WEI_XIN);
         } else {
             String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
             String conversion = ConversionUtils.conversion(json);
             AlipayResultDto jsonObject = JSON.parseObject(conversion + "}", AlipayResultDto.class);
             resultInformDto = DtoConversionUtils.conversion(jsonObject);
+            resultInformDto.setPlatform(PaymentBusinessConstant.ALI_PAY);
         }
         // 调用后台接口回传数据
         ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
@@ -112,13 +118,11 @@ public class NotifyServiceImpl implements NotifyService {
                 weiXinNotifyResponse.setReturnMsg("保存信息失败");
             }
             // 组装返回第三方支付平台的数据
-            returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse);
+            returnMessage = ObjecTransformXML.jaxbRequestObjectToXMLForWeiXin(weiXinNotifyResponse).replace(header, "").trim();
         } else {
             // 支付宝返回数据
             if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
-            }else{
-                returnMessage = PaymentBusinessConstant.RETURN_CODE_ERROR;
             }
         }
         return returnMessage;

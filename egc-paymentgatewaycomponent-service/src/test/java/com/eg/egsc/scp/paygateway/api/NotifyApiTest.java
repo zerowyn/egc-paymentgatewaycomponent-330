@@ -79,14 +79,13 @@ public class NotifyApiTest extends AbstractUnitTestSupport {
                 "<return_code><![CDATA[SUCCESS]]></return_code>\n" +
                 "<appid><![CDATA[wx5332d47f724492fa]]></appid>\n" +
                 "<mch_id><![CDATA[1497973582]]></mch_id>\n" +
-                "<nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str><sign><![CDATA[F1F70604572199F6E4875D88738B89A7]]></sign> " +
-                "<result_code><![CDATA[SUCCESS]]></result_code>\n" +
+                "<nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str><sign><![CDATA[D6ADEFEE3D0AF1AE6A08B27D43263446]]></sign> <result_code><![CDATA[SUCCESS]]></result_code>\n" +
                 "<openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>\n" +
                 "<trade_type><![CDATA[JSAPI]]></trade_type>\n" +
                 "<bank_type><![CDATA[CFT]]></bank_type>\n" +
                 "<total_fee>1</total_fee>\n" +
                 "<cash_fee>1</cash_fee>\n" +
-                "<out_trade_no><![CDATA[alipayd794aa46e89cb775c3b3ba7f2c]]></out_trade_no>\n" +
+                "<out_trade_no><![CDATA[weixinb9abf14d45b1cb39ea50b162e2]]></out_trade_no>\n" +
                 "<time_end><![CDATA[20140903131540]]></time_end>\n" +
                 "</xml>";
     }
