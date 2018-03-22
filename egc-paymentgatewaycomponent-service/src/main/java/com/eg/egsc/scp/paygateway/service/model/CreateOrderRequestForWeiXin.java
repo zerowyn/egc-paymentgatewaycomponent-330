@@ -158,6 +158,11 @@ public class CreateOrderRequestForWeiXin {
   private String sceneInfo;
 
   /**
+   * 获取openid返回的错误信息
+   */
+  private String errorMsg;
+
+  /**
    * @Return the String appid
    */
   public String getAppid() {
@@ -343,5 +348,13 @@ public class CreateOrderRequestForWeiXin {
 
   public void setSceneInfo(String sceneInfo) {
     this.sceneInfo = sceneInfo;
+  }
+
+  public String getErrorMsg() {
+    return errorMsg;
+  }
+
+  public void setErrorMsg(String errorMsg) {
+    this.errorMsg = errorMsg;
   }
 }

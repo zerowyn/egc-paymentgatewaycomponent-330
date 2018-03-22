@@ -96,4 +96,38 @@ public class CreateOrderApiTest extends BaseApiTest{
         }
     }
 
+    /**
+     * 微信临停支付测试
+     * @return
+     * @throw Exception
+     */
+    @Test
+    public void createOrderForWeiXinStop(){
+        try {
+            RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
+            CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
+            dto.setPlatform(PaymentBusinessConstant.WEI_XIN);
+            dto.setAppid("wxea10056a56123b7b");
+            dto.setTotalFee("3");
+            dto.setBody("测试微信下单功能");
+            dto.setTradeType("JSAPI");
+            dto.setOutTradeNo("2018031200000051");
+            dto.setMchId("1500344532");
+            dto.setCode("4654DFD454Jiokg08");
+            req.setData(dto);
+            Header header = new Header();
+            header.setBusinessId("djfdjio");
+            header.setCharset(PaymentBusinessConstant.CHARSET_UTF8);
+            header.setSourceSysId("uoiewhr");
+            header.setContentType("application/json");
+            header.setCreateTimestamp(165551425495L);
+            HashMap<String, Object> extMap = new HashMap<>();
+            extMap.put("test3","test02");
+            header.setExtAttributes(extMap);
+            req.setHeader(header);
+            getHead("/pay/createorder",req);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

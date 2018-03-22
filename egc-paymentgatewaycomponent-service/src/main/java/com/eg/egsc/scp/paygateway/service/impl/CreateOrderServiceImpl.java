@@ -111,7 +111,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setSpbillCreateIp(createOrderRequestForBackendDto.getSpbillCreateIp());
         if(!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())){
             //只有公众号才传入openid
-            createOrderRequestForWeiXin.setOpenid( callThirdPartyCreateOrderApi(createOrderRequestForBackendDto));
+            createOrderRequestForWeiXin.setOpenid( callThirdPartyCreateOrderApi(createOrderRequestForBackendDto,createOrderRequestForWeiXin));
             createOrderRequestForWeiXin.setAppid(weiXinJsapiAppId);
             createOrderRequestForWeiXin.setMchId(weiXinJsapiMchId);
         }
@@ -205,6 +205,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())) {
             CreateOrderRequestForWeiXin createOrderRequestForWeiXin = transferBackendMessageForWeiXin(createOrderRequestForBackendDto);
             try {
+                if(!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType()) && StringUtils.isEmpty(createOrderRequestForWeiXin.getOpenid())){
+                    createOrderResponseForBackendDto.setErrCodeDes(createOrderRequestForWeiXin.getErrorMsg());
+                    return createOrderResponseForBackendDto;
+                }
                 String requestXmlString = objectMapper.writeValueAsString(createOrderRequestForWeiXin);
                 JSONObject jsonObject = JSONObject.fromObject(requestXmlString);
                 requestXmlString = StringUtils.getJson2Xml(jsonObject);
@@ -277,18 +281,20 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     }
 
-    private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
+    private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto,CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         Map params = new HashMap<>();
         params.put("APPID",weiXinJsapiAppId);
         params.put("SECRET",weiXinSecret);
         params.put("CODE",createOrderRequestForBackendDto.getCode());
         params.put("grant_type","authorization_code");
         String result = HttpGetUtil.httpRequestToString(PaymentBusinessConstant.GET_OPENID_URL, params);
-        if(StringUtils.isEmpty(result)){
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        String openid = (String)jsonObject.get("openid");
+        if(StringUtils.isEmpty(openid)){
+            createOrderRequestForWeiXin.setErrorMsg((String)jsonObject.get("errmsg"));
             return null;
         }
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return jsonObject.get("openid").toString();
+        return openid;
     }
 
     private String getSign(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
