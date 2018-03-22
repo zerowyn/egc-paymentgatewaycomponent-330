@@ -40,7 +40,7 @@ public class CreateOrderClientTest {
         dto.setBody("测试微信下单功能");
         dto.setDetail("用client测试微信下单");
         dto.setTradeType("APP");
-        dto.setOutTradeNo("2018030500000006");
+        dto.setOutTradeNo("2018030500000007");
         dto.setTotalFee("1");
         ResponseDto order = paymentGatewayClientImpl.createOrder(dto);
         logger.info(order.toString());
