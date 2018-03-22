@@ -117,6 +117,8 @@ public class NotifyServiceImpl implements NotifyService {
             // 支付宝返回数据
             if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
+            }else{
+                returnMessage = PaymentBusinessConstant.RETURN_CODE_ERROR;
             }
         }
         return returnMessage;
