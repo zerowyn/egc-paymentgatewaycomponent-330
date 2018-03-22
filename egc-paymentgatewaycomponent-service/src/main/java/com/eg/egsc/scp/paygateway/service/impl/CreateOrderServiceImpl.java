@@ -109,9 +109,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setLimitPay(createOrderRequestForBackendDto.getLimitPay());
         createOrderRequestForWeiXin.setTradeType(createOrderRequestForBackendDto.getTradeType());
         createOrderRequestForWeiXin.setSpbillCreateIp(createOrderRequestForBackendDto.getSpbillCreateIp());
-        if(!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())){
+        if (!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())) {
             //只有公众号才传入openid
-            createOrderRequestForWeiXin.setOpenid( callThirdPartyCreateOrderApi(createOrderRequestForBackendDto,createOrderRequestForWeiXin));
+            createOrderRequestForWeiXin.setOpenid(callThirdPartyCreateOrderApi(createOrderRequestForBackendDto, createOrderRequestForWeiXin));
             createOrderRequestForWeiXin.setAppid(weiXinJsapiAppId);
             createOrderRequestForWeiXin.setMchId(weiXinJsapiMchId);
         }
@@ -141,7 +141,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             createOrderResponseForBackendDto.setPrepayid(createOrderResponseForWeiXin.getPrepayId());
             String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
             createOrderResponseForBackendDto.setTimestamp(timeStamp);
-            createOrderResponseForBackendDto.setPackageValue(PaymentBusinessConstant.PACKAGE);
+            if (PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderResponseForBackendDto.getTradeType())) {
+                createOrderResponseForBackendDto.setPackageValue(PaymentBusinessConstant.PACKAGE);
+            } else {
+                createOrderResponseForBackendDto.setPackageValue("prepay_id=" + createOrderResponseForWeiXin.getPrepayId());
+            }
             createOrderResponseForBackendDto.setNoncestr(createOrderResponseForWeiXin.getNonceStr());
         }
         createOrderResponseForBackendDto.setSign(getBackSign(createOrderResponseForBackendDto));
@@ -205,7 +209,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         if (PaymentBusinessConstant.WEI_XIN.equalsIgnoreCase(createOrderRequestForBackendDto.getPlatform())) {
             CreateOrderRequestForWeiXin createOrderRequestForWeiXin = transferBackendMessageForWeiXin(createOrderRequestForBackendDto);
             try {
-                if(!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType()) && StringUtils.isEmpty(createOrderRequestForWeiXin.getOpenid())){
+                if (!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType()) && StringUtils.isEmpty(createOrderRequestForWeiXin.getOpenid())) {
                     createOrderResponseForBackendDto.setErrCodeDes(createOrderRequestForWeiXin.getErrorMsg());
                     return createOrderResponseForBackendDto;
                 }
@@ -281,17 +285,17 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     }
 
-    private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto,CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
+    private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto, CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         Map params = new HashMap<>();
-        params.put("APPID",weiXinJsapiAppId);
-        params.put("SECRET",weiXinSecret);
-        params.put("CODE",createOrderRequestForBackendDto.getCode());
-        params.put("grant_type","authorization_code");
+        params.put("APPID", weiXinJsapiAppId);
+        params.put("SECRET", weiXinSecret);
+        params.put("CODE", createOrderRequestForBackendDto.getCode());
+        params.put("grant_type", "authorization_code");
         String result = HttpGetUtil.httpRequestToString(PaymentBusinessConstant.GET_OPENID_URL, params);
         JSONObject jsonObject = JSONObject.fromObject(result);
-        String openid = (String)jsonObject.get("openid");
-        if(StringUtils.isEmpty(openid)){
-            createOrderRequestForWeiXin.setErrorMsg((String)jsonObject.get("errmsg")+"code:-->"+createOrderRequestForBackendDto.getCode());
+        String openid = (String) jsonObject.get("openid");
+        if (StringUtils.isEmpty(openid)) {
+            createOrderRequestForWeiXin.setErrorMsg((String) jsonObject.get("errmsg") + "params:-->" + params);
             return null;
         }
         return openid;
@@ -313,19 +317,19 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     private String getBackSign(CreateOrderResponseForBackendDto createOrderResponseForBackendDto) {
         Map<String, Object> signatureMap = new HashMap<>();
-        if(PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderResponseForBackendDto.getTradeType())){
+        if (PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderResponseForBackendDto.getTradeType())) {
             signatureMap.put("appid", createOrderResponseForBackendDto.getAppid());
             signatureMap.put("partnerid", createOrderResponseForBackendDto.getPartnerid());
             signatureMap.put("timestamp", createOrderResponseForBackendDto.getTimestamp());
             signatureMap.put("package", createOrderResponseForBackendDto.getPackageValue());
             signatureMap.put("prepayid", createOrderResponseForBackendDto.getPrepayid());
             signatureMap.put("noncestr", createOrderResponseForBackendDto.getNoncestr());
-        }else{
-            signatureMap.put("appId", createOrderResponseForBackendDto.getAppid());
-            signatureMap.put("timeStamp", createOrderResponseForBackendDto.getTimestamp());
-            signatureMap.put("package", "prepay_id="+createOrderResponseForBackendDto.getPackageValue());
-            signatureMap.put("signType", PaymentBusinessConstant.SIGN_TYPE_MD5);
-            signatureMap.put("nonceStr", createOrderResponseForBackendDto.getNoncestr());
+        } else {
+            signatureMap.put("appid", createOrderResponseForBackendDto.getAppid());
+            signatureMap.put("timestamp", createOrderResponseForBackendDto.getTimestamp());
+            signatureMap.put("package", "prepay_id=" + createOrderResponseForBackendDto.getPackageValue());
+            signatureMap.put("signtype", PaymentBusinessConstant.SIGN_TYPE_MD5);
+            signatureMap.put("noncestr", createOrderResponseForBackendDto.getNoncestr());
         }
         return signatureServiceImpl.weixinSignature(signatureMap);
     }

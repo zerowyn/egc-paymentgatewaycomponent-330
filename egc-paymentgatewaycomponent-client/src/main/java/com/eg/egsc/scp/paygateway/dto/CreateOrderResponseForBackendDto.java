@@ -121,7 +121,7 @@ public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
   private String timestamp;
 
   /**
-   * 微信，固定值
+   * 调起微信支付需要用到的参数
    * @return
    */
   private String packageValue;

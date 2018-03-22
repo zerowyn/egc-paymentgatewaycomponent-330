@@ -44,6 +44,7 @@ public class HttpGetUtil {
         try {
             StringBuilder parameters = new StringBuilder();
             boolean hasParams = false;
+            String subString = null;
             for (Map.Entry<String,String> entry : params.entrySet()) {
                 String value = URLEncoder.encode(entry.getValue(), PaymentBusinessConstant.CHARSET_UTF8);
                 String key = entry.getKey();
@@ -51,9 +52,9 @@ public class HttpGetUtil {
                 hasParams = true;
             }
             if (hasParams) {
-                parameters.substring(0, parameters.length() - 1);
+                subString = parameters.substring(0, parameters.length() - 1);
             }
-            url += "?" + parameters;
+            url += "?" + subString;
             URL u = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) u.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
