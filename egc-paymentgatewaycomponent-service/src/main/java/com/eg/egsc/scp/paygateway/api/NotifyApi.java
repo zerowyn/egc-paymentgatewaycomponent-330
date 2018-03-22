@@ -63,6 +63,7 @@ public class NotifyApi extends BaseApiController {
         if (requestDto.getData().getPlatfrom().equalsIgnoreCase(PaymentBusinessConstant.WEI_XIN)) {
             String informStr = (String) requestDto.getData().getInformStr();
             disposeMessage = notifyServiceImpl.disposeMessage(StringUtils.transferXMLtoMap(informStr), true);
+            logger.info("data------------------>:"+disposeMessage);
             responseDto.setMessage(PaymentBusinessConstant.SUCCESS_MESSAGE);
             responseDto.setData(disposeMessage);
             responseDto.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);
