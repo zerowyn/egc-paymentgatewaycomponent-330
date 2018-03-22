@@ -325,11 +325,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             signatureMap.put("prepayid", createOrderResponseForBackendDto.getPrepayid());
             signatureMap.put("noncestr", createOrderResponseForBackendDto.getNoncestr());
         } else {
-            signatureMap.put("appid", createOrderResponseForBackendDto.getAppid());
-            signatureMap.put("timestamp", createOrderResponseForBackendDto.getTimestamp());
-            signatureMap.put("package", "prepay_id=" + createOrderResponseForBackendDto.getPackageValue());
-            signatureMap.put("signtype", PaymentBusinessConstant.SIGN_TYPE_MD5);
-            signatureMap.put("noncestr", createOrderResponseForBackendDto.getNoncestr());
+            signatureMap.put("appId", createOrderResponseForBackendDto.getAppid());
+            signatureMap.put("timeStamp", createOrderResponseForBackendDto.getTimestamp());
+            signatureMap.put("package", "prepay_id=" + createOrderResponseForBackendDto.getPrepayid());
+            signatureMap.put("signType", PaymentBusinessConstant.SIGN_TYPE_MD5);
+            signatureMap.put("nonceStr", createOrderResponseForBackendDto.getNoncestr());
         }
         return signatureServiceImpl.weixinSignature(signatureMap);
     }
