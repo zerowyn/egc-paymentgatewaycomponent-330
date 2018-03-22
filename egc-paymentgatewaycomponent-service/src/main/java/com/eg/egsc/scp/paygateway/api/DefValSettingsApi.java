@@ -28,7 +28,7 @@ import static com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant.SUCCESS_CO
  * @author gucunyang
  * @since 2018-02-11
  */
-@Api(description = "缴费网关默认设置表")
+@Api(value = "缴费网关默认设置表")
 @RestController
 @RequestMapping(value = "/api/defValSettings")
 public class DefValSettingsApi extends BaseApiController {

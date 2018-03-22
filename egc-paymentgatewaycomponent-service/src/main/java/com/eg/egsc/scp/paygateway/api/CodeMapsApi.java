@@ -28,7 +28,7 @@ import static com.eg.egsc.scp.paygateway.util.PaymentBusinessConstant.SUCCESS_CO
  * @author gucunyang
  * @since 2018-02-24
  */
-@Api(description = "缴费网关代码转换表")
+@Api(value = "缴费网关代码转换表")
 @RestController
 @RequestMapping(value = "/api/codeMaps")
 public class CodeMapsApi extends BaseApiController {
