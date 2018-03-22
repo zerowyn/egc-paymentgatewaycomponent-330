@@ -3,9 +3,12 @@
  */
 package com.eg.egsc.scp.paygateway.util;
 
+import com.eg.egsc.scp.paygateway.exception.PaymentGatewayException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -15,11 +18,14 @@ import java.util.Map;
  * @since 2018-03-22
  */
 public class HttpGetUtil {
+    private HttpGetUtil(){}
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpGetUtil.class);
     public static String httpRequestToString(String url,Map<String, String> params) {
         String result;
         try {
             InputStream is = httpRequestToStream(url, params);
-            BufferedReader in = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(is,PaymentBusinessConstant.CHARSET_UTF8));
             StringBuilder buffer = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null) {
@@ -27,42 +33,41 @@ public class HttpGetUtil {
             }
             result = buffer.toString();
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return null;
         }
         return result;
     }
 
     private static InputStream httpRequestToStream(String url,Map<String, String> params) {
-        InputStream is = null;
+        InputStream is;
         try {
-            String parameters = "";
+            StringBuilder parameters = new StringBuilder();
             boolean hasParams = false;
-            for (String key : params.keySet()) {
-                String value = URLEncoder.encode(params.get(key), "UTF-8");
-                parameters += key + "=" + value + "&";
+            for (Map.Entry<String,String> entry : params.entrySet()) {
+                String value = URLEncoder.encode(entry.getValue(), PaymentBusinessConstant.CHARSET_UTF8);
+                String key = entry.getKey();
+                parameters.append(key).append("=").append(value).append("&");
                 hasParams = true;
             }
             if (hasParams) {
-                parameters = parameters.substring(0, parameters.length() - 1);
+                parameters.substring(0, parameters.length() - 1);
             }
             url += "?" + parameters;
             URL u = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) u.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Accept-Charset", "UTF-8");
-            conn.setRequestProperty("contentType", "utf-8");
+            conn.setRequestProperty("Accept-Charset", PaymentBusinessConstant.CHARSET_UTF8);
+            conn.setRequestProperty("contentType", PaymentBusinessConstant.CHARSET_UTF8);
             conn.setConnectTimeout(50000);
             conn.setReadTimeout(50000);
             conn.setDoInput(true);
             //设置请求方式，默认为GET
             conn.setRequestMethod("GET");
             is = conn.getInputStream();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new PaymentGatewayException(e.getMessage());
         }
         return is;
     }

@@ -284,6 +284,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         params.put("CODE",createOrderRequestForBackendDto.getCode());
         params.put("grant_type","authorization_code");
         String result = HttpGetUtil.httpRequestToString(PaymentBusinessConstant.GET_OPENID_URL, params);
+        if(StringUtils.isEmpty(result)){
+            return null;
+        }
         JSONObject jsonObject = JSONObject.fromObject(result);
         return jsonObject.get("openid").toString();
     }

@@ -10,7 +10,6 @@ package com.eg.egsc.scp.paygateway.service;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderRequestForBackendDto;
 import com.eg.egsc.scp.paygateway.dto.CreateOrderResponseForBackendDto;
-import com.eg.egsc.scp.paygateway.dto.RequestForGetOpenIdDto;
 import com.eg.egsc.scp.paygateway.service.model.*;
 
 /**
