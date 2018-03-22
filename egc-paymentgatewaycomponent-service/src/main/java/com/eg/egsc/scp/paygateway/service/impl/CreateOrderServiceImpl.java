@@ -291,7 +291,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         JSONObject jsonObject = JSONObject.fromObject(result);
         String openid = (String)jsonObject.get("openid");
         if(StringUtils.isEmpty(openid)){
-            createOrderRequestForWeiXin.setErrorMsg((String)jsonObject.get("errmsg"));
+            createOrderRequestForWeiXin.setErrorMsg((String)jsonObject.get("errmsg")+"code:-->"+createOrderRequestForBackendDto.getCode());
             return null;
         }
         return openid;
