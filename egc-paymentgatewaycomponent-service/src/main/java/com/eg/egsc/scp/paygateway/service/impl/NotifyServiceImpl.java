@@ -97,7 +97,6 @@ public class NotifyServiceImpl implements NotifyService {
             String conversion = ConversionUtils.conversion(json);
             AlipayResultDto jsonObject = JSON.parseObject(conversion + "}", AlipayResultDto.class);
             resultInformDto = DtoConversionUtils.conversion(jsonObject);
-            resultInformDto.setPlatform(PaymentBusinessConstant.ALI_PAY);
         }
         // 调用后台接口回传数据
         ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
