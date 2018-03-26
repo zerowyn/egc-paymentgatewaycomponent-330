@@ -21,22 +21,24 @@ import java.util.HashMap;
 
 /**
  * 测试Api的相关方法类
+ *
  * @author lihui
  * @since 2018年3月5日
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {PaymentGatewayServiceApplication.class})
-public class CreateOrderApiTest extends BaseApiTest{
+public class CreateOrderApiTest extends BaseApiTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateOrderApiTest.class);
 
     /**
      * 微信下单功能测试
+     *
      * @return
      * @throws Exception
      */
     @Test
-    public void createOrderForWeiXin(){
+    public void createOrderForWeiXin() {
         try {
             RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
@@ -55,10 +57,10 @@ public class CreateOrderApiTest extends BaseApiTest{
             header.setContentType("application/json");
             header.setCreateTimestamp(165456465465L);
             HashMap<String, Object> extMap = new HashMap<>();
-            extMap.put("test","test01");
+            extMap.put("test", "test01");
             header.setExtAttributes(extMap);
             req.setHeader(header);
-            getHead("/pay/createorder",req);
+            getHead("/pay/createorder", req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -66,11 +68,12 @@ public class CreateOrderApiTest extends BaseApiTest{
 
     /**
      * 支付宝下单功能测试
+     *
      * @return
      * @throws Exception
      */
     @Test
-    public void createOrderForAliPay(){
+    public void createOrderForAliPay() {
         try {
             RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
@@ -87,10 +90,10 @@ public class CreateOrderApiTest extends BaseApiTest{
             header.setCreateTimestamp(16545589745L);
             header.setBusinessId("fsdfdsf54654");
             HashMap<String, Object> extMap = new HashMap<>();
-            extMap.put("test","test02");
+            extMap.put("test", "test02");
             header.setExtAttributes(extMap);
             req.setHeader(header);
-            getHead("/pay/createorder",req);
+            getHead("/pay/createorder", req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -98,11 +101,12 @@ public class CreateOrderApiTest extends BaseApiTest{
 
     /**
      * 微信临停支付测试
+     *
      * @return
      * @throw Exception
      */
     @Test
-    public void createOrderForWeiXinStop(){
+    public void createOrderForWeiXinStop() {
         try {
             RequestDto<CreateOrderRequestForBackendDto> req = new RequestDto<>();
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
@@ -122,10 +126,10 @@ public class CreateOrderApiTest extends BaseApiTest{
             header.setContentType("application/json");
             header.setCreateTimestamp(165551425495L);
             HashMap<String, Object> extMap = new HashMap<>();
-            extMap.put("test3","test02");
+            extMap.put("test3", "test02");
             header.setExtAttributes(extMap);
             req.setHeader(header);
-            getHead("/pay/createorder",req);
+            getHead("/pay/createorder", req);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

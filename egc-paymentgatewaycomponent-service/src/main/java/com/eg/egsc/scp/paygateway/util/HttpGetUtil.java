@@ -14,18 +14,21 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
+ * 发送GET请求到微信的工具类
  * @author lihui
  * @since 2018-03-22
  */
 public class HttpGetUtil {
-    private HttpGetUtil(){}
+    private HttpGetUtil() {
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(HttpGetUtil.class);
-    public static String httpRequestToString(String url,Map<String, String> params) {
+
+    public static String httpRequestToString(String url, Map<String, String> params) {
         String result;
         try {
             InputStream is = httpRequestToStream(url, params);
-            BufferedReader in = new BufferedReader(new InputStreamReader(is,PaymentBusinessConstant.CHARSET_UTF8));
+            BufferedReader in = new BufferedReader(new InputStreamReader(is, PaymentBusinessConstant.CHARSET_UTF8));
             StringBuilder buffer = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null) {
@@ -39,13 +42,13 @@ public class HttpGetUtil {
         return result;
     }
 
-    private static InputStream httpRequestToStream(String url,Map<String, String> params) {
+    private static InputStream httpRequestToStream(String url, Map<String, String> params) {
         InputStream is;
         try {
             StringBuilder parameters = new StringBuilder();
             boolean hasParams = false;
             String subString = null;
-            for (Map.Entry<String,String> entry : params.entrySet()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 String value = URLEncoder.encode(entry.getValue(), PaymentBusinessConstant.CHARSET_UTF8);
                 String key = entry.getKey();
                 parameters.append(key).append("=").append(value).append("&");

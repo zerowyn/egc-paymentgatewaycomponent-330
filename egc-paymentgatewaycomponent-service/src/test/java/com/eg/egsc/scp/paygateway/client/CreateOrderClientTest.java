@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * 测试client的相关方法类
+ *
  * @author lihui
  * @since 2018年3月5日
  */
@@ -31,16 +32,16 @@ public class CreateOrderClientTest {
     private PaymentGatewayClient paymentGatewayClientImpl;
 
     @Test
-    public void testCreateOrderClientImpl(){
+    public void testCreateOrderClientImpl() {
 
-        CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto(); dto.setPlatform(PaymentBusinessConstant.WEI_XIN);
+        CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
         dto.setPlatform(PaymentBusinessConstant.WEI_XIN);
         dto.setAppid("wx5332d47f724492fa");
         dto.setMchId("1497973582");
         dto.setBody("测试微信下单功能");
         dto.setDetail("用client测试微信下单");
         dto.setTradeType("APP");
-        dto.setOutTradeNo("2018030500000007");
+        dto.setOutTradeNo("2018030500000008");
         dto.setTotalFee("1");
         ResponseDto order = paymentGatewayClientImpl.createOrder(dto);
         logger.info(order.toString());

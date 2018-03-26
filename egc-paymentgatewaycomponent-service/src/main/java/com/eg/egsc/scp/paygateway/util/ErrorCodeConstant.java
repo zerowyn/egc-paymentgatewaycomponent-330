@@ -30,4 +30,6 @@ public class ErrorCodeConstant {
     public static final String ABNORMAL_CONVERSION = "transform.exception";
 
     public static final String CREATE_ORDER_FOR_ALIPAY ="create.order.for.alipay.error";
+
+    public static final String REQUEST_PARAMTERS_IS_NULL = "dto.from.backend.system.request.for.create.order.is.null!";
 }

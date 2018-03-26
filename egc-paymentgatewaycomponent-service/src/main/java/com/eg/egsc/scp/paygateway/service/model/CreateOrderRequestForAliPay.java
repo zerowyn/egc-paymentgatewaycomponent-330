@@ -14,140 +14,139 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @Create In 2018年2月25日
  */
 public class CreateOrderRequestForAliPay {
-  
-  /**
-   * 应用ID
-   * 
-   */
-  @JsonProperty(value = "app_id")
-  private String appId;
 
-  /**
-   * 接口名称
-   */
-  private String method;
+    /**
+     * 应用ID
+     */
+    @JsonProperty(value = "app_id")
+    private String appId;
 
-  /**
-   * 编码格式
-   */
-  private String charset;
+    /**
+     * 接口名称
+     */
+    private String method;
 
-  /**
-   * 商户生成签名所使用的字符串
-   */
-  @JsonProperty(value = "sign_type")
-  private String signType;
+    /**
+     * 编码格式
+     */
+    private String charset;
 
-  /**
-   * 签名
-   */
-  private String sign;
+    /**
+     * 商户生成签名所使用的字符串
+     */
+    @JsonProperty(value = "sign_type")
+    private String signType;
 
-  /**
-   * 发送请求时间时间
-   */
-  private String timestamp;
+    /**
+     * 签名
+     */
+    private String sign;
 
-  /**
-   * 请求参数格式
-   * 仅支持JSON
-   */
-  private String format;
+    /**
+     * 发送请求时间时间
+     */
+    private String timestamp;
 
-  /**
-   * 版本
-   */
-  private String version;
+    /**
+     * 请求参数格式
+     * 仅支持JSON
+     */
+    private String format;
 
-  /**
-   * 通知地址
-   */
-  @JsonProperty(value = "notify_uri")
-  private String notifyUrl;
+    /**
+     * 版本
+     */
+    private String version;
 
-  /**
-   * 业务请求参数的集合
-   */
-  @JsonProperty(value = "biz_content")
-  private String bizContent;
+    /**
+     * 通知地址
+     */
+    @JsonProperty(value = "notify_uri")
+    private String notifyUrl;
 
-  public String getMethod() {
-    return method;
-  }
+    /**
+     * 业务请求参数的集合
+     */
+    @JsonProperty(value = "biz_content")
+    private String bizContent;
 
-  public void setMethod(String method) {
-    this.method = method;
-  }
+    public String getMethod() {
+        return method;
+    }
 
-  public String getCharset() {
-    return charset;
-  }
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
-  public void setCharset(String charset) {
-    this.charset = charset;
-  }
+    public String getCharset() {
+        return charset;
+    }
 
-  public String getSign() {
-    return sign;
-  }
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
 
-  public void setSign(String sign) {
-    this.sign = sign;
-  }
+    public String getSign() {
+        return sign;
+    }
 
-  public String getTimestamp() {
-    return timestamp;
-  }
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
 
-  public void setTimestamp(String timestamp) {
-    this.timestamp = timestamp;
-  }
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-  public String getVersion() {
-    return version;
-  }
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
-  public void setVersion(String version) {
-    this.version = version;
-  }
+    public String getVersion() {
+        return version;
+    }
 
-  public String getFormat() {
-    return format;
-  }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-  public void setFormat(String format) {
-    this.format = format;
-  }
+    public String getFormat() {
+        return format;
+    }
 
-  public String getAppId() {
-    return appId;
-  }
+    public void setFormat(String format) {
+        this.format = format;
+    }
 
-  public void setAppId(String appId) {
-    this.appId = appId;
-  }
+    public String getAppId() {
+        return appId;
+    }
 
-  public String getSignType() {
-    return signType;
-  }
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
-  public void setSignType(String signType) {
-    this.signType = signType;
-  }
+    public String getSignType() {
+        return signType;
+    }
 
-  public String getNotifyUrl() {
-    return notifyUrl;
-  }
+    public void setSignType(String signType) {
+        this.signType = signType;
+    }
 
-  public void setNotifyUrl(String notifyUrl) {
-    this.notifyUrl = notifyUrl;
-  }
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
 
-  public String getBizContent() {
-    return bizContent;
-  }
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
 
-  public void setBizContent(String bizContent) {
-    this.bizContent = bizContent;
-  }
+    public String getBizContent() {
+        return bizContent;
+    }
+
+    public void setBizContent(String bizContent) {
+        this.bizContent = bizContent;
+    }
 }
