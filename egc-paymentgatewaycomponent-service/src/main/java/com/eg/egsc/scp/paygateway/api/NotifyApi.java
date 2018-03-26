@@ -81,7 +81,7 @@ public class NotifyApi extends BaseApiController {
 
         disposeMessage = notifyServiceImpl.disposeMessage(map, false);
         responseDto.setMessage(PaymentBusinessConstant.SUCCESS_MESSAGE);
-        responseDto.setData(disposeMessage);
+        responseDto.setData("cdhsidsi");
         responseDto.setCode(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE);
         logger.info("End AliPay payment notification processing");
         return responseDto;
