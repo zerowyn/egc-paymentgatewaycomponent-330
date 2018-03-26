@@ -124,6 +124,8 @@ public class NotifyServiceImpl implements NotifyService {
             // 支付宝返回数据
             if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
+            }else{
+                returnMessage = "The data returned by alipay is empty.";
             }
         }
         return returnMessage;
