@@ -88,6 +88,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private String weiXinSecret;
     private String weiXinJsapiMchId;
 
+    /**
+     * @param createOrderRequestForBackendDto 缴费后台提交的请求数据对象
+     * @return CreateOrderRequestForWeiXin 支付网关提交给微信请求下单的数据对象
+     */
     @Override
     public CreateOrderRequestForWeiXin transferBackendMessageForWeiXin(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
         CreateOrderRequestForWeiXin createOrderRequestForWeiXin = new CreateOrderRequestForWeiXin();
@@ -110,7 +114,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         createOrderRequestForWeiXin.setTradeType(createOrderRequestForBackendDto.getTradeType());
         createOrderRequestForWeiXin.setSpbillCreateIp(createOrderRequestForBackendDto.getSpbillCreateIp());
         if (!PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderRequestForBackendDto.getTradeType())) {
-            //只有公众号才传入openid
+            //只有公众号支付（JSAPI）才传入openid
             createOrderRequestForWeiXin.setOpenid(callThirdPartyCreateOrderApi(createOrderRequestForBackendDto, createOrderRequestForWeiXin));
             createOrderRequestForWeiXin.setAppid(weiXinJsapiAppId);
             createOrderRequestForWeiXin.setMchId(weiXinJsapiMchId);
@@ -119,6 +123,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return createOrderRequestForWeiXin;
     }
 
+    /**
+     * @param createOrderResponseForWeiXin 微信接口返回的数据对象
+     * @return CreateOrderResponseForBackendDto 支付网关返回给缴费后台的数据对象
+     */
     @Override
     public CreateOrderResponseForBackendDto transferWeiXinMessageForBackendSystme(
             CreateOrderResponseForWeiXin createOrderResponseForWeiXin) {
@@ -152,6 +160,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return createOrderResponseForBackendDto;
     }
 
+    /**
+     *
+     * @param createOrderRequestForBackendDto 缴费后台提交的请求数据对象
+     * @return CreateOrderRequestForAliPay 支付网关支付宝下单的数据对象
+     */
     @Override
     public CreateOrderRequestForAliPay transferBackendMessageForAliPay(
             CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
@@ -176,6 +189,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return requestForAliPay;
     }
 
+    /**
+     *
+     * @param alipayTradeAppPayResponse 支付宝接口返回的数据对象
+     * @return CreateOrderResponseForBackendDto 支付网关返回给缴费后台的数据对象
+     */
     @Override
     public CreateOrderResponseForBackendDto transferAliPayMessageForBackendSystme(AlipayTradeAppPayResponse alipayTradeAppPayResponse) {
         CreateOrderResponseForBackendDto createOrderResponseForBackendDto = new CreateOrderResponseForBackendDto();
@@ -200,7 +218,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     public CreateOrderResponseForBackendDto createOrderRequestFromBackendSystme(CreateOrderRequestForBackendDto createOrderRequestForBackendDto) {
         CreateOrderResponseForBackendDto createOrderResponseForBackendDto = new CreateOrderResponseForBackendDto();
         if (createOrderRequestForBackendDto == null) {
-            String errorMsg = "Dto from backend system request for order query is null!";
+            String errorMsg = ErrorCodeConstant.REQUEST_PARAMTERS_IS_NULL;
             logger.error(errorMsg);
             return null;
         }
@@ -257,6 +275,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return createOrderResponseForBackendDto;
     }
 
+    /**
+     *
+     * @param responseMap 用于验签的数据集合
+     * @return 验签是否成功
+     */
     private boolean confirmSignForWeiXin(Map<String, Object> responseMap) {
         boolean result;
         logger.info("responseMap : [" + responseMap + "]");
@@ -268,6 +291,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return result;
     }
 
+    /**
+     *
+     * @param platform 平台信息
+     * @param requestString 请求的参数字符串xml格式
+     * @return ResponseEntity<String> 微信返回的数据对象
+     */
     private ResponseEntity<String> callThirdPartyCreateOrderApi(String platform, String requestString) {
         RestTemplate rt = new RestTemplate();
         rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
@@ -285,6 +314,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     }
 
+    /**
+     *
+     * @param createOrderRequestForBackendDto 交费后台请求的数据对象
+     * @param createOrderRequestForWeiXin  请求微信的数据请求对象
+     * @return String 微信JSAPI类型下单需要的openid
+     */
     private String callThirdPartyCreateOrderApi(CreateOrderRequestForBackendDto createOrderRequestForBackendDto, CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         Map params = new HashMap<>();
         params.put("APPID", weiXinJsapiAppId);
@@ -301,6 +336,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return openid;
     }
 
+    /**
+     *
+     * @param createOrderRequestForWeiXin 请求微信的数据对象
+     * @return 签名字符串
+     */
     private String getSign(CreateOrderRequestForWeiXin createOrderRequestForWeiXin) {
         String createOrderForWeiXinJsonString;
         try {
@@ -315,6 +355,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return signatureServiceImpl.weixinSignature(signatureMap);
     }
 
+    /**
+     *
+     * @param createOrderResponseForBackendDto 返回给缴费后台的数据对象
+     * @return 签名的字符串
+     */
     private String getBackSign(CreateOrderResponseForBackendDto createOrderResponseForBackendDto) {
         Map<String, Object> signatureMap = new HashMap<>();
         if (PaymentBusinessConstant.TRADE_TYPE_APP.equalsIgnoreCase(createOrderResponseForBackendDto.getTradeType())) {
@@ -334,10 +379,19 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return signatureServiceImpl.weixinSignature(signatureMap);
     }
 
+    /**
+     *
+     * @return 随机字符串
+     */
     private String getNonceStr() {
         return StringUtils.generateUuid();
     }
 
+    /**
+     *
+     * @param createOrderRequestForAliPay 请求支付宝下单的数据对象
+     * @return AlipayTradeAppPayResponse 支付宝返回的数据对象
+     */
     private AlipayTradeAppPayResponse createOrderForAlipay(CreateOrderRequestForAliPay createOrderRequestForAliPay) {
         AlipayClient alipayClient = new DefaultAlipayClient(
                 aliPayCreateOrderUri,
@@ -358,15 +412,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             logger.error(e.getMessage());
             throw new PaymentGatewayException(ErrorCodeConstant.CREATE_ORDER_FOR_ALIPAY);
         }
-        if (response.isSuccess()) {
-            logger.info("支付宝成功！");
-        } else {
-            logger.info("支付宝失败！");
-        }
         return response;
 
     }
 
+    /**
+     * 初始化数据
+     */
     private void assignVariables() {
         wechatCreateOrderUri = configsServiceImpl.getConfigsValueByExample("WEIXIN-URL", PaymentBusinessConstant.CREATE_METHOD);
         aliPayCreateOrderUri = configsServiceImpl.getConfigsValueByExample("ALIPAY-URL", PaymentBusinessConstant.CREATE_METHOD);
