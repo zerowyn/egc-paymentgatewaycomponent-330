@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
+import com.eg.egsc.scp.paygateway.mapper.CodeMapsMapper;
 import com.eg.egsc.scp.paygateway.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class NotifyServiceImpl implements NotifyService {
         Map<String, Object> newMap = this.stringNameConversion(map);
         ResultInformDto resultInformDto = null;
         if (!flag) {
-            return "";
+            return "Attestation of failure";
         }
         if (sign) {
             String json = JSONObject.toJSONString(newMap).replaceAll("\\[", "{").replaceAll("]", "}");
@@ -103,7 +104,7 @@ public class NotifyServiceImpl implements NotifyService {
         ResponseDto dto = paymentResultInformClientImpl.getNotify(resultInformDto);
         if (ObjectUtils.isEmpty(dto) || ObjectUtils.isEmpty(dto.getData())) {
             logger.error("The received message is erro.");
-            return "";
+            return "The message received was empty.";
         }
         ResultInformResponseDto notify = JSONObject.parseObject(JSONObject.toJSONString(dto.getData()), ResultInformResponseDto.class);
         String returnMessage = "";
@@ -123,6 +124,8 @@ public class NotifyServiceImpl implements NotifyService {
             // 支付宝返回数据
             if (notify.getReturnCode().equalsIgnoreCase(PaymentBusinessConstant.COMMON_FRAMEWORK_SUCCESS_CODE)) {
                 returnMessage = PaymentBusinessConstant.SUCCESS_MESSAGE;
+            }else{
+                returnMessage = "The data returned by alipay is empty.";
             }
         }
         return returnMessage;
