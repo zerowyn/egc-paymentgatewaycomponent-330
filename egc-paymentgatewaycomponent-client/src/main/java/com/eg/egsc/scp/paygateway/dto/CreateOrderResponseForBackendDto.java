@@ -16,265 +16,259 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CreateOrderResponseForBackendDto extends BaseBusinessDto {
-  
-  /**
-   * @Field long serialVersionUID 
-   */
-  private static final long serialVersionUID = 1L;
-  
-  /**
-   * 指定请求的目标平台-‘WEIXIN’或‘ALIPAY’，必填
-   * 
-   */
-  //@NotBlank(message = "scp.pay.gateway.app.backend.request.platform.notblank")
-  private String platform;
 
-  /**
-   * 返回状态码
-   * SUCCESS/FAIL
-   */
-  private String returnCode;
+    /**
+     * @Field long serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * 返回信息
-   */
-  private String returnMsg;
+    /**
+     * 指定请求的目标平台-‘WEIXIN’或‘ALIPAY’，必填
+     */
+    //@NotBlank(message = "scp.pay.gateway.app.backend.request.platform.notblank")
+    private String platform;
 
-  /**
-   * 微信统一下单接口的消息格式-微信开放平台审核通过的应用APPID
-   * 
-   */
-  private String appid;
-  
-  /**
-   * 微信统一下单接口的消息格式-微信支付分配的商户号
-   * 
-   */
-  private String partnerid;
-  
-  /**
-   * 设备号
-   * 调用接口提交的终端设备号，
-   */
-  private String deviceInfo;
-  
-  /**
-   * 随机字符串
-   * 微信返回的随机字符串（验签用，不向缴费后台传送）
-   */
-  private String noncestr;
+    /**
+     * 返回状态码
+     * SUCCESS/FAIL
+     */
+    private String returnCode;
 
-  /**
-   * 签名
-   *
-   */
-  private String sign;
+    /**
+     * 返回信息
+     */
+    private String returnMsg;
 
-  /**
-   * 业务结果
-   *
-   */
-  private String resultCode;
+    /**
+     * 微信统一下单接口的消息格式-微信开放平台审核通过的应用APPID
+     */
+    private String appid;
 
-  /**
-   * 错误代码
-   *
-   */
-  private String errCode;
+    /**
+     * 微信统一下单接口的消息格式-微信支付分配的商户号
+     */
+    private String partnerid;
 
-  /**
-   * 错误代码描述
-   *
-   */
-  private String errCodeDes;
+    /**
+     * 设备号
+     * 调用接口提交的终端设备号，
+     */
+    private String deviceInfo;
 
-  /**
-   * 微信统一下单接口的消息格式-微信的交易类型
-   *
-   */
-  private String tradeType;
+    /**
+     * 随机字符串
+     * 微信返回的随机字符串（验签用，不向缴费后台传送）
+     */
+    private String noncestr;
 
-  /**
-   * 预支付交易会话标识
-   *
-   */
-  private String prepayid;
+    /**
+     * 签名
+     */
+    private String sign;
 
-  /**
-   * 支付跳转链接
-   * mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟。
-   * 当trade_type为MWEB时返回。
-   */
-  private String mwebUrl;
+    /**
+     * 业务结果
+     */
+    private String resultCode;
 
-  /**
-   * 支付宝的订单字符串
-   * 前端页面调用支付宝支付的支付串，无需做处理直接使用
-   * @return
-   */
-  private String orderStr;
+    /**
+     * 错误代码
+     */
+    private String errCode;
 
-  /**
-   * 微信时间戳
-   * @return
-   */
-  private String timestamp;
+    /**
+     * 错误代码描述
+     */
+    private String errCodeDes;
 
-  /**
-   * 调起微信支付需要用到的参数
-   * @return
-   */
-  private String packageValue;
+    /**
+     * 微信统一下单接口的消息格式-微信的交易类型
+     */
+    private String tradeType;
 
-  public String getPackageValue() {
-    return packageValue;
-  }
+    /**
+     * 预支付交易会话标识
+     */
+    private String prepayid;
 
-  public void setPackageValue(String packageValue) {
-    this.packageValue = packageValue;
-  }
+    /**
+     * 支付跳转链接
+     * mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟。
+     * 当trade_type为MWEB时返回。
+     */
+    private String mwebUrl;
 
-  public static long getSerialVersionUID() {
-    return serialVersionUID;
-  }
+    /**
+     * 支付宝的订单字符串
+     * 前端页面调用支付宝支付的支付串，无需做处理直接使用
+     *
+     * @return
+     */
+    private String orderStr;
 
-  /**
-   * @Return the String platform
-   */
-  public String getPlatform() {
-    return platform;
-  }
+    /**
+     * 微信时间戳
+     *
+     * @return
+     */
+    private String timestamp;
 
-  /**
-   * @Param String platform to set
-   */
-  public void setPlatform(String platform) {
-    this.platform = platform;
-  }
+    /**
+     * 调起微信支付需要用到的参数
+     *
+     * @return
+     */
+    private String packageValue;
 
-  /**
-   * @Return the String appid
-   */
-  public String getAppid() {
-    return appid;
-  }
+    public String getPackageValue() {
+        return packageValue;
+    }
 
-  /**
-   * @Param String appid to set
-   */
-  public void setAppid(String appid) {
-    this.appid = appid;
-  }
+    public void setPackageValue(String packageValue) {
+        this.packageValue = packageValue;
+    }
 
-  public String getSign() {
-    return sign;
-  }
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-  public void setSign(String sign) {
-    this.sign = sign;
-  }
+    /**
+     * @Return the String platform
+     */
+    public String getPlatform() {
+        return platform;
+    }
 
-  public String getOrderStr() {
-    return orderStr;
-  }
+    /**
+     * @Param String platform to set
+     */
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 
-  public void setOrderStr(String orderStr) {
-    this.orderStr = orderStr;
-  }
+    /**
+     * @Return the String appid
+     */
+    public String getAppid() {
+        return appid;
+    }
 
-  public String getPartnerid() {
-    return partnerid;
-  }
+    /**
+     * @Param String appid to set
+     */
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
 
-  public void setPartnerid(String partnerid) {
-    this.partnerid = partnerid;
-  }
+    public String getSign() {
+        return sign;
+    }
 
-  public String getNoncestr() {
-    return noncestr;
-  }
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
 
-  public void setNoncestr(String noncestr) {
-    this.noncestr = noncestr;
-  }
+    public String getOrderStr() {
+        return orderStr;
+    }
 
-  public String getPrepayid() {
-    return prepayid;
-  }
+    public void setOrderStr(String orderStr) {
+        this.orderStr = orderStr;
+    }
 
-  public void setPrepayid(String prepayid) {
-    this.prepayid = prepayid;
-  }
+    public String getPartnerid() {
+        return partnerid;
+    }
 
-  public String getTimestamp() {
-    return timestamp;
-  }
+    public void setPartnerid(String partnerid) {
+        this.partnerid = partnerid;
+    }
 
-  public void setTimestamp(String timestamp) {
-    this.timestamp = timestamp;
-  }
+    public String getNoncestr() {
+        return noncestr;
+    }
 
-  public String getReturnCode() {
-    return returnCode;
-  }
+    public void setNoncestr(String noncestr) {
+        this.noncestr = noncestr;
+    }
 
-  public void setReturnCode(String returnCode) {
-    this.returnCode = returnCode;
-  }
+    public String getPrepayid() {
+        return prepayid;
+    }
 
-  public String getReturnMsg() {
-    return returnMsg;
-  }
+    public void setPrepayid(String prepayid) {
+        this.prepayid = prepayid;
+    }
 
-  public void setReturnMsg(String returnMsg) {
-    this.returnMsg = returnMsg;
-  }
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-  public String getDeviceInfo() {
-    return deviceInfo;
-  }
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
-  public void setDeviceInfo(String deviceInfo) {
-    this.deviceInfo = deviceInfo;
-  }
+    public String getReturnCode() {
+        return returnCode;
+    }
 
-  public String getResultCode() {
-    return resultCode;
-  }
+    public void setReturnCode(String returnCode) {
+        this.returnCode = returnCode;
+    }
 
-  public void setResultCode(String resultCode) {
-    this.resultCode = resultCode;
-  }
+    public String getReturnMsg() {
+        return returnMsg;
+    }
 
-  public String getErrCode() {
-    return errCode;
-  }
+    public void setReturnMsg(String returnMsg) {
+        this.returnMsg = returnMsg;
+    }
 
-  public void setErrCode(String errCode) {
-    this.errCode = errCode;
-  }
+    public String getDeviceInfo() {
+        return deviceInfo;
+    }
 
-  public String getErrCodeDes() {
-    return errCodeDes;
-  }
+    public void setDeviceInfo(String deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
 
-  public void setErrCodeDes(String errCodeDes) {
-    this.errCodeDes = errCodeDes;
-  }
+    public String getResultCode() {
+        return resultCode;
+    }
 
-  public String getTradeType() {
-    return tradeType;
-  }
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
 
-  public void setTradeType(String tradeType) {
-    this.tradeType = tradeType;
-  }
+    public String getErrCode() {
+        return errCode;
+    }
 
-  public String getMwebUrl() {
-    return mwebUrl;
-  }
+    public void setErrCode(String errCode) {
+        this.errCode = errCode;
+    }
 
-  public void setMwebUrl(String mwebUrl) {
-    this.mwebUrl = mwebUrl;
-  }
+    public String getErrCodeDes() {
+        return errCodeDes;
+    }
+
+    public void setErrCodeDes(String errCodeDes) {
+        this.errCodeDes = errCodeDes;
+    }
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
+
+    public String getMwebUrl() {
+        return mwebUrl;
+    }
+
+    public void setMwebUrl(String mwebUrl) {
+        this.mwebUrl = mwebUrl;
+    }
 }
