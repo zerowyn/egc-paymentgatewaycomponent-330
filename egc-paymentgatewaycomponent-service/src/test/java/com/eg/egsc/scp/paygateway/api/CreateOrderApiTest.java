@@ -47,7 +47,7 @@ public class CreateOrderApiTest extends BaseApiTest {
             dto.setTotalFee("1");
             dto.setBody("测试微信下单功能");
             dto.setTradeType("APP");
-            dto.setOutTradeNo("2018030800000001");
+            dto.setOutTradeNo("2018030809850001");
             dto.setMchId("1497973582");
             req.setData(dto);
             Header header = new Header();
@@ -79,7 +79,7 @@ public class CreateOrderApiTest extends BaseApiTest {
             CreateOrderRequestForBackendDto dto = new CreateOrderRequestForBackendDto();
             dto.setPlatform(PaymentBusinessConstant.ALI_PAY);
             dto.setAppid("2018020102122242");
-            dto.setOutTradeNo("2018022300007158");
+            dto.setOutTradeNo("2018022389007158");
             dto.setTotalFee("0.02");
             req.setData(dto);
             dto.setBody("测试支付宝下单功能");
@@ -115,7 +115,7 @@ public class CreateOrderApiTest extends BaseApiTest {
             dto.setTotalFee("3");
             dto.setBody("测试微信下单功能");
             dto.setTradeType("JSAPI");
-            dto.setOutTradeNo("2018031200000051");
+            dto.setOutTradeNo("2018031200691051");
             dto.setMchId("1500344532");
             dto.setCode("4654DFD454Jiokg08");
             req.setData(dto);
